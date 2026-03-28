@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Object Reference Manager — Documentation</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --unity-blue: #3d8bff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+  }
+
+  /* ---- Hero / Title ---- */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ---- Table of Contents ---- */
+  .toc {
+    margin-bottom: 2.5rem;
+  }
+
+  .toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc li {
+    margin-bottom: 0.3rem;
+  }
+
+  .toc li::before {
+    content: '› ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .toc a {
+    color: var(--link);
+    font-size: 0.95rem;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-link {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .home-link:hover {
+    color: var(--link);
+    text-decoration: underline;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--link);
+    margin: 2rem 0 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  /* ---- Body text ---- */
+  p {
+    margin-bottom: 1rem;
+  }
+
+  strong {
+    color: var(--text-bright);
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- Lists ---- */
+  ul, ol {
+    margin: 0.75rem 0 1.25rem 1.6rem;
+  }
+
+  li {
+    margin-bottom: 0.45rem;
+  }
+
+  li strong {
+    color: var(--text-bright);
+  }
+
+  /* ---- Inline code ---- */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: #7fdbca;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* ---- Code blocks ---- */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #c5c8c6;
+  }
+
+  /* ---- Blockquotes ---- */
+  blockquote {
+    border-left: 4px solid var(--blockquote-border);
+    background: rgba(233, 69, 96, 0.08);
+    padding: 0.9rem 1.2rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+  }
+
+  blockquote strong {
+    color: var(--accent);
+  }
+
+  /* ---- Tables ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  thead th {
+    background: var(--table-header);
+    color: var(--text-bright);
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--table-row-alt);
+  }
+
+  tbody td code {
+    font-size: 0.84em;
+  }
+
+  /* ---- FAQ ---- */
+  .faq-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .faq-item .q {
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+  }
+
+  .faq-item .a {
+    color: var(--text-muted);
+  }
+
+  /* ---- Version history ---- */
+  .changelog-version {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ---- Horizontal rules ---- */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 1.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.35rem; }
+    table { font-size: 0.82rem; }
+    thead th, tbody td { padding: 0.45rem 0.55rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ============ HERO ============ -->
+<div id="top" class="hero">
+  <h1>Object Reference Manager</h1>
+  <p class="tagline">A persistent GameObject reference palette with automatic prefab variant creation<BR>for the Unity Editor by BigBuffaloBill.</p>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#key-features">Key Features</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#detailed-usage">Detailed Usage Guide</a></li>
+    <li><a href="#api-reference">API Reference</a></li>
+    <li><a href="#tips">Tips and Best Practices</a></li>
+    <li><a href="#faq">FAQ / Troubleshooting</a></li>
+    <li><a href="#version-history">Version History</a></li>
+    <li><a href="#support">Support and Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<h2 id="overview">Overview <a class="home-link" href="#top">home</a></h2>
+
+<blockquote style="font-size: 0.875rem;">
+  <p><strong>Author's Note on Expected Functionality:</strong> The author has written an important note about the intended scope, known limitations, and support expectations for this toolset. Please see <a href="ImportantNoteAboutSupport.html"><strong>Notes on Tool Intent, Status and Author Support</strong></a> before proceeding.</p>
+</blockquote>
+
+<p>Object Reference Manager is a Unity Editor extension that gives you a dedicated window for storing, organizing, and reusing GameObject references across your project. Instead of hunting through deep folder hierarchies or losing track of frequently used assets, you can keep them all in one dockable panel &mdash; complete with 64&times;64 thumbnail previews &mdash; and drag them directly into your scenes.</p>
+
+<p>What sets Object Reference Manager apart is its automatic prefab variant workflow. When you drag a scene object into the manager, it detects that the object is not yet a persistent asset and automatically creates a prefab variant in a dedicated Prefabs subfolder. This means you never accidentally store a reference to a transient scene object that would break the next time you reload. Every reference in the manager is guaranteed to point to a real, saved asset.</p>
+
+<p>The tool stores all its data in a single ScriptableObject asset, so your reference list persists across Editor sessions, domain reloads, and even source control operations. It uses self-resolving asset paths &mdash; the window locates its own data files at runtime based on where the script is installed, so it works regardless of where you place it in your project and is fully compatible with symlinks and custom folder structures.</p>
+
+<hr>
+
+<!-- ============ KEY FEATURES ============ -->
+<h2 id="key-features">Key Features <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Persistent GameObject reference array</strong> stored in a ScriptableObject asset that survives Editor restarts and domain reloads</li>
+  <li><strong>Automatic prefab variant creation</strong> &mdash; scene objects dragged into slots are automatically converted to prefab assets saved in a Prefabs subfolder</li>
+  <li><strong>Drag-out support</strong> &mdash; drag objects from the manager window directly into the Scene view or Hierarchy via their thumbnail previews</li>
+  <li><strong>64&times;64 asset preview thumbnails</strong> for every slot, providing quick visual identification</li>
+  <li><strong>Row selection via checkboxes</strong> with bulk Clear Selected and Clear All operations</li>
+  <li><strong>Resizable array</strong> with a confirmation dialog to prevent accidental data loss</li>
+  <li><strong>Right-click context menu</strong> on thumbnails to clear individual object references</li>
+  <li><strong>Self-resolving asset paths</strong> &mdash; uses <code>MonoScript.FromScriptableObject</code> to locate its own install directory at runtime; no hardcoded paths, fully symlink-safe</li>
+  <li><strong>Zero configuration</strong> &mdash; data asset and Prefabs folder are created automatically on first use</li>
+  <li><strong>Scrollable interface</strong> that handles arrays of any size</li>
+</ul>
+
+<hr>
+
+<!-- ============ REQUIREMENTS ============ -->
+<h2 id="requirements">Requirements <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Unity version:</strong> 2020.3 LTS or later (uses <code>PrefabUtility.SaveAsPrefabAsset</code>, <code>AssetPreview.GetAssetPreview</code>, and <code>MonoScript.FromScriptableObject</code>, all available since 2018.4+; tested and recommended on 2020.3+)</li>
+  <li><strong>Render pipeline:</strong> Any (URP, HDRP, Built-in) &mdash; this is an Editor-only tool with no runtime dependencies</li>
+  <li><strong>Dependencies:</strong> None. Uses only built-in Unity Editor APIs (<code>UnityEngine</code>, <code>UnityEditor</code>, <code>System.IO</code>)</li>
+  <li><strong>Platform:</strong> Works on all platforms supported by the Unity Editor (Windows, macOS, Linux)</li>
+</ul>
+
+<hr>
+
+<!-- ============ INSTALLATION ============ -->
+<h2 id="installation">Installation <a class="home-link" href="#top">home</a></h2>
+
+<h3>Typical Package Manager Installation</h3>
+
+<ol>
+  <li>After purchasing Object Reference Manager on the <strong>Unity Asset Store</strong>, click the <strong>Open in Unity</strong> button on the store page. This automatically opens the Package Manager window in your Unity Editor and navigates to <strong>My Assets</strong> with the package selected.</li>
+  <li>In the package details panel, click <strong>Download</strong> to download the package to your machine. A progress bar will appear while the download completes.</li>
+  <li>Once the download finishes, the button changes to <strong>Import</strong>. Click it to begin importing.</li>
+  <li>The <strong>Import Unity Package</strong> dialog appears with all package contents pre-selected. Optionally uncheck any items you do not want to include, then click <strong>Import</strong>.</li>
+  <li>The Package Manager places the imported files into your project&rsquo;s <strong>Assets</strong> folder, where they are accessible from the Project window.</li>
+</ol>
+
+<h3>After Import</h3>
+
+<p>Allow Unity to compile the newly imported scripts. Once compilation finishes, the tool is ready to use &mdash; no additional setup is required. The following assets will be present in your project:</p>
+
+<pre><code>Assets/BBB/ObjectReferenceManager/
+&#9500;&#9472;&#9472; Editor/
+&#9474;   &#9492;&#9472;&#9472; ObjectReferenceManager.cs
+&#9500;&#9472;&#9472; ObjectReferences.cs
+&#9500;&#9472;&#9472; ObjectReferenceManagerData.asset   (created automatically if missing)
+&#9492;&#9472;&#9472; Prefabs/                           (created automatically on first use)</code></pre>
+
+<blockquote>
+  <p><strong>Note:</strong> The <code>ObjectReferenceManagerData.asset</code> file and the <code>Prefabs/</code> folder are created automatically the first time you open the manager window. You do not need to create them manually.</p>
+</blockquote>
+
+<hr>
+
+<!-- ============ GETTING STARTED ============ -->
+<h2 id="getting-started">Getting Started <a class="home-link" href="#top">home</a></h2>
+
+<ol>
+  <li>Open the manager window: go to <strong>Tools &gt; BBB &gt; Object Reference Manager</strong> in the Unity menu bar.</li>
+  <li>The window opens with an empty array. Enter a number in the size field next to the <strong>Resize Array</strong> button and click the button. A confirmation dialog will appear warning that resizing clears all current data &mdash; click <strong>Yes</strong> to proceed.</li>
+  <li>Drag any GameObject from the Project window into one of the Object Reference fields. The asset is stored immediately.</li>
+  <li>To store a scene object, drag it from the Hierarchy into a slot. The manager automatically creates a prefab variant in the Prefabs subfolder and stores a reference to the new prefab asset instead of the transient scene object.</li>
+  <li>To use a stored object, drag its 64&times;64 thumbnail preview from the manager window into the Scene view or Hierarchy. The referenced prefab will be instantiated.</li>
+  <li>Your references persist automatically &mdash; close and reopen Unity, and the manager window will show all the same objects.</li>
+</ol>
+
+<hr>
+
+<!-- ============ DETAILED USAGE GUIDE ============ -->
+<h2 id="detailed-usage">Detailed Usage Guide <a class="home-link" href="#top">home</a></h2>
+
+<h3>Opening the Window</h3>
+
+<p>Navigate to <strong>Tools &gt; BBB &gt; Object Reference Manager</strong> in the Unity menu bar. The window is a standard dockable Editor window &mdash; you can dock it alongside the Inspector, Scene view, or any other panel. The window title is &ldquo;Object Reference Manager.&rdquo;</p>
+
+<h3>Managing Array Size</h3>
+
+<p>At the top of the window, you will find a <strong>Resize Array</strong> button and an integer input field.</p>
+
+<ol>
+  <li>Enter the desired number of slots in the integer field.</li>
+  <li>Click <strong>Resize Array</strong>.</li>
+  <li>A warning dialog appears: &ldquo;Resizing will clear all current data. Continue?&rdquo; Click <strong>Yes</strong> to proceed or <strong>No</strong> to cancel.</li>
+</ol>
+
+<p><strong>Important:</strong> Resizing clears all existing references in the array. This is by design to prevent index confusion. If you need to preserve existing references, note them before resizing.</p>
+
+<p>The minimum array size is 0. Negative values are automatically clamped to 0.</p>
+
+<h3>Adding Object References</h3>
+
+<p>Each array slot displays an element index label, a selection checkbox, a 64&times;64 thumbnail preview area, and a standard Unity ObjectField.</p>
+
+<p><strong>Adding project assets:</strong> Drag any GameObject prefab from the Project window into the ObjectField for a slot. The reference is stored directly.</p>
+
+<p><strong>Adding scene objects:</strong> Drag a GameObject from the Hierarchy into the ObjectField. The manager automatically:</p>
+
+<ol>
+  <li>Detects that the object is not a persistent asset (using <code>EditorUtility.IsPersistent</code>).</li>
+  <li>Creates a Prefabs subfolder if one does not already exist.</li>
+  <li>Saves the scene object as a prefab asset using <code>PrefabUtility.SaveAsPrefabAsset</code>.</li>
+  <li>Names the prefab <code>&lt;ObjectName&gt;_Variant_&lt;SlotIndex&gt;.prefab</code> (with automatic unique path generation to avoid naming collisions).</li>
+  <li>Replaces the scene object reference with the new prefab asset reference.</li>
+</ol>
+
+<p>This conversion happens automatically every GUI update cycle, so any scene object reference is converted as soon as it appears in the array.</p>
+
+<h3>Dragging Objects Out</h3>
+
+<p>Each slot displays a 64&times;64 thumbnail of the referenced asset (generated by Unity&rsquo;s <code>AssetPreview.GetAssetPreview</code>). While the preview is loading, a &ldquo;...&rdquo; placeholder is shown. Empty slots display &ldquo;Empty.&rdquo;</p>
+
+<p>To drag an object out of the manager:</p>
+
+<ol>
+  <li>Left-click and hold on the thumbnail preview image.</li>
+  <li>Drag beyond a 4-pixel threshold to initiate the drag operation.</li>
+  <li>Drop the object into the Scene view, Hierarchy, or any other field that accepts GameObject references.</li>
+</ol>
+
+<p>The drag operation uses Unity&rsquo;s standard <code>DragAndDrop</code> API, so it is compatible with all standard Editor drop targets.</p>
+
+<h3>Selecting and Clearing References</h3>
+
+<p><strong>Checkbox selection:</strong> Each row has a checkbox to the right of the element label. Check one or more rows to select them.</p>
+
+<p><strong>Clear Selected:</strong> Click the <strong>Clear Selected</strong> button to set all checked slots to null. The checkboxes are also cleared.</p>
+
+<p><strong>Clear All:</strong> Click the <strong>Clear All</strong> button to set every slot in the array to null and clear all checkboxes.</p>
+
+<p><strong>Right-click context menu:</strong> Right-click on any thumbnail preview to open a context menu. If the slot contains an object, the menu shows a <strong>Clear Object</strong> option that sets that slot to null. If the slot is empty, the option is grayed out.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> Clearing a reference removes it from the manager only. The underlying prefab asset in the Prefabs folder is not deleted.</p>
+</blockquote>
+
+<h3>Data Persistence</h3>
+
+<p>All references are stored in <code>ObjectReferenceManagerData.asset</code>, a ScriptableObject asset located in the same directory as the ObjectReferenceManager package. This file:</p>
+
+<ul>
+  <li>Persists across Editor sessions, domain reloads, and play mode transitions.</li>
+  <li>Can be committed to version control alongside your project.</li>
+  <li>Is created automatically if missing when the window is first opened.</li>
+</ul>
+
+<p>The manager marks the data asset as dirty on every GUI update, ensuring that changes are included in the next asset save operation.</p>
+
+<h3>Auto-Generated Prefab Variants</h3>
+
+<p>Prefab variants created by the manager are saved to a <code>Prefabs/</code> subfolder within the package install directory. The naming convention is:</p>
+
+<pre><code>&lt;OriginalObjectName&gt;_Variant_&lt;SlotIndex&gt;.prefab</code></pre>
+
+<p>If a file with that name already exists, Unity&rsquo;s <code>AssetDatabase.GenerateUniqueAssetPath</code> appends a numeric suffix to ensure uniqueness (e.g., <code>Tree_Variant_0 1.prefab</code>).</p>
+
+<p>These prefab assets are standard Unity prefabs and can be used, moved, or deleted independently of the manager.</p>
+
+<hr>
+
+<!-- ============ API REFERENCE ============ -->
+<h2 id="api-reference">API Reference <a class="home-link" href="#top">home</a></h2>
+
+<h3>ObjectReferenceManager (class)</h3>
+
+<p><strong>Namespace:</strong> Global (no namespace)</p>
+<p><strong>Inherits:</strong> <code>UnityEditor.EditorWindow</code></p>
+<p><strong>Location:</strong> <code>Editor/ObjectReferenceManager.cs</code></p>
+<p><strong>Description:</strong> The main Editor window class. This is an editor-only class and is not available at runtime.</p>
+
+<h4>Menu Items</h4>
+
+<table>
+  <thead>
+    <tr><th>Menu Path</th><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tools &gt; BBB &gt; Object Reference Manager</td>
+      <td><code>ShowWindow()</code></td>
+      <td>Opens or focuses the Object Reference Manager window.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Key Private Methods</h4>
+
+<p>These methods are not part of a public API but are documented here for reference and extensibility:</p>
+
+<table>
+  <thead>
+    <tr><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>OnEnable()</code></td><td>Resolves asset paths from the script&rsquo;s own location using <code>MonoScript.FromScriptableObject</code>, then loads or creates the data asset.</td></tr>
+    <tr><td><code>OnGUI()</code></td><td>Draws the window GUI, applies serialized property changes, runs the scene-to-prefab conversion pass, and marks data dirty.</td></tr>
+    <tr><td><code>DrawCustomArrayField()</code></td><td>Renders the resize controls, Clear Selected / Clear All buttons, and the per-element rows with checkboxes, thumbnails, and ObjectFields.</td></tr>
+    <tr><td><code>DrawDragIcon(int index)</code></td><td>Renders the 64&times;64 thumbnail for a slot and handles left-click drag-out initiation, right-click context menus, and mouse state tracking.</td></tr>
+    <tr><td><code>ClearObjectAtIndex(int index)</code></td><td>Sets <code>data.gameObjects[index]</code> to null and refreshes the serialized state.</td></tr>
+    <tr><td><code>ClearSelected()</code></td><td>Nullifies all checked slots and clears their checkboxes.</td></tr>
+    <tr><td><code>ClearAll()</code></td><td>Nullifies every slot and clears all checkboxes.</td></tr>
+    <tr><td><code>ResizeArrayWithWarning()</code></td><td>Shows a confirmation dialog, then resizes and clears the array if the user confirms. Clamps negative sizes to 0.</td></tr>
+    <tr><td><code>ConvertSceneObjectsToPrefabs()</code></td><td>Iterates the array and converts any non-persistent (scene) GameObjects into prefab assets via <code>CreatePrefabVariant</code>.</td></tr>
+    <tr><td><code>HandleDragAndDrop(Rect, int)</code></td><td>Processes <code>DragUpdated</code> and <code>DragPerform</code> events for accepting external drag-and-drop into individual slots.</td></tr>
+    <tr><td><code>CreatePrefabVariant(GameObject, int)</code></td><td>Creates the Prefabs directory if needed, generates a unique asset path, saves the scene object as a prefab via <code>PrefabUtility.SaveAsPrefabAsset</code>, and returns the new prefab asset.</td></tr>
+  </tbody>
+</table>
+
+<h3>ObjectReferences (class)</h3>
+
+<p><strong>Namespace:</strong> Global (no namespace)</p>
+<p><strong>Inherits:</strong> <code>UnityEngine.ScriptableObject</code></p>
+<p><strong>Location:</strong> <code>ObjectReferences.cs</code></p>
+<p><strong>Description:</strong> A minimal ScriptableObject that holds the persistent array of GameObject references.</p>
+
+<h4>Public Fields</h4>
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>gameObjects</code></td>
+      <td><code>GameObject[]</code></td>
+      <td><code>new GameObject[0]</code></td>
+      <td>The array of stored GameObject references. Each element can be null (empty slot) or a reference to a prefab or other persistent GameObject asset.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>ObjectReferenceManagerData.asset</h3>
+
+<p><strong>Type:</strong> Serialized <code>ObjectReferences</code> ScriptableObject</p>
+<p><strong>Location:</strong> Same directory as the package root (auto-created if missing)</p>
+<p><strong>Description:</strong> The persistent data store. This YAML-serialized asset contains the <code>gameObjects</code> array with Unity object references (fileID + GUID pairs). It can be version-controlled normally.</p>
+
+<hr>
+
+<!-- ============ TIPS & BEST PRACTICES ============ -->
+<h2 id="tips">Tips and Best Practices <a class="home-link" href="#top">home</a></h2>
+
+<p><strong>Organize by purpose.</strong> Use separate array regions for different categories &mdash; for example, slots 0&ndash;9 for vegetation, 10&ndash;19 for props, 20&ndash;29 for UI elements. The element index labels make it easy to maintain a mental map.</p>
+
+<p><strong>Pre-size your array.</strong> Decide on a slot count before you start populating references. Resizing clears all data, so it&rsquo;s better to allocate extra empty slots upfront than to resize later.</p>
+
+<p><strong>Use the thumbnails for dragging.</strong> The thumbnail preview area is the designated drag source. Click and drag from the thumbnail image to place objects in your scene. The ObjectField itself is for assigning references, not for dragging out.</p>
+
+<p><strong>Let the auto-conversion work for you.</strong> You don&rsquo;t need to manually create prefabs before adding scene objects. Just drag objects from the Hierarchy and the manager handles prefab creation automatically. The generated prefabs appear in the Prefabs subfolder.</p>
+
+<p><strong>Version control the data asset.</strong> The <code>ObjectReferenceManagerData.asset</code> file and the <code>Prefabs/</code> folder should be committed to your repository so that all team members share the same reference palette.</p>
+
+<p><strong>Relocate freely.</strong> Because the tool resolves its own paths at runtime, you can move the entire package folder to a different location in your project without breaking anything. Just let Unity reimport after moving.</p>
+
+<p><strong>Check debug logs for issues.</strong> </p>
+
+<hr>
+
+<!-- ============ FAQ / TROUBLESHOOTING ============ -->
+<h2 id="faq">FAQ / Troubleshooting <a class="home-link" href="#top">home</a></h2>
+
+<div class="faq-item">
+  <p class="q">Q: I resized the array and lost all my references. Can I undo?</p>
+  <p class="a">A: The resize operation shows a warning dialog before proceeding. If you confirmed the resize, the previous data is overwritten. Unity&rsquo;s Undo system does not cover this operation. It is recommended to note your current references before resizing or to keep your data asset under version control so you can revert.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The thumbnail shows &ldquo;...&rdquo; instead of a preview image.</p>
+  <p class="a">A: Unity generates asset previews asynchronously. The &ldquo;...&rdquo; placeholder appears while the preview is loading. The preview will appear after a moment, or after the window is repainted. If it persists, try clicking away and back, or reimporting the asset.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: A slot shows &ldquo;Empty&rdquo; even though I dragged something in.</p>
+  <p class="a">A: If you dragged a scene object and the prefab creation failed (for example, due to a write permission issue in the Prefabs folder), the slot may revert to null.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Where are the auto-generated prefabs saved?</p>
+  <p class="a">A: In a <code>Prefabs/</code> subfolder within the Object Reference Manager&rsquo;s install directory. For example, if the package is at <code>Assets/BBB/ObjectReferenceManager/</code>, the prefabs are at <code>Assets/BBB/ObjectReferenceManager/Prefabs/</code>.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I delete the auto-generated prefabs?</p>
+  <p class="a">A: Yes. They are standard Unity prefab assets. However, if the manager still references a deleted prefab, that slot will show a &ldquo;Missing&rdquo; reference. Clear the slot using the right-click context menu or the Clear buttons.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: I moved the package folder and the data is gone.</p>
+  <p class="a">A: The data asset (<code>ObjectReferenceManagerData.asset</code>) must remain in the same directory as the package root. If you moved the folder, the data asset moved with it and the tool will find it at the new location on next open. If you moved only the Editor script without the data asset, the tool will create a new empty data asset. Move all files together to preserve data.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I use this at runtime?</p>
+  <p class="a">A: No. Object Reference Manager is an Editor-only tool. The <code>ObjectReferenceManager</code> class is in an Editor folder and depends on <code>UnityEditor</code> APIs that are not available in builds. The <code>ObjectReferences</code> ScriptableObject can technically be accessed at runtime, but the manager itself cannot.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Does this work with Unity&rsquo;s Addressables or asset bundles?</p>
+  <p class="a">A: The manager stores direct object references (GUID-based). It does not integrate with Addressables or AssetBundle systems. You can still use the manager to organize your references, but the stored references are standard Unity asset references, not addressable keys.</p>
+</div>
+
+<hr>
+
+<!-- ============ VERSION HISTORY ============ -->
+<h2 id="version-history">Version History <a class="home-link" href="#top">home</a></h2>
+
+<h3><span class="changelog-version">v1.0.0</span> &mdash; Initial Release</h3>
+
+<ul>
+  <li>Editor window accessible via Tools &gt; BBB &gt; Object Reference Manager</li>
+  <li>Persistent GameObject reference array stored in ScriptableObject</li>
+  <li>Automatic prefab variant creation from scene objects</li>
+  <li>64&times;64 thumbnail previews with drag-out support</li>
+  <li>Row selection checkboxes with Clear Selected and Clear All</li>
+  <li>Resizable array with confirmation dialog</li>
+  <li>Right-click context menu to clear individual slots</li>
+  <li>Self-resolving asset paths (symlink-safe, no hardcoded paths)</li>
+</ul>
+
+<hr>
+
+<!-- ============ SUPPORT & CONTACT ============ -->
+<h2 id="support">Support and Contact <a class="home-link" href="#top">home</a></h2>
+
+<p>For questions, bug reports, or feature requests, please contact us through the Dicord Channel linked below.</p>
+
+<p><strong>Publisher:</strong> BigBuffaloBill</p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/HadwVTP3r5">BigBuffaloBill &amp; Friends Gaming + (bbb-unity-support-forum-public)</a></p>
+<!--<p><strong>Email:</strong> [support@placeholder.com]</p>
+<p><strong>Asset Store:</strong> [Unity Asset Store page link]</p>-->
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  Object Reference Manager is a product of BigBuffaloBill. Unity is a trademark of Unity Technologies. @2026.
+</div>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>

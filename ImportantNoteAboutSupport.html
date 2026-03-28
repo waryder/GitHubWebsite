@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes on Tool Intent, Status and Author Support</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --unity-blue: #3d8bff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+  }
+
+  /* ---- Hero / Title ---- */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.0rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ---- Body text ---- */
+  p {
+    margin-bottom: 1rem;
+  }
+
+  strong {
+    color: var(--text-bright);
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- Blockquotes ---- */
+  blockquote {
+    border-left: 4px solid var(--blockquote-border);
+    background: rgba(233, 69, 96, 0.08);
+    padding: 0.9rem 1.2rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+  }
+
+  blockquote strong {
+    color: var(--accent);
+  }
+
+  /* ---- Author note — spaced paragraphs inside blockquote ---- */
+  blockquote.author-note {
+    margin-top: 3rem;
+  }
+
+  blockquote.author-note p {
+    margin-bottom: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  blockquote.author-note p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- Horizontal rules ---- */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ---- Back link bar ---- */
+  .back-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  .back-bar a {
+    color: var(--link);
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 1.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.7rem; }
+    h2 { font-size: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ============ HERO ============ -->
+<div id="top" class="hero">
+  <h1>Author's Note on Expected Functionality</h1>
+</div>
+
+<!-- ============ BACK LINK ============ -->
+<div class="back-bar">
+  &larr; <a href="ObjectReferenceManager_Documentation.html">Back to Object Reference Manager Documentation</a>
+</div>
+<H2></H2>
+
+<!-- ============ AUTHOR'S NOTE ============ -->
+
+
+<blockquote class="author-note" style="font-size: 0.875rem;">
+  
+  <p><strong>Author's Note &mdash; What These Tools Are, and What They Aren&rsquo;t</strong></p>
+
+  <p>There&rsquo;s a moment most game developers know well: you&rsquo;ve built something that genuinely solves a real problem &mdash; something you wish had existed six months ago &mdash; and you think, <em>someone else is going to hit this exact wall.</em> That&rsquo;s where these tools come from. Not from a product roadmap or a QA cycle, but from the actual workbench of someone making games.</p>
+
+  <p><strong>What you&rsquo;re getting</strong> is a working, thoughtful tool built by a developer for developers &mdash; tested in real projects, documented in good faith, and backed by genuine support. It handles its stated use cases reliably, and often well beyond that. What you are <em>not</em> getting is a hardened commercial product with a team behind it. That&rsquo;s also true of the majority of what&rsquo;s on the Asset Store &mdash; but most authors won&rsquo;t say it out loud. I will.</p>
+
+  <p>Each tool is documented for its intended use cases, and within those it performs well. Edge cases or applications that fall well outside the described scope may not behave as expected &mdash; that&rsquo;s the honest reality of any independently developed tool, and each tool&rsquo;s own documentation will be upfront about where the edges are. What I <em>can</em> tell you is that when something doesn&rsquo;t work the way you need it to, I am reachable on <a href="https://discord.gg/HadwVTP3r5">Discord</a> (https://discord.gg/HadwVTP3r5) and will do my genuine best to help.</p>
+
+  <p>The price I charge isn&rsquo;t about profit. It&rsquo;s the signal that says <em>this is worth my continued effort.</em> Every purchase is a vote that says: keep building. I&rsquo;m not asking anyone to keep something that truly doesn&rsquo;t serve them &mdash; but before you decide, I&rsquo;d ask you to consider not just <em>&ldquo;is this perfect?&rdquo;</em> but <em>&ldquo;is this useful? Do I want developers like this to keep contributing to the ecosystem I work in?&rdquo;</em></p>
+
+  <p>If your expectation is Unity-corporate-grade polish and team QA, this isn&rsquo;t the right fit &mdash; and I&rsquo;d rather you know that now than be disappointed later. But if you value a real developer sharing real tools and standing behind them personally, I think you&rsquo;ll find genuine value here.</p>
+
+  <p>&mdash;BBB</p>
+</blockquote>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  BigBuffaloBill @2026. Unity is a trademark of Unity Technologies.
+</div>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>
