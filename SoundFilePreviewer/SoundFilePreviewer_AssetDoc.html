@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound File Previewer — Documentation</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --unity-blue: #3d8bff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+  }
+
+  /* ---- Hero / Title ---- */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ---- Table of Contents ---- */
+  .toc {
+    margin-bottom: 2.5rem;
+  }
+
+  .toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc li {
+    margin-bottom: 0.3rem;
+  }
+
+  .toc li::before {
+    content: '› ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .toc a {
+    color: var(--link);
+    font-size: 0.95rem;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-link {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .home-link:hover {
+    color: var(--link);
+    text-decoration: underline;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--link);
+    margin: 2rem 0 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  /* ---- Body text ---- */
+  p {
+    margin-bottom: 1rem;
+  }
+
+  strong {
+    color: var(--text-bright);
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- Lists ---- */
+  ul, ol {
+    margin: 0.75rem 0 1.25rem 1.6rem;
+  }
+
+  li {
+    margin-bottom: 0.45rem;
+  }
+
+  li strong {
+    color: var(--text-bright);
+  }
+
+  /* ---- Inline code ---- */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: #7fdbca;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* ---- Code blocks ---- */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #c5c8c6;
+  }
+
+  /* ---- Blockquotes ---- */
+  blockquote {
+    border-left: 4px solid var(--blockquote-border);
+    background: rgba(233, 69, 96, 0.08);
+    padding: 0.9rem 1.2rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+  }
+
+  blockquote strong {
+    color: var(--accent);
+  }
+
+  /* ---- Tables ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  thead th {
+    background: var(--table-header);
+    color: var(--text-bright);
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--table-row-alt);
+  }
+
+  tbody td code {
+    font-size: 0.84em;
+  }
+
+  /* ---- FAQ ---- */
+  .faq-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .faq-item .q {
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+  }
+
+  .faq-item .a {
+    color: var(--text-muted);
+  }
+
+  /* ---- Version history ---- */
+  .changelog-version {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ---- Horizontal rules ---- */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 1.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.35rem; }
+    table { font-size: 0.82rem; }
+    thead th, tbody td { padding: 0.45rem 0.55rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ============ HERO ============ -->
+<div id="top" class="hero">
+  <h1>Sound File Previewer</h1>
+  <p class="tagline">Keyboard-driven audio browsing and auditioning right inside your Unity Editor<br>by BigBuffaloBill &mdash; v1.0</p>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#key-features">Key Features</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#detailed-usage">Detailed Usage Guide</a></li>
+    <li><a href="#api-reference">API Reference</a></li>
+    <li><a href="#tips">Tips and Best Practices</a></li>
+    <li><a href="#faq">FAQ / Troubleshooting</a></li>
+    <li><a href="#version-history">Version History</a></li>
+    <li><a href="#support">Support and Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<h2 id="overview">Overview <a class="home-link" href="#top">home</a></h2>
+
+<blockquote style="font-size: 0.875rem;">
+  <p><strong>Author's Note on Expected Functionality:</strong> The author has written an important note about the intended scope, known limitations, and support expectations for this toolset. Please see <a href="ImportantNoteAboutSupport.html"><strong>Notes on Tool Intent, Status and Author Support</strong></a> before proceeding.</p>
+</blockquote>
+
+<p>Sound File Previewer is a Unity Editor utility window that lets you instantly browse and audition every audio clip inside any folder in your project &mdash; just drag the folder in and use your arrow keys to step through the list, hearing each clip play the moment you land on it. No clicking Play over and over, no hunting through the Project panel &mdash; just fast, keyboard-driven audio browsing right inside your Unity layout.</p>
+
+<hr>
+
+<!-- ============ KEY FEATURES ============ -->
+<h2 id="key-features">Key Features <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Audition your whole library in seconds</strong> &mdash; arrow-key through dozens of clips faster than you could find and click them one at a time. Ideal for evaluating a new sound effects pack the moment you import it.</li>
+  <li><strong>Perfect for rapid iteration</strong> &mdash; keeping this window open beside your scene while swapping footsteps, UI clicks, or explosion variants lets you pick sounds without ever breaking your flow.</li>
+  <li><strong>Every Unity audio format supported</strong> &mdash; WAV, OGG, MP3, AIFF, AIF, FLAC, XM, MOD, IT, and S3M. If Unity can import it, Sound File Previewer will find and play it.</li>
+  <li><strong>Non-modal and fully dockable</strong> &mdash; behaves exactly like any other Unity panel. Dock it, float it, drag it to a second monitor.</li>
+  <li><strong>Real-time regex filtering</strong> &mdash; type any regular expression to narrow the list instantly. The file count updates live. Invalid regex is highlighted so you always know why the list changed.</li>
+  <li><strong>Copy any file path in one click</strong> &mdash; right-click any row and choose &ldquo;Copy Full File Path&rdquo; to copy the complete OS path to your clipboard.</li>
+  <li><strong>Drag any clip directly where you need it</strong> &mdash; drag straight from the list onto an AudioClip field in the Inspector, a GameObject in the Hierarchy, or any folder in the Project window. When dropping into the Project window, the file is <strong>copied</strong> to the destination &mdash; your original is never moved or removed.</li>
+  <li><strong>Zero scene setup, zero runtime impact</strong> &mdash; a pure Editor tool. It adds nothing to your scenes, prefabs, or builds.</li>
+</ul>
+
+<hr>
+
+<!-- ============ REQUIREMENTS ============ -->
+<h2 id="requirements">Requirements <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Unity version:</strong> 2021.3 LTS or later (uses <code>AudioUtil.PlayPreviewClip</code>, an internal Editor API consistent across Unity 2021 through Unity 6; tested and recommended on 2021.3+)</li>
+  <li><strong>Render pipeline:</strong> Any (URP, HDRP, Built-in) &mdash; this is an Editor-only tool with no runtime dependencies</li>
+  <li><strong>Dependencies:</strong> None. Uses only built-in Unity Editor APIs (<code>UnityEngine</code>, <code>UnityEditor</code>, <code>System.IO</code>, <code>System.Text.RegularExpressions</code>)</li>
+  <li><strong>Platform:</strong> Works on all platforms supported by the Unity Editor (Windows, macOS, Linux)</li>
+</ul>
+
+<hr>
+
+<!-- ============ INSTALLATION ============ -->
+<h2 id="installation">Installation <a class="home-link" href="#top">home</a></h2>
+
+<h3>Typical Package Manager Installation</h3>
+
+<ol>
+  <li>After purchasing Sound File Previewer on the <strong>Unity Asset Store</strong>, click the <strong>Open in Unity</strong> button on the store page. This automatically opens the Package Manager window in your Unity Editor and navigates to <strong>My Assets</strong> with the package selected.</li>
+  <li>In the package details panel, click <strong>Download</strong> to download the package to your machine. A progress bar will appear while the download completes.</li>
+  <li>Once the download finishes, the button changes to <strong>Import</strong>. Click it to begin importing.</li>
+  <li>The <strong>Import Unity Package</strong> dialog appears with all package contents pre-selected. Optionally uncheck any items you do not want to include, then click <strong>Import</strong>.</li>
+  <li>The Package Manager places the imported files into your project&rsquo;s <strong>Assets</strong> folder, where they are accessible from the Project window.</li>
+</ol>
+
+<h3>After Import</h3>
+
+<p>Allow Unity to compile the newly imported scripts. Once compilation finishes, the tool is ready to use &mdash; no additional setup is required. The following assets will be present in your project:</p>
+
+<pre><code>Assets/BBB/SoundFilePreviewer/
+&#9500;&#9472;&#9472; Editor/
+&#9474;   &#9492;&#9472;&#9472; SoundFilePreviewer.cs
+&#9500;&#9472;&#9472; SoundFilePreviewer_AssetDoc.html
+&#9492;&#9472;&#9472; ImportantNoteAboutSupport.html</code></pre>
+
+<blockquote>
+  <p><strong>Note:</strong> This is a purely Editor-side tool. No data assets or runtime files are created at any point.</p>
+</blockquote>
+
+<hr>
+
+<!-- ============ GETTING STARTED ============ -->
+<h2 id="getting-started">Getting Started <a class="home-link" href="#top">home</a></h2>
+
+<ol>
+  <li>Open the window: go to <strong>Tools &gt; BBB &gt; Sound File Previewer</strong> in the Unity menu bar.</li>
+  <li>Drag any folder from the Project window into the <strong>Folder</strong> field at the top of the window.</li>
+  <li>The list populates immediately with all audio clips found in that folder and its subfolders.</li>
+  <li>Click any row to play that clip, or use the <strong>Up / Down</strong> arrow keys to step through the list &mdash; each clip plays automatically as you land on it.</li>
+  <li>Optionally type in the <strong>Filter</strong> field to narrow the list by filename using plain text or a regular expression.</li>
+  <li>When you find the clip you want, drag it from the list directly onto an AudioClip field in the Inspector or any other valid drop target.</li>
+</ol>
+
+<hr>
+
+<!-- ============ DETAILED USAGE GUIDE ============ -->
+<h2 id="detailed-usage">Detailed Usage Guide <a class="home-link" href="#top">home</a></h2>
+
+<h3>Opening the Window</h3>
+
+<p>Navigate to <strong>Tools &gt; BBB &gt; Sound File Previewer</strong> in the Unity menu bar. The window is a standard dockable Editor window &mdash; you can dock it alongside the Inspector, Scene view, or any other panel. The window title is &ldquo;Sound File Previewer.&rdquo;</p>
+
+<p>A small <strong>Help</strong> button sits in the top-right corner of the window. Clicking it opens this documentation file in your operating system&rsquo;s default web browser.</p>
+
+<h3>Dragging In a Folder</h3>
+
+<p>In the <strong>Folder</strong> field at the top of the window, drag any folder from your Unity Project panel and drop it into the field. Sound File Previewer will immediately scan that folder and all of its subfolders for audio clips and display them as a sorted list.</p>
+
+<blockquote>
+  <p><strong>Tip:</strong> The folder must be inside your Unity project&rsquo;s Assets folder. Dragging a file instead of a folder will show a prompt asking you to try again with a folder.</p>
+</blockquote>
+
+<h3>Filtering the List</h3>
+
+<p>Once a folder is loaded, a <strong>Filter (regex)</strong> field appears below the Folder field. Type any text or regular expression to narrow the list in real time &mdash; only filenames that match will be shown.</p>
+
+<p>Examples:</p>
+<pre><code>explosion        shows all files with "explosion" in the name (case-insensitive)
+^amb             shows files whose names start with "amb"
+\.(wav|ogg)$     shows only WAV and OGG files</code></pre>
+
+<p>The file count in the list header updates to show matched vs. total (e.g. <code>Audio Files (12 of 47)</code>).</p>
+
+<p>If your regex is invalid the field turns red and a warning appears below it. The previous valid filter stays active until you correct or clear the input. Leave the field empty to show all files.</p>
+
+<h3>Browsing and Previewing</h3>
+
+<p>Each row in the list shows the filename of the audio clip (e.g. <code>Explosion_01.wav</code>).</p>
+
+<ul>
+  <li>Click any row to select it &mdash; it plays immediately.</li>
+  <li>Use the <strong>Up</strong> and <strong>Down</strong> arrow keys to step through the list one clip at a time. Each new clip plays automatically.</li>
+  <li>Only one clip plays at a time. Moving to a new clip stops the previous one instantly.</li>
+  <li>The list scrolls vertically to keep the selected clip in view as you navigate.</li>
+  <li>Right-click any row to open a context menu with <strong>Copy Full File Path</strong>, which copies the complete OS path for that clip to your clipboard.</li>
+</ul>
+
+<p>To scan a different folder, simply drag a new folder into the Folder field at any time.</p>
+
+<h3>Dragging a Clip to Use It</h3>
+
+<p>Once you&rsquo;ve found the clip you want, drag it directly from the list into your scene:</p>
+
+<ul>
+  <li>Drag onto an <strong>AudioClip</strong> field in the Inspector (e.g. an AudioSource component) to assign it immediately.</li>
+  <li>Drag onto a GameObject in the Hierarchy to trigger Unity&rsquo;s normal asset-drop behaviour for that object type.</li>
+  <li>Drag into any folder in the <strong>Project window</strong> to place a <strong>copy</strong> of the file there. Your original file stays exactly where it is &mdash; nothing is moved or removed.</li>
+</ul>
+
+<p>Just click and hold on any row, then drag &mdash; the cursor changes to Unity&rsquo;s standard drag icon as soon as the drag is recognized.</p>
+
+<blockquote>
+  <p><strong>Tip:</strong> You do not need to select a clip first. You can click, hold, and drag in one motion. The clip will also play as normal on the initial click.</p>
+</blockquote>
+
+<hr>
+
+<!-- ============ API REFERENCE ============ -->
+<h2 id="api-reference">API Reference <a class="home-link" href="#top">home</a></h2>
+
+<h3>SoundFilePreviewer (class)</h3>
+
+<p><strong>Namespace:</strong> Global (no namespace)</p>
+<p><strong>Inherits:</strong> <code>UnityEditor.EditorWindow</code></p>
+<p><strong>Location:</strong> <code>Editor/SoundFilePreviewer.cs</code></p>
+<p><strong>Description:</strong> The main Editor window class. This is an editor-only class and is not available at runtime.</p>
+
+<h4>Menu Items</h4>
+
+<table>
+  <thead>
+    <tr><th>Menu Path</th><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tools &gt; BBB &gt; Sound File Previewer</td>
+      <td><code>ShowWindow()</code></td>
+      <td>Opens or focuses the Sound File Previewer window.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Key Private Methods</h4>
+
+<p>These methods are not part of a public API but are documented here for reference and extensibility:</p>
+
+<table>
+  <thead>
+    <tr><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>OnGUI()</code></td><td>Draws the window UI: folder field, filter field, file list, and handles keyboard navigation events.</td></tr>
+    <tr><td><code>ScanFolder(string path)</code></td><td>Recursively scans the given folder for supported audio file extensions and populates the internal file list.</td></tr>
+    <tr><td><code>ApplyFilter()</code></td><td>Runs the current regex pattern against the full file list and rebuilds the filtered display list. Highlights the filter field red on invalid regex.</td></tr>
+    <tr><td><code>PlayClip(string path)</code></td><td>Loads the audio asset at the given path and plays it via Unity&rsquo;s internal <code>AudioUtil.PlayPreviewClip</code> API &mdash; the same system the Inspector uses.</td></tr>
+    <tr><td><code>HandleDragOut(Rect row, string path)</code></td><td>Initiates a Unity <code>DragAndDrop</code> operation for the clip at the given path when the user clicks and drags beyond the threshold.</td></tr>
+  </tbody>
+</table>
+
+<h4>Internal API Note</h4>
+
+<p>Sound File Previewer uses Unity&rsquo;s internal editor audio preview system via <code>AudioUtil.PlayPreviewClip</code> &mdash; the same one the Inspector uses when you click Play on an audio clip. No extra audio sources or components are required. This API has been consistent across Unity 2021 through Unity 6, but since it is an internal API, a future Unity upgrade could rename it without warning. If playback ever silently stops working after a Unity upgrade, that would be the first place to check.</p>
+
+<hr>
+
+<!-- ============ TIPS & BEST PRACTICES ============ -->
+<h2 id="tips">Tips and Best Practices <a class="home-link" href="#top">home</a></h2>
+
+<p><strong>Evaluate new sound packs on import.</strong> The moment you import a new audio package, drag its root folder into Sound File Previewer and arrow-key through everything. It&rsquo;s the fastest way to know what you actually got.</p>
+
+<p><strong>Start with plain text before reaching for regex.</strong> Simple keyword searches like <code>explosion</code> or <code>footstep</code> work without any regex knowledge. Only reach for regex when you need format filtering (<code>\.(wav|ogg)$</code>) or anchored matches (<code>^amb</code>).</p>
+
+<p><strong>Drag without selecting first.</strong> You can click, hold, and drag in one motion &mdash; you don&rsquo;t need to select a row before dragging it. The clip will also play on the click, so you&rsquo;ll hear it as you pick it up.</p>
+
+<p><strong>Keep it docked beside your Inspector.</strong> The window is most useful when it stays visible while you work. Dock it in a tab group next to your Inspector or Scene view so it&rsquo;s always one click away.</p>
+
+<p><strong>Use the file count as a gut-check.</strong> The <code>(matched of total)</code> count in the list header tells you at a glance whether your filter is working as expected or accidentally excluding files you intended to see.</p>
+
+<p><strong>Copy paths for scripting references.</strong> The right-click &ldquo;Copy Full File Path&rdquo; option is handy when you need to reference a specific audio file path in code or configuration &mdash; no need to navigate to it in the Project panel.</p>
+
+<hr>
+
+<!-- ============ FAQ / TROUBLESHOOTING ============ -->
+<h2 id="faq">FAQ / Troubleshooting <a class="home-link" href="#top">home</a></h2>
+
+<div class="faq-item">
+  <p class="q">Q: The list is empty after I drag in a folder.</p>
+  <p class="a">A: Make sure you dragged a <em>folder</em>, not an individual file. If you dragged a file, the window will prompt you to try again with a folder. Also confirm the folder contains audio files in a supported format (WAV, OGG, MP3, AIFF, AIF, FLAC, XM, MOD, IT, S3M) and that they have been imported into Unity.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The filter field turned red and the list didn&rsquo;t update.</p>
+  <p class="a">A: A red filter field means your input is not valid regex. The previous valid filter (or no filter, if none was applied) stays active until you correct or clear the input. Check for unmatched parentheses, brackets, or other special characters that need escaping.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Audio stopped playing after a Unity upgrade.</p>
+  <p class="a">A: Sound File Previewer uses Unity&rsquo;s internal <code>AudioUtil.PlayPreviewClip</code> API. This API is not part of Unity&rsquo;s public surface and could be renamed in a future release without notice. If playback silently stops working after an upgrade, check whether that API still exists and report it via the Discord support channel.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Clicking a row doesn&rsquo;t play any sound.</p>
+  <p class="a">A: Confirm your system audio is not muted and that the Unity Editor audio is enabled (the speaker icon in the Game view toolbar). Also check that the audio clip imported successfully &mdash; a failed import will show a warning icon on the asset in the Project window.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I use this at runtime in a build?</p>
+  <p class="a">A: No. Sound File Previewer is an Editor-only tool. The window class lives in an Editor folder and depends on <code>UnityEditor</code> APIs that are stripped from builds. It has zero runtime impact.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: What audio formats are supported?</p>
+  <p class="a">A: Any format Unity can import: WAV, OGG, MP3, AIFF, AIF, FLAC, XM, MOD, IT, and S3M.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Does the drag-out work with Addressables or asset bundles?</p>
+  <p class="a">A: The drag operation uses Unity&rsquo;s standard <code>DragAndDrop</code> API with direct asset references. It is compatible with standard Inspector fields and the Hierarchy. It does not integrate with Addressables keys or AssetBundle systems.</p>
+</div>
+
+<hr>
+
+<!-- ============ VERSION HISTORY ============ -->
+<h2 id="version-history">Version History <a class="home-link" href="#top">home</a></h2>
+
+<h3><span class="changelog-version">v1.0.0</span> &mdash; Initial Release</h3>
+
+<ul>
+  <li>Editor window accessible via Tools &gt; BBB &gt; Sound File Previewer</li>
+  <li>Recursive folder scanning for all Unity-supported audio formats</li>
+  <li>Keyboard-driven browsing with auto-play on arrow-key navigation</li>
+  <li>Real-time regex filtering with live file count and invalid-regex highlighting</li>
+  <li>Right-click context menu with Copy Full File Path</li>
+  <li>Drag-out support to Inspector AudioClip fields, Hierarchy, and Project window</li>
+  <li>Help button linking to this documentation</li>
+  <li>Zero runtime impact &mdash; Editor-only tool</li>
+</ul>
+
+<hr>
+
+<!-- ============ SUPPORT & CONTACT ============ -->
+<h2 id="support">Support and Contact <a class="home-link" href="#top">home</a></h2>
+
+<p>For questions, bug reports, or feature requests, please contact us through the Discord channel linked below.</p>
+
+<p><strong>Publisher:</strong> BigBuffaloBill</p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/HadwVTP3r5">BigBuffaloBill &amp; Friends Gaming + (bbb-unity-support-forum-public)</a></p>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  Sound File Previewer is a product of BigBuffaloBill. Unity is a trademark of Unity Technologies. &copy;2026.
+</div>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>
