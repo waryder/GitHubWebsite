@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terrain Height Visualizer &amp; Prefab Placer — Documentation</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --unity-blue: #3d8bff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+  }
+
+  /* ---- Hero / Title ---- */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ---- Table of Contents ---- */
+  .toc {
+    margin-bottom: 2.5rem;
+  }
+
+  .toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc li {
+    margin-bottom: 0.3rem;
+  }
+
+  .toc li::before {
+    content: '› ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .toc a {
+    color: var(--link);
+    font-size: 0.95rem;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-link {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .home-link:hover {
+    color: var(--link);
+    text-decoration: underline;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--link);
+    margin: 2rem 0 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  /* ---- Body text ---- */
+  p {
+    margin-bottom: 1rem;
+  }
+
+  strong {
+    color: var(--text-bright);
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- Lists ---- */
+  ul, ol {
+    margin: 0.75rem 0 1.25rem 1.6rem;
+  }
+
+  li {
+    margin-bottom: 0.45rem;
+  }
+
+  li strong {
+    color: var(--text-bright);
+  }
+
+  /* ---- Inline code ---- */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: #7fdbca;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* ---- Code blocks ---- */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #c5c8c6;
+  }
+
+  /* ---- Blockquotes ---- */
+  blockquote {
+    border-left: 4px solid var(--blockquote-border);
+    background: rgba(233, 69, 96, 0.08);
+    padding: 0.9rem 1.2rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+  }
+
+  blockquote strong {
+    color: var(--accent);
+  }
+
+  /* ---- Tables ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  thead th {
+    background: var(--table-header);
+    color: var(--text-bright);
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--table-row-alt);
+  }
+
+  tbody td code {
+    font-size: 0.84em;
+  }
+
+  /* ---- Tool cards ---- */
+  .tool-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.25rem 0 1.75rem;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem 1.4rem 1.2rem;
+  }
+
+  .tool-card h4 {
+    font-size: 1.1rem;
+    color: var(--text-bright);
+    margin: 0 0 0.4rem;
+  }
+
+  .tool-card .tool-tagline {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 0.9rem;
+  }
+
+  .tool-card ul {
+    margin: 0 0 0 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .tool-card li {
+    margin-bottom: 0.3rem;
+  }
+
+  .tool-card .tool-dir {
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .tool-card .tool-dir code {
+    font-size: 0.82em;
+  }
+
+  /* ---- Workflow steps ---- */
+  .workflow-step {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .workflow-step .step-num {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--text-bright);
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.15rem;
+  }
+
+  .workflow-step .step-body p {
+    margin-bottom: 0.4rem;
+  }
+
+  .workflow-step .step-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- FAQ ---- */
+  .faq-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .faq-item .q {
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+  }
+
+  .faq-item .a {
+    color: var(--text-muted);
+  }
+
+  /* ---- Version history ---- */
+  .changelog-version {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ---- Horizontal rules ---- */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 1.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.35rem; }
+    table { font-size: 0.82rem; }
+    thead th, tbody td { padding: 0.45rem 0.55rem; }
+    .tool-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ============ HERO ============ -->
+<div id="top" class="hero">
+  <h1>Terrain Height Visualizer &amp; Prefab Placer</h1>
+  <p class="tagline">A paired set of Unity Editor tools for reading and populating terrain elevation &mdash;<br>analyze your landscape, then bring it to life. By BigBuffaloBill.</p>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#whats-included">What&rsquo;s Included</a></li>
+    <li><a href="#shared-design">Shared Design: The Height Filter &amp; Grid System</a></li>
+    <li><a href="#workflow">Recommended Workflow</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#version-history">Version History</a></li>
+    <li><a href="#support">Support and Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<h2 id="overview">Overview <a class="home-link" href="#top">home</a></h2>
+
+<blockquote style="font-size: 0.875rem;">
+  <p><strong>Author&rsquo;s Note on Expected Functionality:</strong> Please review the <strong>Notes on Tool Intent, Status and Author Support</strong> document included in each tool&rsquo;s subdirectory (<code>TerrainHeightSpheres/</code> and <code>TerrainPrefabPlacer/</code>) before getting started.</p>
+</blockquote>
+
+<p>This package bundles two terrain editor tools that were built to work together. The first &mdash; <strong>Terrain Height Spheres</strong> &mdash; lets you read your terrain. It drops a grid of color-coded spheres across your scene so you can see exactly where the high ground is, where the valleys are, and where any particular elevation band sits, all without leaving the Editor and without touching your scene file. The second &mdash; <strong>Terrain Prefab Placer</strong> &mdash; lets you act on what you saw. It uses the exact same elevation filter to scatter prefabs across the terrain surface, restricted to whichever height band you choose, with randomized position, rotation, and scale so the result looks natural.</p>
+
+<p>The tools share a common design language: the same percentile-based height filter, the same grid-spacing model, and the same multi-terrain traversal logic. Once you understand how the height filter works in one tool you know how it works in both. The workflow they enable is intentional &mdash; use Height Spheres to explore and identify the elevation zones that matter for your scene, note the percentile values that isolate those zones, then carry those exact values into Prefab Placer to populate them. The two tools are halves of a single pipeline.</p>
+
+<p>Both tools are Editor-only. Neither requires configuration beyond opening a window and setting a few sliders. Neither requires any third-party dependencies. They are lightweight, non-opinionated additions to any terrain-based Unity project.</p>
+
+<hr>
+
+<!-- ============ WHAT'S INCLUDED ============ -->
+<h2 id="whats-included">What&rsquo;s Included <a class="home-link" href="#top">home</a></h2>
+
+<div class="tool-cards">
+
+  <div class="tool-card">
+    <h4>Terrain Height Spheres</h4>
+    <p class="tool-tagline">Visualize terrain elevation as color-coded spheres in the Scene view</p>
+    <ul>
+      <li>Yellow-to-red gradient by elevation</li>
+      <li>Configurable grid spacing and sphere size</li>
+      <li>Percentile-based height filter</li>
+      <li>Non-destructive &mdash; never saved to scene</li>
+      <li>Settings persisted via <code>EditorPrefs</code></li>
+      <li>Multi-terrain support</li>
+      <li>Requires URP</li>
+    </ul>
+    <p class="tool-dir">Full documentation: <code>TerrainHeightSpheres/</code></p>
+  </div>
+
+  <div class="tool-card">
+    <h4>Terrain Prefab Placer</h4>
+    <p class="tool-tagline">Scatter prefabs across terrain surfaces filtered by elevation</p>
+    <ul>
+      <li>Up to 10 prefab slots, randomly selected per placement</li>
+      <li>Configurable grid spacing and scale variance</li>
+      <li>Same percentile-based height filter</li>
+      <li>Objects saved to scene; Bake to commit permanently</li>
+      <li>Unique GUID container per generation</li>
+      <li>Multi-terrain support</li>
+      <li>Any render pipeline</li>
+    </ul>
+    <p class="tool-dir">Full documentation: <code>TerrainPrefabPlacer/</code></p>
+  </div>
+
+</div>
+
+<p>Each tool ships as a single <code>.cs</code> file in its own <code>Editor/</code> subfolder. There are no shared assemblies, no ScriptableObjects, and no runtime components. Importing one tool does not require the other, but they are designed to be used together.</p>
+
+<hr>
+
+<!-- ============ SHARED DESIGN ============ -->
+<h2 id="shared-design">Shared Design: The Height Filter &amp; Grid System <a class="home-link" href="#top">home</a></h2>
+
+<p>Because both tools are built on the same core logic, it is worth understanding that logic once rather than twice. The following concepts apply identically to both tools.</p>
+
+<h3>The Percentile Height Filter</h3>
+
+<p>Each tool has a <strong>Bottom Percentile</strong> and a <strong>Top Percentile</strong> slider, each ranging from 0 to 100. Together they define a slice of your terrain&rsquo;s elevation range to work within. The tool samples all <code>Terrain</code> objects in the scene on each generation pass, computes the global minimum and maximum world-space height across every terrain, and then uses your percentile values to compute absolute height thresholds within that range.</p>
+
+<p>For example, if your terrain spans from 0&nbsp;m to 200&nbsp;m and you set the bottom percentile to 60 and the top to 100, the tool operates on heights between 120&nbsp;m and 200&nbsp;m &mdash; the upper 40% of the elevation range. If you later add a second terrain tile that reaches 400&nbsp;m, the same percentile settings now resolve to 240&ndash;400&nbsp;m, because the global range has changed. The filter is always relative to whatever terrains are in the scene at generation time.</p>
+
+<table>
+  <thead>
+    <tr><th>Bottom</th><th>Top</th><th>Effect</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>100</td><td>Full terrain &mdash; no filter applied</td></tr>
+    <tr><td>0</td><td>30</td><td>Valleys and low-lying ground only</td></tr>
+    <tr><td>40</td><td>60</td><td>Mid-elevation band only</td></tr>
+    <tr><td>70</td><td>100</td><td>Upper slopes and ridgelines only</td></tr>
+    <tr><td>90</td><td>100</td><td>Peaks only &mdash; narrow high-elevation strip</td></tr>
+  </tbody>
+</table>
+
+<h3>Grid Spacing</h3>
+
+<p>Both tools use a <strong>Grid Spacing</strong> slider that controls the distance in meters between sample or placement points on the X and Z axes. A value of 100&nbsp;m means one sample every 100 meters; a value of 10&nbsp;m means one every 10 meters, producing 100&times; as many points. Start large and reduce as needed &mdash; very small values generate large numbers of objects and can slow the Editor significantly.</p>
+
+<p>In Prefab Placer, each placed object is additionally offset by a random amount within a circle of radius half the grid spacing, which breaks up the regular grid pattern and produces more natural-looking scatter. In Height Spheres, placement is exact on the grid with no offset.</p>
+
+<h3>Multi-Terrain Traversal</h3>
+
+<p>Both tools use <code>Object.FindObjectsOfType&lt;Terrain&gt;</code> to discover all active terrains in the scene. Every generation pass recomputes the height range from scratch across all discovered terrains. This means both tools work correctly with tiled multi-terrain setups and the height filter is always globally consistent, regardless of how many terrain tiles are present.</p>
+
+<hr>
+
+<!-- ============ RECOMMENDED WORKFLOW ============ -->
+<h2 id="workflow">Recommended Workflow <a class="home-link" href="#top">home</a></h2>
+
+<p>The two tools are designed to be used in sequence. The following workflow takes you from a bare terrain to a populated scene using both tools together.</p>
+
+<div class="workflow-step">
+  <div class="step-num">1</div>
+  <div class="step-body">
+    <p><strong>Open Terrain Height Spheres</strong> via <strong>Tools &gt; BBB &gt; Terrain Height Spheres</strong>.</p>
+    <p>Set Grid Spacing to a coarse value (100&ndash;200&nbsp;m) and click <strong>Generate Spheres</strong>. You will see the full elevation map of your scene as a yellow-to-red gradient. This is your read of the terrain.</p>
+  </div>
+</div>
+
+<div class="workflow-step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <p><strong>Identify your target elevation zones.</strong></p>
+    <p>Use the Bottom and Top Percentile sliders to isolate the band you want to populate. For example, if you want to place forest on mid-elevation slopes, adjust the sliders until the spheres highlight only those slopes. Note the percentile values.</p>
+  </div>
+</div>
+
+<div class="workflow-step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <p><strong>Open Terrain Prefab Placer</strong> via <strong>Tools &gt; BBB &gt; Terrain Prefab Placer</strong>.</p>
+    <p>Assign your prefabs to the slots, set Grid Spacing and Scale Variance as desired, and enter the same Bottom and Top Percentile values you identified in step 2.</p>
+  </div>
+</div>
+
+<div class="workflow-step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <p><strong>Click Generate Objects.</strong></p>
+    <p>Your prefabs will appear across the same elevation band the spheres were showing. If the result looks right, click <strong>Bake Current Objects</strong> to commit this pass to the scene permanently.</p>
+  </div>
+</div>
+
+<div class="workflow-step">
+  <div class="step-num">5</div>
+  <div class="step-body">
+    <p><strong>Repeat for additional elevation bands.</strong></p>
+    <p>Go back to Height Spheres, change the percentile range to isolate a different zone (e.g., the high peaks for rocks and sparse ground cover), note the values, and run another generation pass in Prefab Placer. Bake that pass too. Each baked pass is independent and coexists in the Hierarchy under its own GUID-named container.</p>
+  </div>
+</div>
+
+<blockquote>
+  <p><strong>Terrain Height Spheres &mdash; view only:</strong> The spheres are a read-only analysis overlay. They are never written to the scene file and will disappear if you enter Play Mode or close the scene. This is by design &mdash; the tool is purely for reading your terrain, not for placing anything in it.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Terrain Prefab Placer &mdash; objects land in the scene immediately:</strong> Generated prefabs are standard scene GameObjects from the moment you click Generate. They can be removed at any time using the <strong>Remove Objects</strong> button, or deleted directly from the Hierarchy using the standard Editor delete. Once you click <strong>Bake Current Objects</strong>, the tool releases its reference to that container &mdash; the objects remain in the scene permanently but the tool no longer tracks them. The same applies if you leave the scene and return: the container reference is lost, and any cleanup must be done manually from the Hierarchy. Save your scene after generating or baking to preserve your work. For full details on object lifecycle, baking, and container management, see the documentation in the <code>TerrainPrefabPlacer/</code> directory.</p>
+</blockquote>
+
+<hr>
+
+<!-- ============ REQUIREMENTS ============ -->
+<h2 id="requirements">Requirements <a class="home-link" href="#top">home</a></h2>
+
+<table>
+  <thead>
+    <tr><th>Requirement</th><th>Terrain Height Spheres</th><th>Terrain Prefab Placer</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Unity version</strong></td><td>2020.3 LTS or later</td><td>2020.3 LTS or later</td></tr>
+    <tr><td><strong>Render pipeline</strong></td><td>URP required (sphere materials use <code>Universal Render Pipeline/Lit</code>)</td><td>Any (URP, HDRP, Built-in) &mdash; no materials created</td></tr>
+    <tr><td><strong>Dependencies</strong></td><td>None &mdash; built-in Unity APIs only</td><td>None &mdash; built-in Unity APIs only</td></tr>
+    <tr><td><strong>Scene requirement</strong></td><td>At least one active <code>Terrain</code> in the scene</td><td>At least one active <code>Terrain</code> and one prefab slot filled</td></tr>
+    <tr><td><strong>Platform</strong></td><td>All Editor platforms (Windows, macOS, Linux)</td><td>All Editor platforms (Windows, macOS, Linux)</td></tr>
+    <tr><td><strong>Runtime use</strong></td><td>Editor-only. Not available in builds.</td><td>Editor-only. Not available in builds.</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============ INSTALLATION ============ -->
+<h2 id="installation">Installation <a class="home-link" href="#top">home</a></h2>
+
+<ol>
+  <li>After purchasing on the <strong>Unity Asset Store</strong>, click <strong>Open in Unity</strong> on the store page. This opens the Package Manager and navigates to <strong>My Assets</strong> with the package selected.</li>
+  <li>Click <strong>Download</strong>, then <strong>Import</strong> once the download finishes.</li>
+  <li>In the <strong>Import Unity Package</strong> dialog, all contents are pre-selected. Click <strong>Import</strong>.</li>
+  <li>Allow Unity to compile the newly imported scripts.</li>
+</ol>
+
+<p>After import, the following structure will be present in your project:</p>
+
+<pre><code>Assets/BBB/TerrainHeightVisualizerAndPrefabPlacer/
+├── TerrainHeightSpheres/
+│   ├── Editor/
+│   │   └── TerrainHeightSpheres.cs
+│   ├── TerrainHeightSpheres.html
+│   ├── README.md
+│   └── ImportantNoteAboutSupport.html
+└── TerrainPrefabPlacer/
+    ├── Editor/
+    │   └── TerrainPrefabPlacer.cs
+    ├── TerrainPrefabPlacer.html
+    ├── README.md
+    └── ImportantNoteAboutSupport.html</code></pre>
+
+<p>No additional setup is required. Both tool windows are immediately available under <strong>Tools &gt; BBB</strong> in the Unity menu bar.</p>
+
+<blockquote>
+  <p><strong>Importing one tool independently:</strong> Both tools are self-contained. If you only want one, you can uncheck the other&rsquo;s subfolder in the Import dialog. They have no shared code dependencies.</p>
+</blockquote>
+
+<hr>
+
+<!-- ============ FAQ ============ -->
+<h2 id="faq">FAQ <a class="home-link" href="#top">home</a></h2>
+
+<div class="faq-item">
+  <p class="q">Q: Do I need both tools, or can I import just one?</p>
+  <p class="a">A: Each tool is fully self-contained and works independently. You can uncheck either tool's subfolder in the Import Unity Package dialog to import only the one you need. The tools have no shared code and no dependency on each other.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Why does Height Spheres require URP but Prefab Placer does not?</p>
+  <p class="a">A: Terrain Height Spheres creates sphere GameObjects and assigns dynamically generated materials using the <code>Universal Render Pipeline/Lit</code> shader to display the elevation gradient. The shader must be present in the project for colors to display correctly. Terrain Prefab Placer instantiates your own prefabs and applies no materials of its own, so it is render-pipeline agnostic.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I use the same percentile values in both tools to target the same terrain area?</p>
+  <p class="a">A: Yes &mdash; this is exactly the intended workflow. Both tools compute their elevation thresholds against the same global height range. A bottom percentile of 60 and top percentile of 80 will resolve to the same absolute height band in both tools, as long as the terrains in the scene have not changed between generation passes.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Height Spheres disappeared when I entered Play Mode. Is that a bug?</p>
+  <p class="a">A: No. The visualization spheres are created with <code>HideFlags.DontSave</code> by design, which prevents them from being written to the scene file or persisting across Play Mode transitions. They are a read-only analysis tool. Re-generate after exiting Play Mode if needed.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The prefabs placed by Terrain Prefab Placer disappeared after I closed Unity.</p>
+  <p class="a">A: Generated prefab objects are standard scene GameObjects. Save the scene after generating (or after baking) to persist them. If you did not save, the objects were lost with the unsaved scene state.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Where is the detailed API reference and usage guide for each tool?</p>
+  <p class="a">A: Full documentation for each tool &mdash; including all settings, methods, constants, tips, and troubleshooting &mdash; is in the tool&rsquo;s own subdirectory. See the <code>TerrainHeightSpheres/</code> and <code>TerrainPrefabPlacer/</code> directories for their respective HTML documentation and README files.</p>
+</div>
+
+<hr>
+
+<!-- ============ VERSION HISTORY ============ -->
+<h2 id="version-history">Version History <a class="home-link" href="#top">home</a></h2>
+
+<h3><span class="changelog-version">v1.0.0</span> &mdash; Initial Release</h3>
+
+<ul>
+  <li>Terrain Height Spheres v1.0.0 &mdash; color-coded sphere elevation visualizer, percentile filter, multi-terrain, non-destructive, EditorPrefs persistence</li>
+  <li>Terrain Prefab Placer v1.0.0 &mdash; terrain-aware prefab scatterer, 10-slot prefab mix, percentile filter, scale variance, random offset and rotation, Bake, GUID containers, multi-terrain</li>
+</ul>
+
+<hr>
+
+<!-- ============ SUPPORT & CONTACT ============ -->
+<h2 id="support">Support and Contact <a class="home-link" href="#top">home</a></h2>
+
+<p>For questions, bug reports, or feature requests, please contact us through the Discord channel linked below.</p>
+
+<p><strong>Publisher:</strong> BigBuffaloBill</p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/HadwVTP3r5">BigBuffaloBill &amp; Friends Gaming + (bbb-unity-support-forum-public)</a></p>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  Terrain Height Visualizer &amp; Prefab Placer is a product of BigBuffaloBill. Unity is a trademark of Unity Technologies. &copy;2026.
+</div>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>

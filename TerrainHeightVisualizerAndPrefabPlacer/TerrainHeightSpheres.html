@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terrain Height Spheres — Documentation</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --unity-blue: #3d8bff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+  }
+
+  /* ---- Hero / Title ---- */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ---- Table of Contents ---- */
+  .toc {
+    margin-bottom: 2.5rem;
+  }
+
+  .toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc li {
+    margin-bottom: 0.3rem;
+  }
+
+  .toc li::before {
+    content: '› ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .toc a {
+    color: var(--link);
+    font-size: 0.95rem;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-link {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .home-link:hover {
+    color: var(--link);
+    text-decoration: underline;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--link);
+    margin: 2rem 0 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  /* ---- Body text ---- */
+  p {
+    margin-bottom: 1rem;
+  }
+
+  strong {
+    color: var(--text-bright);
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- Lists ---- */
+  ul, ol {
+    margin: 0.75rem 0 1.25rem 1.6rem;
+  }
+
+  li {
+    margin-bottom: 0.45rem;
+  }
+
+  li strong {
+    color: var(--text-bright);
+  }
+
+  /* ---- Inline code ---- */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: #7fdbca;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* ---- Code blocks ---- */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #c5c8c6;
+  }
+
+  /* ---- Blockquotes ---- */
+  blockquote {
+    border-left: 4px solid var(--blockquote-border);
+    background: rgba(233, 69, 96, 0.08);
+    padding: 0.9rem 1.2rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+  }
+
+  blockquote strong {
+    color: var(--accent);
+  }
+
+  /* ---- Tables ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  thead th {
+    background: var(--table-header);
+    color: var(--text-bright);
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--table-row-alt);
+  }
+
+  tbody td code {
+    font-size: 0.84em;
+  }
+
+  /* ---- FAQ ---- */
+  .faq-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .faq-item .q {
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+  }
+
+  .faq-item .a {
+    color: var(--text-muted);
+  }
+
+  /* ---- Version history ---- */
+  .changelog-version {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ---- Horizontal rules ---- */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 1.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.35rem; }
+    table { font-size: 0.82rem; }
+    thead th, tbody td { padding: 0.45rem 0.55rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ============ HERO ============ -->
+<div id="top" class="hero">
+  <h1>Terrain Height Spheres</h1>
+  <p class="tagline">An interactive terrain height visualization tool using color-coded spheres<br>for the Unity Editor by BigBuffaloBill.</p>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#key-features">Key Features</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#detailed-usage">Detailed Usage Guide</a></li>
+    <li><a href="#api-reference">API Reference</a></li>
+    <li><a href="#tips">Tips and Best Practices</a></li>
+    <li><a href="#faq">FAQ / Troubleshooting</a></li>
+    <li><a href="#version-history">Version History</a></li>
+    <li><a href="#support">Support and Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<h2 id="overview">Overview <a class="home-link" href="#top">home</a></h2>
+
+<blockquote style="font-size: 0.875rem;">
+  <p><strong>Author's Note on Expected Functionality:</strong> The author has written an important note about the intended scope, known limitations, and support expectations for this toolset. Please see <a href="ImportantNoteAboutSupport.html"><strong>Notes on Tool Intent, Status and Author Support</strong></a> before proceeding.</p>
+</blockquote>
+
+<p>Terrain Height Spheres is a Unity Editor tool that gives you an instant, at-a-glance read of your terrain&rsquo;s elevation across your entire scene &mdash; right in the Scene view. Click Generate and a grid of color-coded spheres appears directly on top of your terrain: yellow spheres mark the lowest ground, red spheres mark the highest, and everything in between blends smoothly across the gradient. You can read the shape of your entire landscape in terms of elevation at a glance, without leaving the Editor. When you&rsquo;re done, a single click removes every sphere instantly. You stay in complete control of what&rsquo;s in the scene at all times.</p>
+
+<p>What makes the tool especially powerful is its height filter. Two simple sliders &mdash; a bottom percentile and a top percentile, each ranging from 0 to 100 &mdash; let you tell the tool exactly which slice of your terrain&rsquo;s elevation range you want to see. Set the top slider to 20, for example, and only the highest peaks and ridgelines are marked in the scene. Set the bottom slider to 70 and the top to 100, and you isolate just the upper 30% of your elevation range. Dial the bottom to 0 and the top to 30, and the tool highlights your valleys and low-lying areas only. You can focus on any band of the elevation spectrum you need, from a broad overview of the whole landscape down to a precise slice just a few percent wide.</p>
+
+<p>The spheres are never saved to your scene &mdash; they exist only while you choose to show them, and each new generation starts completely fresh. Your settings from the last session &mdash; grid density, sphere size, and your percentile range &mdash; are remembered automatically so you can pick up exactly where you left off.</p>
+
+<hr>
+
+<!-- ============ KEY FEATURES ============ -->
+<h2 id="key-features">Key Features <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Color-coded sphere visualization</strong> &mdash; yellow (low elevation) to red (high elevation) gradient, computed against the global height range across all terrains in the scene</li>
+  <li><strong>Configurable grid spacing</strong> &mdash; slider from 10&nbsp;m to 500&nbsp;m to control sample density and sphere count</li>
+  <li><strong>Configurable sphere size</strong> &mdash; slider from 0.5&nbsp;m to 20&nbsp;m diameter</li>
+  <li><strong>Percentile-based height filter</strong> &mdash; bottom and top percentile sliders (0&ndash;100) to isolate specific elevation bands</li>
+  <li><strong>Multi-terrain support</strong> &mdash; automatically discovers and processes all <code>Terrain</code> objects in the current scene</li>
+  <li><strong>Non-destructive &mdash;</strong> all spheres are created with <code>HideFlags.DontSave</code> and are never written to the scene file</li>
+  <li><strong>Persistent settings</strong> via <code>EditorPrefs</code> &mdash; grid spacing, sphere size, and percentile range are restored on next open</li>
+  <li><strong>One-click removal</strong> &mdash; Remove Spheres button instantly destroys the entire visualization container</li>
+  <li><strong>Live status indicator</strong> &mdash; window shows Active/Inactive state based on whether a visualization is currently present</li>
+</ul>
+
+<hr>
+
+<!-- ============ REQUIREMENTS ============ -->
+<h2 id="requirements">Requirements <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Unity version:</strong> 2020.3 LTS or later (uses <code>Object.FindObjectsOfType</code>, <code>TerrainData.GetInterpolatedHeight</code>, and <code>EditorPrefs</code>, all standard since 2018.4+; tested and recommended on 2020.3+)</li>
+  <li><strong>Render pipeline:</strong> Universal Render Pipeline (URP) &mdash; sphere materials are created using the <code>Universal Render Pipeline/Lit</code> shader. The tool will not correctly color spheres in Built-in or HDRP projects without shader adjustment.</li>
+  <li><strong>Dependencies:</strong> None. Uses only built-in Unity Editor and Engine APIs (<code>UnityEngine</code>, <code>UnityEditor</code>)</li>
+  <li><strong>Scene requirement:</strong> At least one <code>Terrain</code> object must be present in the active scene for sphere generation to produce output</li>
+  <li><strong>Platform:</strong> Works on all platforms supported by the Unity Editor (Windows, macOS, Linux)</li>
+</ul>
+
+<hr>
+
+<!-- ============ INSTALLATION ============ -->
+<h2 id="installation">Installation <a class="home-link" href="#top">home</a></h2>
+
+<p>Terrain Height Spheres ships as part of the <strong>Terrain Height Visualizer &amp; Prefab Placer</strong> package. Full installation instructions &mdash; including the Package Manager flow, import steps, and the complete post-import file structure &mdash; are covered in <code>TerrainHeightVisualizerAndPrefabPlacer_Documentation.html</code> in the parent directory.</p>
+
+<hr>
+
+<!-- ============ GETTING STARTED ============ -->
+<h2 id="getting-started">Getting Started <a class="home-link" href="#top">home</a></h2>
+
+<ol>
+  <li>Open the tool window: go to <strong>Tools &gt; BBB &gt; Terrain Height Spheres</strong> in the Unity menu bar.</li>
+  <li>Open a scene that contains at least one <code>Terrain</code> object.</li>
+  <li>Adjust the <strong>Grid Spacing</strong> slider to control how densely spheres are placed. A larger value means fewer, more spread-out spheres; a smaller value means a denser grid.</li>
+  <li>Adjust the <strong>Sphere Size</strong> slider to set the diameter of each visualization sphere.</li>
+  <li>Optionally adjust the <strong>Bottom Percentile</strong> and <strong>Top Percentile</strong> sliders to restrict the visualization to a specific elevation band.</li>
+  <li>Click <strong>Generate Spheres</strong>. The tool samples the terrain, creates the sphere grid, and places it in the Scene view. The status line will change to <strong>Active</strong>.</li>
+  <li>When you are done, click <strong>Remove Spheres</strong> to destroy the visualization. Spheres are never saved to the scene file regardless.</li>
+</ol>
+
+<hr>
+
+<!-- ============ DETAILED USAGE GUIDE ============ -->
+<h2 id="detailed-usage">Detailed Usage Guide <a class="home-link" href="#top">home</a></h2>
+
+<h3>Opening the Window</h3>
+
+<p>Navigate to <strong>Tools &gt; BBB &gt; Terrain Height Spheres</strong> in the Unity menu bar. The window is a standard dockable Editor window and can be placed alongside the Inspector, Scene view, or any other panel. The window title is &ldquo;Terrain Height Spheres.&rdquo;</p>
+
+<h3>Grid Spacing</h3>
+
+<p>The <strong>Grid Spacing</strong> slider controls the distance in meters between adjacent sphere sample points. Range: 10&nbsp;m to 500&nbsp;m. This setting is persisted in <code>EditorPrefs</code> and restored on next open.</p>
+
+<blockquote>
+  <p><strong>Performance note:</strong> Small grid spacing values produce a very large number of spheres and can significantly slow the Editor. Start with a value of 100&nbsp;m or higher and decrease as needed.</p>
+</blockquote>
+
+<h3>Sphere Size</h3>
+
+<p>The <strong>Sphere Size</strong> slider controls the diameter of each visualization sphere in world units. Range: 0.5&nbsp;m to 20&nbsp;m. This setting is persisted in <code>EditorPrefs</code>.</p>
+
+<h3>Height Range Filter</h3>
+
+<p>The <strong>Bottom Percentile</strong> and <strong>Top Percentile</strong> sliders define which portion of the terrain's elevation range is visualized. Both values range from 0 to 100.</p>
+
+<ul>
+  <li>A bottom percentile of <code>0</code> and top percentile of <code>100</code> visualizes the full elevation range.</li>
+  <li>A bottom percentile of <code>80</code> and top percentile of <code>100</code> shows only the highest 20% of terrain elevation.</li>
+  <li>A bottom percentile of <code>0</code> and top percentile of <code>30</code> shows only the lowest 30% of terrain elevation.</li>
+</ul>
+
+<p>Height percentile is computed against the global min/max elevation sampled across <em>all</em> terrains in the scene, so the filter is consistent even in multi-terrain setups.</p>
+
+<h3>Generating Spheres</h3>
+
+<p>Click <strong>Generate Spheres</strong> to run the visualization. The tool:</p>
+
+<ol>
+  <li>Removes any existing sphere visualization.</li>
+  <li>Finds all <code>Terrain</code> objects in the scene using <code>Object.FindObjectsOfType&lt;Terrain&gt;</code>.</li>
+  <li>Performs a first pass over all terrains to compute the global minimum and maximum world-space heights.</li>
+  <li>Creates a hidden container <code>GameObject</code> named <code>__TerrainHeightSpheres_Container</code> with <code>HideFlags.DontSave</code>.</li>
+  <li>For each terrain, places a sphere at every grid point within the current percentile range. Each sphere is colored by its height percentile along a yellow-to-red gradient.</li>
+  <li>Sphere colliders are removed immediately after creation as they are not needed for visualization.</li>
+</ol>
+
+<h3>Color Gradient</h3>
+
+<p>Sphere color is determined by the sphere's world Y position relative to the global height range:</p>
+
+<ul>
+  <li><strong>Yellow</strong> (RGB 1, 1, 0) &mdash; lowest sampled elevation</li>
+  <li><strong>Red</strong> (RGB 1, 0, 0) &mdash; highest sampled elevation</li>
+  <li>Intermediate elevations blend linearly between yellow and red by reducing the green channel.</li>
+</ul>
+
+<p>Materials are created with the <code>Universal Render Pipeline/Lit</code> shader and assigned <code>HideFlags.DontSave</code>.</p>
+
+<h3>Removing Spheres</h3>
+
+<p>Click <strong>Remove Spheres</strong> to immediately destroy the container and all child spheres. The button is disabled when no visualization is active. The window status line will return to <strong>Inactive</strong>.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> Closing the scene or entering Play Mode will also remove the spheres, as they are marked <code>HideFlags.DontSave</code>.</p>
+</blockquote>
+
+<h3>Status Indicator</h3>
+
+<p>The window displays a <strong>Status</strong> line that reads <strong>Active</strong> when a sphere container is present in the scene and <strong>Inactive</strong> when it is not. This is determined by checking whether the container <code>GameObject</code> exists via <code>GameObject.Find</code>.</p>
+
+<hr>
+
+<!-- ============ API REFERENCE ============ -->
+<h2 id="api-reference">API Reference <a class="home-link" href="#top">home</a></h2>
+
+<h3>TerrainHeightSpheres (class)</h3>
+
+<p><strong>Namespace:</strong> <code>BleBike.Editor</code></p>
+<p><strong>Inherits:</strong> <code>UnityEditor.EditorWindow</code></p>
+<p><strong>Location:</strong> <code>Editor/TerrainHeightSpheres.cs</code></p>
+<p><strong>Description:</strong> The main Editor window class. This is an editor-only class and is not available at runtime.</p>
+
+<h4>Menu Items</h4>
+
+<table>
+  <thead>
+    <tr><th>Menu Path</th><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tools &gt; BBB &gt; Terrain Height Spheres</td>
+      <td><code>Open()</code></td>
+      <td>Opens or focuses the Terrain Height Spheres window.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Inspector / Window Fields</h4>
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>_gridSpacing</code></td><td><code>float</code></td><td>100</td><td>Distance in meters between sphere sample points on both axes.</td></tr>
+    <tr><td><code>_sphereSize</code></td><td><code>float</code></td><td>2</td><td>Diameter in world units of each visualization sphere.</td></tr>
+    <tr><td><code>_bottomPercentile</code></td><td><code>float</code></td><td>0</td><td>Lower bound of the height filter (0&ndash;100). Points below this percentile are skipped.</td></tr>
+    <tr><td><code>_topPercentile</code></td><td><code>float</code></td><td>100</td><td>Upper bound of the height filter (0&ndash;100). Points above this percentile are skipped.</td></tr>
+  </tbody>
+</table>
+
+<h4>Key Private Methods</h4>
+
+<table>
+  <thead>
+    <tr><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>Open()</code></td><td>Static <code>[MenuItem]</code> method that opens or focuses the window. Sets minimum window size to 300&times;100.</td></tr>
+    <tr><td><code>OnEnable()</code></td><td>Loads persisted <code>EditorPrefs</code> values for all four settings fields and calls <code>FindExistingContainer()</code>.</td></tr>
+    <tr><td><code>OnGUI()</code></td><td>Draws the full window UI: setting sliders, EditorPrefs persistence on change, status label, and Generate/Remove buttons.</td></tr>
+    <tr><td><code>FindExistingContainer()</code></td><td>Uses <code>GameObject.Find(CONTAINER_NAME)</code> to detect whether a visualization is already present in the scene.</td></tr>
+    <tr><td><code>GenerateSpheres()</code></td><td>Removes any existing container, finds all scene terrains, computes global height range, creates the container, and delegates per-terrain sphere creation to <code>GenerateSpheresForTerrain</code>.</td></tr>
+    <tr><td><code>GenerateSpheresForTerrain(Terrain, float, float, float, float, float)</code></td><td>Iterates the grid for one terrain, samples height at each point, applies the percentile filter, creates and parents a colored sphere, and returns the count of spheres placed.</td></tr>
+    <tr><td><code>RemoveSpheres()</code></td><td>Calls <code>DestroyImmediate</code> on the container if it exists and nulls the reference.</td></tr>
+    <tr><td><code>GetHeightColor(float, float, float)</code></td><td>Returns a <code>Color</code> along the yellow-to-red gradient by computing the normalized height value and reducing the green channel linearly.</td></tr>
+  </tbody>
+</table>
+
+<h4>Constants</h4>
+
+<table>
+  <thead>
+    <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>CONTAINER_NAME</code></td><td><code>"__TerrainHeightSpheres_Container"</code></td><td>Name of the transient root GameObject that parents all visualization spheres.</td></tr>
+    <tr><td><code>DEBUG_ENABLED</code></td><td><code>false</code></td><td>Master switch for all non-error debug output in this class. Set to <code>true</code> to enable logging.</td></tr>
+    <tr><td><code>DBG_OUT_PREPEND</code></td><td><code>"[TerrainHeightVisualizer/TerrainHeightSpheres]"</code></td><td>Prefix string prepended to all debug log messages from this class.</td></tr>
+    <tr><td><code>PREF_GRID_SPACING</code></td><td><code>"TerrainHeightSpheres_GridSpacing"</code></td><td>EditorPrefs key for persisting grid spacing.</td></tr>
+    <tr><td><code>PREF_BOTTOM_PERCENTILE</code></td><td><code>"TerrainHeightSpheres_BottomPercentile"</code></td><td>EditorPrefs key for persisting the bottom percentile filter value.</td></tr>
+    <tr><td><code>PREF_TOP_PERCENTILE</code></td><td><code>"TerrainHeightSpheres_TopPercentile"</code></td><td>EditorPrefs key for persisting the top percentile filter value.</td></tr>
+    <tr><td><code>PREF_SPHERE_SIZE</code></td><td><code>"TerrainHeightSpheres_SphereSize"</code></td><td>EditorPrefs key for persisting sphere size.</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============ TIPS & BEST PRACTICES ============ -->
+<h2 id="tips">Tips and Best Practices <a class="home-link" href="#top">home</a></h2>
+
+<p><strong>Start with a coarse grid.</strong> Use a grid spacing of 100&nbsp;m or more for your first pass to get a quick overview without flooding the scene with geometry. Refine downward once you know which area you want to examine more closely.</p>
+
+<p><strong>Use percentile filters to isolate features.</strong> Setting the bottom percentile to 85&ndash;100 highlights ridgelines and peaks. Setting it to 0&ndash;15 isolates valley floors and water-adjacent areas. Narrow bands reveal subtle elevation transitions that are hard to read when the full range is shown.</p>
+
+<p><strong>Regenerate freely.</strong> Because spheres are never saved to the scene, you can click Generate Spheres as many times as you like with different settings. Each generation pass automatically removes the previous set first.</p>
+
+<p><strong>The spheres are scene-view only.</strong> Entering Play Mode will destroy the visualization (due to <code>HideFlags.DontSave</code>). This is expected behavior. Re-generate after exiting Play Mode if needed.</p>
+
+<p><strong>Multi-terrain height ranges are global.</strong> The percentile filter is computed against the combined min/max of all terrains in the scene. This ensures consistent coloring across terrain tiles but means that an isolated low tile will not show the full yellow-to-red gradient if the adjacent tiles reach much higher elevations.</p>
+
+<hr>
+
+<!-- ============ FAQ / TROUBLESHOOTING ============ -->
+<h2 id="faq">FAQ / Troubleshooting <a class="home-link" href="#top">home</a></h2>
+
+<div class="faq-item">
+  <p class="q">Q: I clicked Generate Spheres but nothing appeared in the scene.</p>
+  <p class="a">A: The most common cause is that there is no <code>Terrain</code> object in the active scene. The tool searches for terrains using <code>Object.FindObjectsOfType&lt;Terrain&gt;</code>. Ensure at least one terrain is present and active in the Hierarchy. Also check your percentile filter settings &mdash; if the bottom and top percentile values are very close together, few or no points may fall within the band.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The spheres all appear the same color (all red or all yellow).</p>
+  <p class="a">A: This occurs when the terrain's height variation is very small relative to the global range, causing all sampled points to cluster at one end of the gradient. Try using the percentile filter to narrow the band to the range where variation exists.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Sphere colors look wrong &mdash; they appear pink, magenta, or solid gray.</p>
+  <p class="a">A: The sphere materials are created using the <code>Universal Render Pipeline/Lit</code> shader. If your project uses the Built-in Render Pipeline or HDRP, this shader will not be found and Unity will fall back to a default error/pink material. This tool requires URP.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The Editor became slow after generating spheres.</p>
+  <p class="a">A: A very small grid spacing produces a very large number of GameObjects. Each is a full primitive sphere with a mesh renderer and a dynamically created material. Increase grid spacing or use Remove Spheres to restore normal Editor performance.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The spheres were removed when I entered Play Mode. Is that a bug?</p>
+  <p class="a">A: No, this is by design. The container and all sphere objects are created with <code>HideFlags.DontSave</code>, which prevents them from persisting across Play Mode transitions and from being saved into the scene file. Re-generate after exiting Play Mode.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The status line says Inactive but I can see spheres in the scene.</p>
+  <p class="a">A: The status is determined by a <code>GameObject.Find</code> call for the container name. If the container name was changed manually in the Hierarchy, or if the tool window was closed and reopened after the spheres were generated in a different session, the Find call may not locate it. Click Remove Spheres to clean up, then Generate Spheres again.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I use this at runtime?</p>
+  <p class="a">A: No. Terrain Height Spheres is an Editor-only tool. The class is in an <code>Editor</code> folder and depends on <code>UnityEditor</code> APIs that are not available in builds.</p>
+</div>
+
+<hr>
+
+<!-- ============ VERSION HISTORY ============ -->
+<h2 id="version-history">Version History <a class="home-link" href="#top">home</a></h2>
+
+<h3><span class="changelog-version">v1.0.0</span> &mdash; Initial Release</h3>
+
+<ul>
+  <li>Editor window accessible via Tools &gt; BBB &gt; Terrain Height Spheres</li>
+  <li>Color-coded sphere grid visualization (yellow to red by elevation)</li>
+  <li>Configurable grid spacing (10&ndash;500&nbsp;m) and sphere size (0.5&ndash;20&nbsp;m)</li>
+  <li>Percentile-based height range filter (bottom and top, 0&ndash;100)</li>
+  <li>Multi-terrain support with global height range computation</li>
+  <li>All settings persisted via EditorPrefs</li>
+  <li>Non-destructive: spheres never saved to scene file</li>
+  <li>One-click Generate and Remove controls</li>
+</ul>
+
+<hr>
+
+<!-- ============ SUPPORT & CONTACT ============ -->
+<h2 id="support">Support and Contact <a class="home-link" href="#top">home</a></h2>
+
+<p>For questions, bug reports, or feature requests, please contact us through the Discord channel linked below.</p>
+
+<p><strong>Publisher:</strong> BigBuffaloBill</p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/HadwVTP3r5">BigBuffaloBill &amp; Friends Gaming + (bbb-unity-support-forum-public)</a></p>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  Terrain Height Spheres is a product of BigBuffaloBill. Unity is a trademark of Unity Technologies. &copy;2026.
+</div>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terrain Prefab Placer — Documentation</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --unity-blue: #3d8bff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 { font-size: 2.4rem; font-weight: 700; color: var(--text-bright); letter-spacing: -0.5px; margin-bottom: 0.6rem; }
+  .hero .tagline { font-size: 1.1rem; color: var(--text-muted); font-style: italic; }
+
+  .toc { margin-bottom: 2.5rem; }
+  .toc ul { list-style: none; margin: 0; padding: 0; }
+  .toc li { margin-bottom: 0.3rem; }
+  .toc li::before { content: '› '; color: var(--accent); font-weight: 700; }
+  .toc a { color: var(--link); font-size: 0.95rem; }
+
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-link { font-size: 0.75rem; font-weight: 400; color: var(--text-muted); text-decoration: none; white-space: nowrap; margin-left: 1rem; }
+  .home-link:hover { color: var(--link); text-decoration: underline; }
+
+  h3 { font-size: 1.25rem; font-weight: 600; color: var(--link); margin: 2rem 0 0.75rem; }
+  h4 { font-size: 1.05rem; font-weight: 600; color: var(--text-bright); margin: 1.5rem 0 0.5rem; }
+
+  p { margin-bottom: 1rem; }
+  strong { color: var(--text-bright); }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  ul, ol { margin: 0.75rem 0 1.25rem 1.6rem; }
+  li { margin-bottom: 0.45rem; }
+  li strong { color: var(--text-bright); }
+
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: #7fdbca;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  pre code { background: none; border: none; padding: 0; font-size: 0.85rem; color: #c5c8c6; }
+
+  blockquote {
+    border-left: 4px solid var(--blockquote-border);
+    background: rgba(233, 69, 96, 0.08);
+    padding: 0.9rem 1.2rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p { margin-bottom: 0; color: var(--text-muted); }
+  blockquote strong { color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.92rem; }
+  thead th { background: var(--table-header); color: var(--text-bright); text-align: left; padding: 0.7rem 0.9rem; border-bottom: 2px solid var(--accent); font-weight: 600; }
+  tbody td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:nth-child(even) { background: var(--table-row-alt); }
+  tbody td code { font-size: 0.84em; }
+
+  .faq-item { margin-bottom: 1.5rem; }
+  .faq-item .q { font-weight: 700; color: var(--text-bright); margin-bottom: 0.3rem; }
+  .faq-item .a { color: var(--text-muted); }
+
+  .changelog-version { color: var(--accent); font-weight: 700; }
+
+  hr { border: none; height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+  .footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-style: italic; }
+
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 1.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.35rem; }
+    table { font-size: 0.82rem; }
+    thead th, tbody td { padding: 0.45rem 0.55rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ============ HERO ============ -->
+<div id="top" class="hero">
+  <h1>Terrain Prefab Placer</h1>
+  <p class="tagline">A terrain-aware prefab scattering tool with height filtering and randomized placement<br>for the Unity Editor by BigBuffaloBill.</p>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#key-features">Key Features</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#detailed-usage">Detailed Usage Guide</a></li>
+    <li><a href="#api-reference">API Reference</a></li>
+    <li><a href="#tips">Tips and Best Practices</a></li>
+    <li><a href="#faq">FAQ / Troubleshooting</a></li>
+    <li><a href="#version-history">Version History</a></li>
+    <li><a href="#support">Support and Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<h2 id="overview">Overview <a class="home-link" href="#top">home</a></h2>
+
+<blockquote style="font-size: 0.875rem;">
+  <p><strong>Author's Note on Expected Functionality:</strong> The author has written an important note about the intended scope, known limitations, and support expectations for this toolset. Please see <a href="ImportantNoteAboutSupport.html"><strong>Notes on Tool Intent, Status and Author Support</strong></a> before proceeding.</p>
+</blockquote>
+
+<p>Terrain Prefab Placer is a Unity Editor tool that lets you scatter prefabs across your terrain with a single click &mdash; placed directly on the terrain surface. Placement is filtered by elevation, and randomized in position, rotation, and scale so the result looks natural rather than mechanical. Load up to ten prefabs into the tool&rsquo;s slots, configure your placement settings, click Generate, and your objects appear in the scene immediately. When you&rsquo;re done or want to try different settings, one click removes everything instantly.</p>
+
+<p>Using a similar mechanism and workflow as the Terrain Height Spheres tool that this tool is packaged with, you can use the same style settings to place permanent objects at the desired height bands. The tool&rsquo;s height filter gives you precise control over the height bands where your prefabs appear on the terrain. Two percentile sliders &mdash; bottom and top, each from 0 to 100 &mdash; let you target any slice of the terrain&rsquo;s elevation range. Set the top slider to 30, for example, and your prefabs are placed only in the low valleys and flat ground. Set the bottom to 60 and the top to 100, and placement is restricted to the upper slopes and peaks. You can isolate any elevation band you need, from a broad mid-range to a narrow strip just a few percent wide.</p>
+
+<p>Each placed object is randomized within a radius of half the grid spacing around its grid point, given a random Y rotation, and scaled by a tunable variance percentage &mdash; so even a single prefab produces a scattered, organic-looking result. When multiple prefabs are loaded, the tool picks randomly from your available slots on each placement. Generated objects are parented under a uniquely named container in the Hierarchy, making them easy to identify and manage. Your settings are not persisted between sessions, keeping each generation intentional and clean.</p>
+
+<hr>
+
+<!-- ============ KEY FEATURES ============ -->
+<h2 id="key-features">Key Features <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Up to 10 prefab slots</strong> &mdash; load multiple prefabs and the tool randomly selects from all assigned slots on each placement</li>
+  <li><strong>Configurable grid spacing</strong> &mdash; slider from 0.01&nbsp;m to 500&nbsp;m to control placement density</li>
+  <li><strong>Scale variance</strong> &mdash; slider from 0% to 50% applies a random scale multiplier to each placed object for natural variation</li>
+  <li><strong>Random position offset</strong> &mdash; each object is offset randomly within a circle half the grid spacing in radius, breaking up the grid pattern</li>
+  <li><strong>Random Y rotation</strong> &mdash; each object receives a random 0&ndash;360&deg; Y rotation on placement</li>
+  <li><strong>Percentile-based height filter</strong> &mdash; bottom and top sliders (0&ndash;100) restrict placement to any elevation band across all terrains</li>
+  <li><strong>Multi-terrain support</strong> &mdash; automatically finds and processes all <code>Terrain</code> objects in the scene</li>
+  <li><strong>Uniquely named container</strong> &mdash; each generation creates a GUID-named container so multiple passes can coexist in the Hierarchy</li>
+  <li><strong>One-click remove</strong> &mdash; instantly destroys the last generated container and all its children</li>
+  <li><strong>Bake Current Objects</strong> &mdash; permanently detaches the current container from the tool, leaving it in the scene; subsequent Generate passes start fresh without disturbing baked objects</li>
+  <li><strong>Live status indicator</strong> &mdash; window displays Active/Inactive and shows the last container name for reference</li>
+</ul>
+
+<hr>
+
+<!-- ============ REQUIREMENTS ============ -->
+<h2 id="requirements">Requirements <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Unity version:</strong> 2020.3 LTS or later</li>
+  <li><strong>Render pipeline:</strong> Any (URP, HDRP, Built-in) &mdash; this tool places prefabs and applies no materials of its own</li>
+  <li><strong>Dependencies:</strong> None. Uses only built-in Unity Editor and Engine APIs (<code>UnityEngine</code>, <code>UnityEditor</code>, <code>System.Collections.Generic</code>)</li>
+  <li><strong>Scene requirement:</strong> At least one <code>Terrain</code> object and at least one prefab slot filled before generation</li>
+  <li><strong>Platform:</strong> Works on all platforms supported by the Unity Editor (Windows, macOS, Linux)</li>
+</ul>
+
+<hr>
+
+<!-- ============ INSTALLATION ============ -->
+<h2 id="installation">Installation <a class="home-link" href="#top">home</a></h2>
+
+<p>Terrain Prefab Placer ships as part of the <strong>Terrain Height Visualizer &amp; Prefab Placer</strong> package. Full installation instructions &mdash; including the Package Manager flow, import steps, and the complete post-import file structure &mdash; are covered in <code>TerrainHeightVisualizerAndPrefabPlacer_Documentation.html</code> in the parent directory.</p>
+
+<hr>
+
+<!-- ============ GETTING STARTED ============ -->
+<h2 id="getting-started">Getting Started <a class="home-link" href="#top">home</a></h2>
+
+<ol>
+  <li>Open the tool window: go to <strong>Tools &gt; BBB &gt; Terrain Prefab Placer</strong> in the Unity menu bar.</li>
+  <li>Open a scene that contains at least one <code>Terrain</code> object.</li>
+  <li>Assign at least one prefab to a slot in the <strong>Prefabs to Place</strong> section.</li>
+  <li>Adjust <strong>Grid Spacing</strong> and <strong>Scale Variance %</strong> as desired.</li>
+  <li>Optionally adjust the <strong>Bottom</strong> and <strong>Top Percentile</strong> sliders to restrict placement to a specific elevation range.</li>
+  <li>Click <strong>Generate Objects</strong>. Your prefabs will appear in the scene parented under a uniquely named container.</li>
+  <li>To remove the generated objects, click <strong>Remove Objects</strong>.</li>
+</ol>
+
+<hr>
+
+<!-- ============ DETAILED USAGE GUIDE ============ -->
+<h2 id="detailed-usage">Detailed Usage Guide <a class="home-link" href="#top">home</a></h2>
+
+<h3>Opening the Window</h3>
+
+<p>Navigate to <strong>Tools &gt; BBB &gt; Terrain Prefab Placer</strong>. The window is a standard dockable Editor window with a minimum size of 300&times;400. The title is &ldquo;Terrain Prefab Placer.&rdquo;</p>
+
+<h3>Prefab Slots</h3>
+
+<p>The top section of the window shows ten <strong>Prefab</strong> slots (Prefab 1 through Prefab 10). Drag any prefab from the Project window into one or more slots. At least one slot must be filled before generation is allowed &mdash; the Generate Objects button is disabled otherwise, and a warning message is shown.</p>
+
+<p>When multiple slots are filled, the tool picks randomly from all non-null slots on each individual placement. You can weight your prefab distribution by filling multiple slots with the same prefab.</p>
+
+<h3>Grid Spacing</h3>
+
+<p>Controls the distance in meters between placement grid points on both X and Z axes. Range: 0.01&nbsp;m to 500&nbsp;m. Each object is additionally offset randomly within a circle of radius half the grid spacing, so tighter grids produce denser, more overlapping scatter.</p>
+
+<blockquote>
+  <p><strong>Performance note:</strong> Small grid spacing values produce a very large number of instantiated prefabs. Start with 100&nbsp;m or higher and reduce as needed.</p>
+</blockquote>
+
+<h3>Scale Variance %</h3>
+
+<p>Applies a random scale multiplier to each placed object. Range: 0% to 50%. At 0% all objects are placed at their prefab&rsquo;s default scale. At 20%, for example, each object is randomly scaled between 80% and 120% of its default. The multiplier is applied uniformly to all three axes.</p>
+
+<h3>Height Range Filter</h3>
+
+<p>The <strong>Bottom Percentile</strong> and <strong>Top Percentile</strong> sliders (0&ndash;100 each) restrict placement to a specific slice of your terrain&rsquo;s elevation range, computed globally across all terrains in the scene.</p>
+
+<ul>
+  <li>Bottom: 0, Top: 100 &mdash; place across the full terrain</li>
+  <li>Bottom: 0, Top: 30 &mdash; valleys and low ground only</li>
+  <li>Bottom: 60, Top: 100 &mdash; upper slopes and peaks only</li>
+  <li>Bottom: 40, Top: 60 &mdash; mid-elevation band only</li>
+</ul>
+
+<h3>Generating Objects</h3>
+
+<p>Click <strong>Generate Objects</strong>. The tool:</p>
+
+<ol>
+  <li>Removes any previously generated container (same as clicking Remove Objects first).</li>
+  <li>Finds all <code>Terrain</code> objects in the scene.</li>
+  <li>Performs a first pass to compute the global min/max world-space height across all terrains.</li>
+  <li>Creates a uniquely named container: <code>__TerrainPrefabPlacer_Container_&lt;GUID&gt;</code>.</li>
+  <li>For each grid point within the percentile range, selects a random prefab, applies a random position offset within the grid cell, re-samples the terrain height at the randomized position, instantiates the prefab via <code>PrefabUtility.InstantiatePrefab</code>, applies random Y rotation and scale variance, and parents it to the container.</li>
+</ol>
+
+<h3>The Container</h3>
+
+<p>Each generation creates a new <code>GameObject</code> with a unique GUID-based name (e.g. <code>__TerrainPrefabPlacer_Container_3f2a1b8c...</code>). The window tracks and displays the most recently generated container name. Generate Objects always removes the currently tracked container before creating a new one &mdash; unless you have first baked it (see below).</p>
+
+<blockquote>
+  <p><strong>Note:</strong> Unlike the Terrain Height Spheres tool, objects generated by this tool <em>are</em> saved to the scene. They are standard instantiated prefabs and will persist across Editor sessions unless explicitly removed.</p>
+</blockquote>
+
+<h3>Removing Objects</h3>
+
+<p>Click <strong>Remove Objects</strong> to destroy the currently tracked container and all its children. The button is disabled when no active container is tracked. If the container was renamed or deleted manually, Remove Objects will log a warning and clear its internal reference.</p>
+
+<h3>Baking Objects</h3>
+
+<p>Click <strong>Bake Current Objects</strong> to permanently detach the current container from the tool without destroying it. The container and all its children remain in the scene and are saved with it, but the tool forgets about them entirely &mdash; they become ordinary Hierarchy objects. After baking, the tool&rsquo;s status resets to Inactive and the next Generate Objects call creates a fresh container, leaving the baked group untouched.</p>
+
+<p>This allows you to build up layers of placed objects &mdash; for example, baking a group of trees, then generating and baking rocks at a different elevation band, without any pass disturbing the previous one.</p>
+
+<p>If you later want to remove a baked group, find its container in the Hierarchy by its GUID name (e.g. <code>__TerrainPrefabPlacer_Container_3f2a1b8c...</code>) and delete it manually.</p>
+
+<hr>
+
+<!-- ============ API REFERENCE ============ -->
+<h2 id="api-reference">API Reference <a class="home-link" href="#top">home</a></h2>
+
+<h3>TerrainPrefabPlacer (class)</h3>
+
+<p><strong>Namespace:</strong> <code>BleBike.Editor</code></p>
+<p><strong>Inherits:</strong> <code>UnityEditor.EditorWindow</code></p>
+<p><strong>Location:</strong> <code>Editor/TerrainPrefabPlacer.cs</code></p>
+<p><strong>Description:</strong> The main Editor window class. Editor-only; not available at runtime.</p>
+
+<h4>Menu Items</h4>
+
+<table>
+  <thead>
+    <tr><th>Menu Path</th><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tools &gt; BBB &gt; Terrain Prefab Placer</td>
+      <td><code>Open()</code></td>
+      <td>Opens or focuses the Terrain Prefab Placer window.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Window Fields</h4>
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>_prefabs</code></td><td><code>GameObject[10]</code></td><td>all null</td><td>The ten prefab slots. At least one must be assigned before generation.</td></tr>
+    <tr><td><code>_gridSpacing</code></td><td><code>float</code></td><td>100</td><td>Distance in meters between grid sample points.</td></tr>
+    <tr><td><code>_scaleVariancePercent</code></td><td><code>float</code></td><td>10</td><td>Random scale variance applied to each placed object (±%).</td></tr>
+    <tr><td><code>_bottomPercentile</code></td><td><code>float</code></td><td>0</td><td>Lower bound of the height filter (0&ndash;100).</td></tr>
+    <tr><td><code>_topPercentile</code></td><td><code>float</code></td><td>100</td><td>Upper bound of the height filter (0&ndash;100).</td></tr>
+  </tbody>
+</table>
+
+<h4>Key Private Methods</h4>
+
+<table>
+  <thead>
+    <tr><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>Open()</code></td><td>Static <code>[MenuItem]</code> — opens or focuses the window. Sets minimum size to 300&times;400.</td></tr>
+    <tr><td><code>OnEnable()</code></td><td>Loads the last container name from <code>EditorPrefs</code> and calls <code>FindExistingContainer()</code>.</td></tr>
+    <tr><td><code>OnGUI()</code></td><td>Draws the full window UI: prefab slots, sliders, status, container name display, and Generate/Remove buttons.</td></tr>
+    <tr><td><code>HasAtLeastOnePrefab()</code></td><td>Returns true if any slot in <code>_prefabs</code> is non-null. Used to gate the Generate button.</td></tr>
+    <tr><td><code>FindExistingContainer()</code></td><td>Attempts <code>GameObject.Find</code> on the stored container name to restore active state after domain reload.</td></tr>
+    <tr><td><code>GenerateObjects()</code></td><td>Removes any existing container, finds terrains, computes global height range, creates the GUID-named container, and delegates per-terrain placement to <code>GenerateObjectsForTerrain</code>.</td></tr>
+    <tr><td><code>GenerateObjectsForTerrain(Terrain, float, float, float, float)</code></td><td>Iterates the grid for one terrain, applies the height filter, randomizes position and re-samples height, instantiates and configures each prefab, and returns the count placed.</td></tr>
+    <tr><td><code>GetRandomPrefab()</code></td><td>Builds a list of non-null slots and returns a randomly selected prefab from it.</td></tr>
+    <tr><td><code>RemoveObjects()</code></td><td>Finds and destroys the last container by its stored name, clears the reference, and deletes the <code>EditorPrefs</code> key.</td></tr>
+  </tbody>
+</table>
+
+<h4>Constants</h4>
+
+<table>
+  <thead>
+    <tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>CONTAINER_BASE_NAME</code></td><td><code>"__TerrainPrefabPlacer_Container_"</code></td><td>Base name prefix for generated containers. A GUID is appended to make each unique.</td></tr>
+    <tr><td><code>LAST_CONTAINER_PREFS_KEY</code></td><td><code>"TerrainPrefabPlacer_LastContainer"</code></td><td>EditorPrefs key for persisting the last container name across domain reloads.</td></tr>
+    <tr><td><code>DEBUG_ENABLED</code></td><td><code>false</code></td><td>Master switch for all non-error debug output. Set to <code>true</code> to enable logging.</td></tr>
+    <tr><td><code>DBG_OUT_PREPEND</code></td><td><code>"[TerrainHeightVisualizer/TerrainPrefabPlacer]"</code></td><td>Prefix string prepended to all debug log messages from this class.</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============ TIPS & BEST PRACTICES ============ -->
+<h2 id="tips">Tips and Best Practices <a class="home-link" href="#top">home</a></h2>
+
+<p><strong>Start coarse, refine later.</strong> Use a large grid spacing (200&nbsp;m or more) for a first pass to preview distribution. Reduce spacing to add density once the placement area and prefab mix look right.</p>
+
+<p><strong>Weight your prefab mix.</strong> Fill multiple slots with the same prefab to increase its probability of selection. For example, filling slots 1&ndash;7 with trees and slots 8&ndash;10 with rocks gives a roughly 70/30 tree-to-rock ratio.</p>
+
+<p><strong>Use the height filter to place by biome.</strong> Low-percentile ranges suit vegetation in valleys; high-percentile ranges suit sparse rocks or snow on peaks. Mid-range bands are useful for dense forest placement on slopes.</p>
+
+<p><strong>Generated objects are saved to the scene.</strong> Unlike the Terrain Height Spheres tool, these objects persist. Use the Remove Objects button or the Hierarchy to clean up between iterations.</p>
+
+<p><strong>Multiple containers can coexist.</strong> Each generation creates a new uniquely named container. This lets you layer different prefab sets at different elevation bands and manage each group independently in the Hierarchy.</p>
+
+<p><strong>Scale variance adds realism.</strong> Even a small 10&ndash;15% variance breaks up the uniform look of repeated prefabs. Higher values (30%+) work well for rocks and debris; lower values (5&ndash;10%) are better for structured objects like fences or props.</p>
+
+<hr>
+
+<!-- ============ FAQ / TROUBLESHOOTING ============ -->
+<h2 id="faq">FAQ / Troubleshooting <a class="home-link" href="#top">home</a></h2>
+
+<div class="faq-item">
+  <p class="q">Q: The Generate Objects button is grayed out.</p>
+  <p class="a">A: At least one prefab slot must be filled before generation is allowed. Assign a prefab to any slot and the button will become active.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: I clicked Generate but nothing appeared in the scene.</p>
+  <p class="a">A: Ensure at least one active <code>Terrain</code> is present in the Hierarchy. Also check that your Bottom and Top Percentile values are not so close together that no terrain points fall within the band.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Objects are all at the same scale.</p>
+  <p class="a">A: The Scale Variance % slider is set to 0. Increase it to apply random scale variation.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The objects appear in a visible grid pattern.</p>
+  <p class="a">A: This can happen with small grid spacing and low scale variance, making the grid-based origin obvious. Increase scale variance, or reduce grid spacing to tighten the random offset radius relative to object size.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Remove Objects says the container was not found.</p>
+  <p class="a">A: The container may have been renamed or deleted manually in the Hierarchy, or a domain reload cleared the reference. The window clears its internal reference automatically. Locate and delete the container manually from the Hierarchy if it still exists.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: I generated objects, closed Unity, and they are gone.</p>
+  <p class="a">A: You may not have saved the scene before closing. Generated objects are standard scene GameObjects &mdash; save the scene after generating to persist them.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I use this at runtime?</p>
+  <p class="a">A: No. Terrain Prefab Placer is an Editor-only tool. The class is in an <code>Editor</code> folder and depends on <code>UnityEditor</code> APIs not available in builds.</p>
+</div>
+
+<hr>
+
+<!-- ============ VERSION HISTORY ============ -->
+<h2 id="version-history">Version History <a class="home-link" href="#top">home</a></h2>
+
+<h3><span class="changelog-version">v1.0.0</span> &mdash; Initial Release</h3>
+
+<ul>
+  <li>Editor window accessible via Tools &gt; BBB &gt; Terrain Prefab Placer</li>
+  <li>Ten prefab slots with random selection on each placement</li>
+  <li>Configurable grid spacing (0.01&ndash;500&nbsp;m)</li>
+  <li>Bake Current Objects — permanently commits the current generation to the scene and resets the tool for a fresh pass</li>
+  <li>Scale variance slider (0&ndash;50%) for randomized object scale</li>
+  <li>Random position offset within grid cell radius</li>
+  <li>Random Y rotation per object</li>
+  <li>Percentile-based height filter (bottom and top, 0&ndash;100)</li>
+  <li>Multi-terrain support with global height range computation</li>
+  <li>Unique GUID-named container per generation</li>
+  <li>One-click Generate and Remove controls</li>
+</ul>
+
+<hr>
+
+<!-- ============ SUPPORT & CONTACT ============ -->
+<h2 id="support">Support and Contact <a class="home-link" href="#top">home</a></h2>
+
+<p>For questions, bug reports, or feature requests, please contact us through the Discord channel linked below.</p>
+
+<p><strong>Publisher:</strong> BigBuffaloBill</p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/HadwVTP3r5">BigBuffaloBill &amp; Friends Gaming + (bbb-unity-support-forum-public)</a></p>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  Terrain Prefab Placer is a product of BigBuffaloBill. Unity is a trademark of Unity Technologies. &copy;2026.
+</div>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>
