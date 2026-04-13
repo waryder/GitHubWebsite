@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Object Catalog Scene Creator — Documentation</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --unity-blue: #3d8bff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+  }
+
+  /* ---- Hero / Title ---- */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ---- Table of Contents ---- */
+  .toc {
+    margin-bottom: 2.5rem;
+  }
+
+  .toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc li {
+    margin-bottom: 0.3rem;
+  }
+
+  .toc li::before {
+    content: '› ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .toc a {
+    color: var(--link);
+    font-size: 0.95rem;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .home-link {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .home-link:hover {
+    color: var(--link);
+    text-decoration: underline;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--link);
+    margin: 2rem 0 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  /* ---- Body text ---- */
+  p {
+    margin-bottom: 1rem;
+  }
+
+  strong {
+    color: var(--text-bright);
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---- Lists ---- */
+  ul, ol {
+    margin: 0.75rem 0 1.25rem 1.6rem;
+  }
+
+  li {
+    margin-bottom: 0.45rem;
+  }
+
+  li strong {
+    color: var(--text-bright);
+  }
+
+  /* ---- Inline code ---- */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: #7fdbca;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* ---- Code blocks ---- */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #c5c8c6;
+  }
+
+  /* ---- Blockquotes ---- */
+  blockquote {
+    border-left: 4px solid var(--blockquote-border);
+    background: rgba(233, 69, 96, 0.08);
+    padding: 0.9rem 1.2rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+  }
+
+  blockquote strong {
+    color: var(--accent);
+  }
+
+  /* ---- Tables ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  thead th {
+    background: var(--table-header);
+    color: var(--text-bright);
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--table-row-alt);
+  }
+
+  tbody td code {
+    font-size: 0.84em;
+  }
+
+  /* ---- FAQ ---- */
+  .faq-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .faq-item .q {
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+  }
+
+  .faq-item .a {
+    color: var(--text-muted);
+  }
+
+  /* ---- Version history ---- */
+  .changelog-version {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ---- Horizontal rules ---- */
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 1.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.35rem; }
+    table { font-size: 0.82rem; }
+    thead th, tbody td { padding: 0.45rem 0.55rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ============ HERO ============ -->
+<div id="top" class="hero">
+  <h1>Object Catalog Scene Creator</h1>
+  <p class="tagline">Automatically generate browsable catalog scenes from any asset folder<BR>for the Unity Editor by BigBuffaloBill.</p>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#why-this-tool">Why This Tool Exists</a></li>
+    <li><a href="#key-features">Key Features</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#detailed-usage">Detailed Usage Guide</a></li>
+    <li><a href="#hierarchy-workflow">The Hierarchy &amp; Scene Tab Workflow</a></li>
+    <li><a href="#synergy">Synergy with Object Reference Manager</a></li>
+    <li><a href="#api-reference">API Reference</a></li>
+    <li><a href="#tips">Tips and Best Practices</a></li>
+    <li><a href="#faq">FAQ / Troubleshooting</a></li>
+    <li><a href="#version-history">Version History</a></li>
+    <li><a href="#support">Support and Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<h2 id="overview">Overview <a class="home-link" href="#top">home</a></h2>
+
+<blockquote style="font-size: 0.875rem;">
+  <p><strong>Author's Note on Expected Functionality:</strong> The author has written an important note about the intended scope, known limitations, and support expectations for this toolset. Please see <a href="ImportantNoteAboutSupport.html"><strong>Notes on Tool Intent, Status and Author Support</strong></a> before proceeding.</p>
+</blockquote>
+
+<p>Object Catalog Scene Creator is a Unity Editor extension that takes any project folder containing Prefab, FBX, or OBJ assets and instantly generates a dedicated catalog scene &mdash; a clean, well-lit grid of every object, each named in the Hierarchy for fast identification. Instead of digging through nested project folders or hunting for the right asset among hundreds of files, you open the catalog scene and see everything at a glance.</p>
+
+<p>The tool scans the chosen folder (with an optional recursive mode for deep folder trees), instantiates every valid asset, filters out oversized objects, lays them out in a uniform grid with configurable spacing, adds a camera and directional light, places a coloured background quad behind the grid, and saves the entire result as a standalone Unity scene. Each object retains its prefab link, so you can drag directly from the catalog scene&rsquo;s Hierarchy or Scene tab into any other scene or Inspector field.</p>
+
+<p>A built-in hover preview overlay lets you mouse over objects in the Scene view to see a magnified preview with the asset name &mdash; no clicking required.</p>
+
+<hr>
+
+<!-- ============ WHY THIS TOOL EXISTS ============ -->
+<h2 id="why-this-tool">Why This Tool Exists <a class="home-link" href="#top">home</a></h2>
+
+<p>This tool was born from the experience of buying object packages that did not provide a full, easy-browse scene showing the complete set of assets in the package. Sometimes a package includes a demo scene arranged artistically &mdash; objects laid out in a room or landscape to show intended usage &mdash; but no bare object catalog where you can see and access every asset individually. Other packages ship with no demo scene at all, or bury their assets in folder structures that are not obvious to navigate. In still other cases, a project accumulates a large number of object assets that were never designed for reuse, but from which you may want to cherry-pick objects anyway.</p>
+
+<p>In all of these situations, the same problem arises: <strong>you own the assets, but you cannot easily see, compare, or access them.</strong></p>
+
+<p>Object Catalog Scene Creator puts object review and easy reuse squarely in your hands. Point it at any folder, click one button, and you have a browsable, named, drag-ready catalog of everything in that folder &mdash; regardless of whether the original author provided one.</p>
+
+<hr>
+
+<!-- ============ KEY FEATURES ============ -->
+<h2 id="key-features">Key Features <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>One-click catalog scene generation</strong> from any project folder containing Prefab, FBX, or OBJ assets</li>
+  <li><strong>Recursive subdirectory scanning</strong> &mdash; optionally search the entire folder tree, not just the top level</li>
+  <li><strong>Configurable object count warning</strong> &mdash; prompts for confirmation before generating scenes with more objects than a user-defined threshold (default: 256)</li>
+  <li><strong>Max model size filter</strong> &mdash; automatically excludes assets whose largest bounding dimension exceeds a configurable limit</li>
+  <li><strong>Uniform grid layout</strong> centred at world origin with configurable minimum buffer spacing</li>
+  <li><strong>Background quad</strong> with user-selectable colour, sized to frame the entire grid</li>
+  <li><strong>Auto-generated camera and directional light</strong> positioned to frame the full grid</li>
+  <li><strong>Show as Disabled mode</strong> &mdash; optionally saves all objects as inactive for manual activation during review</li>
+  <li><strong>Suspend LODs (live toggle)</strong> &mdash; temporarily disable all LOD groups in the active scene for full-detail review without persisting changes on scene switch or reboot</li>
+  <li><strong>Hover Preview overlay</strong> &mdash; mouse over any prefab instance in the Scene view to see a magnified preview with the object name, with configurable overlay dimensions</li>
+  <li><strong>Prefab links preserved</strong> &mdash; every object in the catalog retains its prefab connection for drag-and-drop reuse</li>
+  <li><strong>In-window Help button</strong> &mdash; opens this documentation in your system browser directly from the tool window</li>
+  <li><strong>Non-destructive workflow</strong> &mdash; output is written to a dedicated <code>ObjectCatalog</code> subfolder inside the scanned folder; source assets are never modified</li>
+</ul>
+
+<hr>
+
+<!-- ============ REQUIREMENTS ============ -->
+<h2 id="requirements">Requirements <a class="home-link" href="#top">home</a></h2>
+
+<ul>
+  <li><strong>Unity version:</strong> 2020.3 LTS or later (uses <code>PrefabUtility.InstantiatePrefab</code>, <code>EditorSceneManager</code>, and <code>AssetDatabase</code> APIs available since 2018.4+; tested and recommended on 2020.3+)</li>
+  <li><strong>Render pipeline:</strong> Any (URP, HDRP, Built-in) &mdash; this is an Editor-only tool with no runtime dependencies</li>
+  <li><strong>Dependencies:</strong> None. Uses only built-in Unity Editor APIs (<code>UnityEngine</code>, <code>UnityEditor</code>, <code>System.IO</code>)</li>
+  <li><strong>Platform:</strong> Works on all platforms supported by the Unity Editor (Windows, macOS, Linux)</li>
+</ul>
+
+<hr>
+
+<!-- ============ INSTALLATION ============ -->
+<h2 id="installation">Installation <a class="home-link" href="#top">home</a></h2>
+
+<h3>Typical Package Manager Installation</h3>
+
+<ol>
+  <li>After purchasing Object Catalog Scene Creator on the <strong>Unity Asset Store</strong>, click the <strong>Open in Unity</strong> button on the store page. This automatically opens the Package Manager window in your Unity Editor and navigates to <strong>My Assets</strong> with the package selected.</li>
+  <li>In the package details panel, click <strong>Download</strong> to download the package to your machine. A progress bar will appear while the download completes.</li>
+  <li>Once the download finishes, the button changes to <strong>Import</strong>. Click it to begin importing.</li>
+  <li>The <strong>Import Unity Package</strong> dialog appears with all package contents pre-selected. Optionally uncheck any items you do not want to include, then click <strong>Import</strong>.</li>
+  <li>The Package Manager places the imported files into your project&rsquo;s <strong>Assets</strong> folder, where they are accessible from the Project window.</li>
+</ol>
+
+<h3>After Import</h3>
+
+<p>Allow Unity to compile the newly imported scripts. Once compilation finishes, the tool is ready to use &mdash; no additional setup is required. The following assets will be present in your project:</p>
+
+<pre><code>Assets/BBB/ObjectCatalogSceneCreator/
+&#9500;&#9472;&#9472; Editor/
+&#9474;   &#9492;&#9472;&#9472; ObjectCatalogSceneCreator.cs
+&#9492;&#9472;&#9472; ObjectCatalogSceneCreator.html</code></pre>
+
+<blockquote>
+  <p><strong>Note:</strong> No additional data files or folders are needed. The tool generates its output (an <code>ObjectCatalog</code> subfolder containing the scene and material) inside whichever folder you point it at.</p>
+</blockquote>
+
+<hr>
+
+<!-- ============ GETTING STARTED ============ -->
+<h2 id="getting-started">Getting Started <a class="home-link" href="#top">home</a></h2>
+
+<ol>
+  <li>Open the tool window: go to <strong>Tools &gt; BBB &gt; Object Catalog Scene Creator</strong> in the Unity menu bar.</li>
+  <li>Drag a folder from the Project window into the <strong>Folder</strong> field. This is the folder whose assets you want to catalog.</li>
+  <li>Optionally adjust settings: enable <strong>Recurse Subdirectories</strong> if the assets are spread across subfolders, adjust the <strong>Min Buffer</strong>, <strong>Max Model Size</strong>, or <strong>Background Color</strong> as desired.</li>
+  <li>Click <strong>Execute: Generate ObjectCatalog Scene</strong>.</li>
+  <li>A confirmation dialog appears showing where the output will be saved. Click <strong>Yes</strong> to proceed.</li>
+  <li>If the object count exceeds your <strong>Warn if Objects Found &gt;</strong> threshold, a second confirmation dialog lets you continue or cancel.</li>
+  <li>The tool generates the catalog scene and displays a summary of how many objects were placed. The scene is saved as <code>ObjectCatalog.unity</code> inside an <code>ObjectCatalog</code> subfolder of the folder you selected.</li>
+  <li>Open the generated scene to browse your assets. Each object is named in the Hierarchy, making it trivial to locate, select, and reuse.</li>
+</ol>
+
+<hr>
+
+<!-- ============ DETAILED USAGE GUIDE ============ -->
+<h2 id="detailed-usage">Detailed Usage Guide <a class="home-link" href="#top">home</a></h2>
+
+<h3>Opening the Window</h3>
+
+<p>Navigate to <strong>Tools &gt; BBB &gt; Object Catalog Scene Creator</strong> in the Unity menu bar. The window is a standard dockable Editor window &mdash; you can dock it alongside the Inspector, Scene view, or any other panel. The window title is &ldquo;Object Catalog Scene Creator.&rdquo;</p>
+
+<h3>Selecting a Folder</h3>
+
+<p>Drag any folder from the Project window into the <strong>Folder</strong> field at the top of the window. Only folders are accepted &mdash; individual asset files are not valid targets. The folder can be at any depth in your project.</p>
+
+<h3>Configuring Options</h3>
+
+<table>
+  <thead>
+    <tr><th>Option</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Min Buffer (m)</strong></td><td>0.1</td><td>Minimum spacing gap around the largest object in the grid. Also controls the gap between the objects and the background quad.</td></tr>
+    <tr><td><strong>Max Model Size (m)</strong></td><td>10</td><td>Any asset whose largest bounding dimension exceeds this value is excluded from the catalog. Useful for filtering out terrain pieces, buildings, or other oversized assets.</td></tr>
+    <tr><td><strong>Background Color</strong></td><td>White</td><td>The colour of the flat quad placed behind the entire grid. Choose a contrasting colour to make objects stand out.</td></tr>
+    <tr><td><strong>Show as Disabled</strong></td><td>Off</td><td>When enabled, every object in the catalog scene is saved with <code>SetActive(false)</code>. This lets you manually enable objects one at a time during review.</td></tr>
+    <tr><td><strong>Recurse Subdirectories</strong></td><td>Off</td><td>When enabled, the tool scans the entire directory tree under the selected folder, not just the top-level contents. Useful for packages that organise assets into category subfolders.</td></tr>
+    <tr><td><strong>Warn if Objects Found &gt;</strong></td><td>256</td><td>If the total number of objects to be placed in the scene exceeds this threshold, a confirmation dialog is shown before the scene is generated. This gives you the opportunity to cancel if the count is unexpectedly high.</td></tr>
+    <tr><td><strong>Hover Preview</strong></td><td>Off</td><td>When enabled, hovering over prefab instances in the Scene view shows a magnified preview overlay with the object name. The overlay size is configurable via the <strong>Preview Width</strong> and <strong>Preview Height</strong> fields that appear when this toggle is on.</td></tr>
+  </tbody>
+</table>
+
+<h3>Generating the Catalog Scene</h3>
+
+<p>Click <strong>Execute: Generate ObjectCatalog Scene</strong>. The tool performs the following steps:</p>
+
+<ol>
+  <li>Creates (or replaces) an <code>ObjectCatalog</code> subfolder inside the selected folder.</li>
+  <li>Scans for all <code>.prefab</code>, <code>.fbx</code>, and <code>.obj</code> assets (respecting the <strong>Recurse Subdirectories</strong> setting).</li>
+  <li>Instantiates each asset, measures its bounds, and excludes any that exceed the <strong>Max Model Size</strong>.</li>
+  <li>If the remaining object count exceeds the <strong>Warn if Objects Found &gt;</strong> threshold, prompts for confirmation.</li>
+  <li>Arranges all remaining objects in a uniform grid centred at world origin.</li>
+  <li>Adds a background quad, directional light, and perspective camera.</li>
+  <li>Saves the scene as <code>ObjectCatalog.unity</code> and the background material as <code>ObjectCatalog_Background.mat</code>.</li>
+</ol>
+
+<h3>Output Structure</h3>
+
+<pre><code>&lt;YourFolder&gt;/
+&#9492;&#9472;&#9472; ObjectCatalog/
+    &#9500;&#9472;&#9472; ObjectCatalog.unity
+    &#9492;&#9472;&#9472; ObjectCatalog_Background.mat</code></pre>
+
+<p>Running the tool again on the same folder overwrites the previous output. Source assets are never modified.</p>
+
+<h3>Help Button</h3>
+
+<p>The <strong>?</strong> button in the top-right corner of the tool window opens this documentation page in your system&rsquo;s default web browser.</p>
+
+<hr>
+
+<!-- ============ HIERARCHY & SCENE TAB WORKFLOW ============ -->
+<h2 id="hierarchy-workflow">The Hierarchy &amp; Scene Tab Workflow <a class="home-link" href="#top">home</a></h2>
+
+<p>One of the most valuable aspects of a generated catalog scene is how it integrates with Unity&rsquo;s Hierarchy and Scene tabs for fast object identification and reuse.</p>
+
+<p>Every object placed in the catalog scene retains its original asset name as its GameObject name in the Hierarchy. This makes it trivial to <strong>click any entry in either the Hierarchy or the Scene tab and have it highlighted in the other tab for use as needed from that context.</strong> Click a name in the Hierarchy and the Scene view zooms to and highlights that object. Click an object in the Scene view and its name is selected in the Hierarchy. This bidirectional selection means you can:</p>
+
+<ul>
+  <li><strong>Visually browse</strong> objects in the Scene view and instantly see their names and hierarchy paths.</li>
+  <li><strong>Search by name</strong> in the Hierarchy&rsquo;s search bar to jump directly to a specific asset.</li>
+  <li><strong>Drag from the Hierarchy</strong> into another open scene, an Inspector field, or a reference slot in any other editor window.</li>
+  <li><strong>Compare objects side by side</strong> by selecting multiple entries in the Hierarchy while viewing them spatially in the Scene tab.</li>
+</ul>
+
+<p>Because each catalog object retains its prefab link, dragging an object from the catalog into another scene creates a proper prefab instance &mdash; not a disconnected copy. This preserves the ability to push overrides back to the source prefab and ensures your scene references stay clean.</p>
+
+<hr>
+
+<!-- ============ SYNERGY WITH OBJECT REFERENCE MANAGER ============ -->
+<h2 id="synergy">Synergy with Object Reference Manager <a class="home-link" href="#top">home</a></h2>
+
+<p><strong><a href="../ObjectReferenceManager/ObjectReferenceManager_Documentation.html">Object Reference Manager</a></strong> is another Editor tool by BigBuffaloBill, available separately on the Unity Asset Store. It provides a persistent, dockable palette of GameObject references with thumbnail previews and drag-out support &mdash; a curated collection of your most-used assets that survives across Editor sessions.</p>
+
+<p>Object Catalog Scene Creator and Object Reference Manager are designed to complement each other powerfully. Neither tool duplicates the other&rsquo;s function; together they form a complete <strong>discover-then-reuse</strong> workflow:</p>
+
+<ol>
+  <li><strong>Discover</strong> &mdash; Use Object Catalog Scene Creator to generate a visual catalog of every asset in a folder (or an entire package). Browse the catalog scene to identify objects you want to work with.</li>
+  <li><strong>Curate</strong> &mdash; Drag the objects you care about from the catalog scene&rsquo;s Hierarchy into Object Reference Manager&rsquo;s palette slots. Each reference is stored persistently.</li>
+  <li><strong>Reuse</strong> &mdash; From that point forward, your curated objects are always one drag away in the Object Reference Manager window, regardless of which scene you have open. No more hunting through folders or regenerating catalogs.</li>
+</ol>
+
+<p>This workflow is especially valuable when working with large purchased asset packs. Generate the catalog once, spend a few minutes identifying the assets you actually need, drag them into the Reference Manager, and you have a permanent, organized palette tailored to your project &mdash; built from assets that may have been buried three folders deep with no demo scene in sight.</p>
+
+<hr>
+
+<!-- ============ API REFERENCE ============ -->
+<h2 id="api-reference">API Reference <a class="home-link" href="#top">home</a></h2>
+
+<h3>ObjectCatalogSceneCreator (class)</h3>
+
+<p><strong>Namespace:</strong> <code>BBB.Utilities</code></p>
+<p><strong>Inherits:</strong> <code>UnityEditor.EditorWindow</code></p>
+<p><strong>Location:</strong> <code>Editor/ObjectCatalogSceneCreator.cs</code></p>
+<p><strong>Description:</strong> The main Editor window class. This is an editor-only class and is not available at runtime.</p>
+
+<h4>Menu Items</h4>
+
+<table>
+  <thead>
+    <tr><th>Menu Path</th><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tools &gt; BBB &gt; Object Catalog Scene Creator</td>
+      <td><code>ShowWindow()</code></td>
+      <td>Opens or focuses the Object Catalog Scene Creator window.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Key Private Methods</h4>
+
+<table>
+  <thead>
+    <tr><th>Method</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>OnEnable()</code></td><td>Subscribes to SceneView repaint events for hover preview detection.</td></tr>
+    <tr><td><code>OnDisable()</code></td><td>Unsubscribes from SceneView events and cleans up the cached preview editor.</td></tr>
+    <tr><td><code>OnGUI()</code></td><td>Draws the window GUI: folder field, options, execute button, help button, and info box.</td></tr>
+    <tr><td><code>OpenHelpPage()</code></td><td>Resolves the HTML documentation path to an absolute file URI and opens it in the system browser.</td></tr>
+    <tr><td><code>CreateCatalogScene(string, float, float, Color, bool, bool, int)</code></td><td>Full scene-generation pipeline: collect assets, instantiate and filter, check warn threshold, lay out grid, add background/light/camera, save scene.</td></tr>
+    <tr><td><code>CollectRenderableAssetPaths(string, bool)</code></td><td>Returns project-relative paths for all Prefab, FBX, and OBJ assets in the given folder. Respects the recurse flag.</td></tr>
+    <tr><td><code>IsDirectChild(string, string)</code></td><td>Returns true only if the asset path is immediately inside the parent folder with no subdirectory levels in between.</td></tr>
+    <tr><td><code>TryGetCombinedBounds(GameObject, out Bounds)</code></td><td>Computes the world-space union of all Renderer bounds on the object and its children.</td></tr>
+    <tr><td><code>OnSceneViewHoverPreview(SceneView)</code></td><td>SceneView callback for hover detection and preview overlay rendering.</td></tr>
+    <tr><td><code>DrawHoverPreviewOverlay(SceneView)</code></td><td>Renders a magnified interactive preview of the hovered prefab with its name as a 2D overlay.</td></tr>
+  </tbody>
+</table>
+
+<h4>Window Fields</h4>
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>folderAsset</code></td><td><code>DefaultAsset</code></td><td><code>null</code></td><td>The project folder to scan, assigned via drag-and-drop.</td></tr>
+    <tr><td><code>minBuffer</code></td><td><code>float</code></td><td><code>0.1</code></td><td>Minimum spacing gap in meters around objects.</td></tr>
+    <tr><td><code>maxModelSize</code></td><td><code>float</code></td><td><code>10</code></td><td>Maximum allowed bounding dimension in meters.</td></tr>
+    <tr><td><code>backgroundColor</code></td><td><code>Color</code></td><td><code>White</code></td><td>Background quad colour.</td></tr>
+    <tr><td><code>showAsDisabled</code></td><td><code>bool</code></td><td><code>false</code></td><td>Whether objects are saved as inactive.</td></tr>
+    <tr><td><code>recurseSubdirectories</code></td><td><code>bool</code></td><td><code>false</code></td><td>Whether to scan subdirectories recursively.</td></tr>
+    <tr><td><code>warnIfObjectsExceed</code></td><td><code>int</code></td><td><code>256</code></td><td>Object count threshold for the warning dialog.</td></tr>
+    <tr><td><code>hoverPreviewEnabled</code></td><td><code>bool</code></td><td><code>false</code></td><td>Master toggle for the Scene view hover preview overlay.</td></tr>
+    <tr><td><code>hpPreviewWidth</code></td><td><code>int</code></td><td><code>256</code></td><td>Pixel width of the hover preview overlay.</td></tr>
+    <tr><td><code>hpPreviewHeight</code></td><td><code>int</code></td><td><code>256</code></td><td>Pixel height of the hover preview overlay.</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============ TIPS & BEST PRACTICES ============ -->
+<h2 id="tips">Tips and Best Practices <a class="home-link" href="#top">home</a></h2>
+
+<p><strong>Start without recursion.</strong> If you are unsure how many assets are in a folder tree, start with <strong>Recurse Subdirectories</strong> off. This lets you preview the top-level contents first and decide whether a full recursive scan is needed.</p>
+
+<p><strong>Use the warn threshold.</strong> Keep the <strong>Warn if Objects Found &gt;</strong> value at a reasonable level for your machine. Generating a scene with thousands of objects is possible but may take time. The threshold gives you a chance to cancel before committing.</p>
+
+<p><strong>Adjust Max Model Size for your content.</strong> If the catalog includes terrain pieces or large architectural assets you don&rsquo;t want to review, lower the max size to exclude them automatically.</p>
+
+<p><strong>Use Show as Disabled for large catalogs.</strong> When reviewing hundreds of objects, enable <strong>Show as Disabled</strong>. Then enable objects selectively in the Hierarchy to examine them individually without visual clutter.</p>
+
+<p><strong>Enable Hover Preview for quick identification.</strong> The hover overlay shows a magnified preview with the asset name. This is especially useful in dense grids where objects are small on screen.</p>
+
+<p><strong>Pair with Object Reference Manager.</strong> Once you have identified the assets you need in a catalog scene, drag them into <a href="../ObjectReferenceManager/ObjectReferenceManager_Documentation.html">Object Reference Manager</a>&rsquo;s palette for persistent, session-spanning access.</p>
+
+<p><strong>Re-generate freely.</strong> Running the tool again on the same folder replaces the previous catalog. This is non-destructive &mdash; only the <code>ObjectCatalog</code> subfolder is affected, never your source assets.</p>
+
+<hr>
+
+<!-- ============ FAQ / TROUBLESHOOTING ============ -->
+<h2 id="faq">FAQ / Troubleshooting <a class="home-link" href="#top">home</a></h2>
+
+<div class="faq-item">
+  <p class="q">Q: No assets were found even though I can see them in the Project window.</p>
+  <p class="a">A: The tool only recognises <code>.prefab</code>, <code>.fbx</code>, and <code>.obj</code> files. If your assets are in other formats (e.g., <code>.blend</code>, <code>.max</code>), they will not be included. Also check whether <strong>Recurse Subdirectories</strong> is enabled &mdash; assets in subfolders are only found when recursion is on.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The scene has gaps where objects should be.</p>
+  <p class="a">A: Objects that exceed the <strong>Max Model Size</strong> are excluded. A dialog reports how many were skipped. If important objects are missing, increase the max size and re-generate.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: I got a warning about too many objects. Can I change the threshold?</p>
+  <p class="a">A: Yes. Adjust the <strong>Warn if Objects Found &gt;</strong> field in the tool window before running. The default is 256, but you can set it to any value from 1 upward.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The hover preview shows nothing for some objects.</p>
+  <p class="a">A: The hover preview only works for prefab instances. Objects that are not linked to a prefab asset (such as the background quad, lights, or cameras) will not show a preview. Additionally, Unity&rsquo;s asset preview system may take a moment to generate thumbnails for newly instantiated objects.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I run this on the same folder repeatedly?</p>
+  <p class="a">A: Yes. Each run replaces the previous <code>ObjectCatalog</code> subfolder contents. If the catalog scene is currently open in the editor, it is automatically closed before regeneration.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: The background quad colour does not match what I selected.</p>
+  <p class="a">A: The tool looks for <code>Unlit/Color</code>, <code>Universal Render Pipeline/Unlit</code>, and <code>Sprites/Default</code> shaders in that order. If your project uses a non-standard shader configuration, the colour property may not map correctly. You can manually adjust the generated <code>ObjectCatalog_Background.mat</code> material after generation.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Does this modify my source assets?</p>
+  <p class="a">A: No. The tool only creates files inside the <code>ObjectCatalog</code> subfolder of the selected folder. Your source Prefab, FBX, and OBJ files are read but never written to.</p>
+</div>
+
+<div class="faq-item">
+  <p class="q">Q: Can I use this at runtime?</p>
+  <p class="a">A: No. Object Catalog Scene Creator is an Editor-only tool. The class is in an Editor folder and depends on <code>UnityEditor</code> APIs that are not available in builds.</p>
+</div>
+
+<hr>
+
+<!-- ============ VERSION HISTORY ============ -->
+<h2 id="version-history">Version History <a class="home-link" href="#top">home</a></h2>
+
+<h3><span class="changelog-version">v1.0.0</span> &mdash; Initial Release</h3>
+
+<ul>
+  <li>Editor window accessible via Tools &gt; BBB &gt; Object Catalog Scene Creator</li>
+  <li>One-click catalog scene generation from Prefab, FBX, and OBJ assets</li>
+  <li>Recursive subdirectory scanning (optional)</li>
+  <li>Configurable object count warning threshold with confirmation dialog</li>
+  <li>Max model size filter with exclusion reporting</li>
+  <li>Uniform grid layout with configurable buffer spacing</li>
+  <li>Background quad with user-selectable colour</li>
+  <li>Auto-generated perspective camera and directional light</li>
+  <li>Show as Disabled toggle for selective review</li>
+  <li>Hover Preview overlay with configurable dimensions</li>
+  <li>In-window Help button linking to HTML documentation</li>
+  <li>Non-destructive output to dedicated ObjectCatalog subfolder</li>
+</ul>
+
+<hr>
+
+<!-- ============ SUPPORT & CONTACT ============ -->
+<h2 id="support">Support and Contact <a class="home-link" href="#top">home</a></h2>
+
+<p>For questions, bug reports, or feature requests, please contact us through the Discord Channel linked below.</p>
+
+<p><strong>Publisher:</strong> BigBuffaloBill</p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/HadwVTP3r5">BigBuffaloBill &amp; Friends Gaming + (bbb-unity-support-forum-public)</a></p>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  Object Catalog Scene Creator is a product of BigBuffaloBill. Unity is a trademark of Unity Technologies. @2026.
+</div>
+
+</div><!-- .page-wrapper -->
+</body>
+</html>
