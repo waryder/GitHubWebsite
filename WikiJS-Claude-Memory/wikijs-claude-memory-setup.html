@@ -322,6 +322,15 @@
     <p class="meta" style="margin-top:0.4rem">Author: <strong style="color:var(--text)">BigBuffaloBill @ Discord</strong> &nbsp;·&nbsp; April 29, 2026</p>
   </div>
 
+  <!-- DISCLAIMER -->
+  <div class="warn" style="margin-top:0; margin-bottom:2.5rem;">
+    <strong>Disclaimer — read before continuing.</strong>
+    <p style="margin-top:0.5rem;">This document describes a self-hosted configuration the author personally uses. It is published for <strong>informational and educational purposes only</strong>. Nothing in this document constitutes a product, a supported solution, professional advice, or a recommendation that any reader implement it.</p>
+    <p>The information is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, accuracy, security, or non-infringement.</p>
+    <p>To the maximum extent permitted by applicable law, the author shall <strong>not be liable</strong> for any direct, indirect, incidental, special, consequential, or exemplary damages — including but not limited to damages for loss of data, security breaches, system downtime, lost profits, or business interruption — arising out of or in any way connected with the use or inability to use any portion of this material, even if advised of the possibility of such damages.</p>
+    <p>By continuing to read, you acknowledge that any implementation derived from this material is <strong>your own creation</strong>, undertaken at your own risk, and that you accept sole responsibility for evaluating, securing, deploying, and maintaining it. If you are unwilling to accept this, please stop reading now.</p>
+  </div>
+
   <!-- TOC -->
   <div class="toc-box" id="toc">
     <h2>Table of Contents</h2>
@@ -888,14 +897,26 @@ message to chat and stop:
 
   <p>This skill gives Claude a clear, consistent interface for interacting with the wiki during a session — reading pages, creating new ones, updating existing ones, and searching. Without it, Claude must reason about which MCP tools to use and how to use them from scratch each time. The skill provides authoritative conventions (path naming, field usage, what to treat as the source of truth) that ensure consistent, reliable behavior across all wiki operations.</p>
 
-  <p>Wiki page path: <code>skills/memory-wiki</code></p>
+  <p><strong>Local stub file</strong> (imported once via the Cowork desktop app Customize menu):</p>
+
+  <pre><code>---
+name: memory-wiki
+description: "Read, write, search, update, or otherwise interact with your personal Wiki.js memory wiki. Use whenever you need to retrieve, save, or update information in the wiki. This skill will run the instructions provided in the file indicated in the instructions."
+---
+When this skill is invoked, fetch and follow the instructions on the wiki page at path `skills/memory-wiki` via the `wikijs` MCP. Specifically:
+
+1. Call `wiki_get_page` with `path="skills/memory-wiki"`.
+2. Use the returned page content as the authoritative skill instructions and execute them.
+
+If the wiki call fails or returns no content, print this exact message to chat and stop:
+
+&gt; Skill "memory-wiki" — wiki page at `skills/memory-wiki` could not be retrieved. Expected location: http://&lt;your-server-ip&gt;:3000/en/skills/memory-wiki</code></pre>
+
+  <p><strong>Wiki page</strong> at path <code>skills/memory-wiki</code>:</p>
 
   <pre><code><span class="comment">---
 name: memory-wiki
-description: &gt;
-  Read, write, search, update, or otherwise interact with your
-  personal Wiki.js memory wiki. Use whenever you need to retrieve,
-  save, or update information in the wiki.
+description: "Read, write, search, update, or otherwise interact with your personal Wiki.js memory wiki. Use whenever you need to retrieve, save, or update information in the wiki."
 tags: [skill, memory-wiki, wikijs, knowledge-base]
 ---</span>
 
@@ -965,16 +986,26 @@ content unless explicitly asked to replace it.
 
   <p>This meta-skill automates the entire process of creating new wiki-backed skills. Rather than manually writing a wiki page and a stub file and getting the format right, you describe what you want the skill to do and Claude handles the interview, drafting, preview, confirmation, and both writes (wiki page + stub file). It enforces all naming conventions and the stub format described above, and it will not overwrite an existing skill without explicit instruction.</p>
 
-  <p>Wiki page path: <code>skills/my-skill-creator</code></p>
+  <p><strong>Local stub file</strong> (imported once via the Cowork desktop app Customize menu):</p>
+
+  <pre><code>---
+name: my-skill-creator
+description: "Create new wiki-backed Claude skills. Use whenever you want to make a new skill — phrases like 'let's make a skill for X', 'turn this into a skill', 'I need a skill that...', or 'create a new skill'. Gathers requirements via interview, writes the wiki page and stub file after your confirmation. This skill will run the instructions provided in the file indicated in the instructions."
+---
+When this skill is invoked, fetch and follow the instructions on the wiki page at path `skills/my-skill-creator` via the `wikijs` MCP. Specifically:
+
+1. Call `wiki_get_page` with `path="skills/my-skill-creator"`.
+2. Use the returned page content as the authoritative skill instructions and execute them.
+
+If the wiki call fails or returns no content, print this exact message to chat and stop:
+
+&gt; Skill "my-skill-creator" — wiki page at `skills/my-skill-creator` could not be retrieved. Expected location: http://&lt;your-server-ip&gt;:3000/en/skills/my-skill-creator</code></pre>
+
+  <p><strong>Wiki page</strong> at path <code>skills/my-skill-creator</code>:</p>
 
   <pre><code><span class="comment">---
 name: my-skill-creator
-description: &gt;
-  Create new wiki-backed Claude skills. Use whenever you want to
-  make a new skill — phrases like "let's make a skill for X",
-  "turn this into a skill", "I need a skill that...", or
-  "create a new skill". Gathers requirements via interview,
-  writes the wiki page and stub file after your confirmation.
+description: "Create new wiki-backed Claude skills. Use whenever you want to make a new skill — phrases like 'let's make a skill for X', 'turn this into a skill', 'I need a skill that...', or 'create a new skill'. Gathers requirements via interview, writes the wiki page and stub file after your confirmation."
 tags: [skill, skill-creator, meta, wiki-backed]
 ---</span>
 
