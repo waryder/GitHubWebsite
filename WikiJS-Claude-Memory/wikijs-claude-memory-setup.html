@@ -356,6 +356,14 @@
       <li><a href="#verify">Part 8 — End-to-End Verification</a></li>
       <li><a href="#troubleshooting">Troubleshooting</a></li>
       <li><a href="#reference">Quick Reference</a></li>
+      <li><a href="#prompts-skills">Prompt &amp; Skill Examples</a>
+        <ul class="toc-sub">
+          <li><a href="#prompts-skills">Session Startup Directive</a></li>
+          <li><a href="#prompts-skills">Wiki-Backed Skill Stub Format</a></li>
+          <li><a href="#prompts-skills">The memory-wiki Skill</a></li>
+          <li><a href="#prompts-skills">The my-skill-creator Skill</a></li>
+        </ul>
+      </li>
     </ol>
   </div>
 
@@ -813,6 +821,228 @@ netstat -ano | findstr ":3000"
 
 <span class="comment"># Verify MCP binary exists</span>
 pipx list</code></pre>
+
+  <!-- SECTION 13: PROMPT & SKILL EXAMPLES -->
+  <h2 id="prompts-skills">Prompt &amp; Skill Examples <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>One of the most powerful aspects of this system is that it allows you to move the <em>entirety</em> of Claude's persistent memory and standing instructions into the wiki — making the wiki the single source of truth for everything Claude knows about you and how it should behave. Rather than maintaining a static local file that must be manually synced across machines, every instruction, preference, skill definition, and memory item lives in one central, human-editable place. Any change you make in the wiki browser is immediately available to every Claude instance on your network at the next session start.</p>
+
+  <p>The three patterns below are the core building blocks of that system: a startup directive that bootstraps Claude from the wiki each session, a skill stub format that lets Claude route to wiki-hosted skill instructions, and two example skills that make reading/writing the wiki and creating new skills trivially easy.</p>
+
+  <hr>
+
+  <h3>1. Session Startup Directive (CLAUDE.md / User Preferences)</h3>
+
+  <p>This is the instruction you place in Claude's persistent user preferences or your <code>CLAUDE.md</code> file. It tells Claude to fetch a designated wiki page at the start of every session and treat its contents as the authoritative source of standing instructions. Because the instructions themselves live in the wiki, you can update them from any browser without touching any config file.</p>
+
+  <pre><code><span class="comment"># Session Startup</span>
+
+Wiki URL: http://&lt;your-server-ip&gt;:3000
+Wiki Auth: the `wikijs` MCP is already authenticated; no key handling needed from you.
+Wiki paths follow lowercase-hyphenated conventions with folder prefixes:
+  `memory/`, `personal/`, `handoffs/` and so on.
+
+At the start of every session, fetch and act on session-startup data:
+call `wiki_get_page` with path="session-startup" and take any
+follow-up actions dictated by that page's content.</code></pre>
+
+  <p>The <code>session-startup</code> wiki page itself then contains everything Claude needs: standing behavioral rules, daily workflow triggers, reminders carried forward from prior sessions, machine identification steps, and any other per-session setup logic. Updating that one wiki page is all it takes to change Claude's behavior globally across all machines.</p>
+
+  <hr>
+
+  <h3>2. Wiki-Backed Skill Stub Format</h3>
+
+  <p>Skills in Cowork are normally defined as local files imported via the desktop app. In this system, the local file is replaced by a thin "stub" that simply tells Claude to fetch the real skill instructions from the wiki. This means skill content is editable in the browser, versioned by wiki history, and shared across all machines automatically — no re-import needed after edits.</p>
+
+  <p>Each stub file follows this template:</p>
+
+  <pre><code>---
+name: your-skill-name
+description: &gt;
+  Clear description of what this skill does and when to invoke it.
+  Be specific — this description is what Claude uses to decide
+  whether to route to this skill. This skill will run the
+  instructions provided in the file indicated in the instructions.
+---
+
+When this skill is invoked, fetch and follow the instructions on
+the wiki page at path `skills/your-skill-name` via the `wikijs` MCP.
+Specifically:
+
+1. Call `wiki_get_page` with `path="skills/your-skill-name"`.
+2. Use the returned page content as the authoritative skill
+   instructions and execute them.
+
+If the wiki call fails or returns no content, print this exact
+message to chat and stop:
+
+&gt; Skill "your-skill-name" — wiki page at
+&gt; `skills/your-skill-name` could not be retrieved.
+&gt; Expected location: http://&lt;your-server-ip&gt;:3000/en/skills/your-skill-name</code></pre>
+
+  <p>The corresponding wiki page at <code>skills/your-skill-name</code> opens with a frontmatter block containing the skill's <code>name</code>, <code>description</code>, and optional <code>tags</code>, followed by the full Markdown skill instructions. The stub is imported once via the Cowork desktop app's Customize menu; after that, all future edits happen in the wiki with no re-import required.</p>
+
+  <hr>
+
+  <h3>3. The <code>memory-wiki</code> Skill</h3>
+
+  <p>This skill gives Claude a clear, consistent interface for interacting with the wiki during a session — reading pages, creating new ones, updating existing ones, and searching. Without it, Claude must reason about which MCP tools to use and how to use them from scratch each time. The skill provides authoritative conventions (path naming, field usage, what to treat as the source of truth) that ensure consistent, reliable behavior across all wiki operations.</p>
+
+  <p>Wiki page path: <code>skills/memory-wiki</code></p>
+
+  <pre><code><span class="comment">---
+name: memory-wiki
+description: &gt;
+  Read, write, search, update, or otherwise interact with your
+  personal Wiki.js memory wiki. Use whenever you need to retrieve,
+  save, or update information in the wiki.
+tags: [skill, memory-wiki, wikijs, knowledge-base]
+---</span>
+
+# Memory Wiki Skill
+
+This skill uses the `wikijs` MCP connector to interact with your
+personal Wiki.js knowledge base.
+
+## Important: the page body is the single source of truth
+
+Everything Claude needs from a wiki page lives **inside the page
+body** (the Markdown content). For pages that act as Claude skills
+or carry structured metadata, put that metadata in a
+`---`-delimited frontmatter block at the top of the body.
+
+Wiki.js has its own separate `description` and `tags` metadata
+fields used by the wiki UI (search results, page listings). Claude
+does not use those fields for content — they exist only for wiki
+navigation hygiene.
+
+## If invoked with no specific request
+
+Ask the user what they would like to do:
+- **Read** a page by path or search for content
+- **Create** a new page to save notes, research, or reference material
+- **Update** an existing page
+- **Search** across all wiki content
+- **Browse** the page tree or list pages by tag
+
+## Common Operations
+
+### Reading a page
+Use `wiki_get_page` with the page path (e.g. `memory/goals`).
+Paths do not include a leading slash. Treat the page body as
+authoritative.
+
+### Searching
+Use `wiki_search` with a query string. Present results as a list
+with title, path, and a brief excerpt.
+
+### Creating a page
+Use `wiki_create_page`. Required fields:
+- `path` — lowercase, hyphens for spaces (e.g. `memory/my-topic`)
+- `title` — human-readable title
+- `content` — the Markdown body (single source of truth)
+- `editor` — always `markdown`
+- `locale` — always `en`
+- `isPublished` — always `true`
+
+Before creating, confirm no page exists at that path.
+
+### Updating a page
+Use `wiki_get_page` first to get the current content and page ID,
+then `wiki_update_page` with the ID. Always preserve existing
+content unless explicitly asked to replace it.
+
+## Page Organization Conventions
+- Lowercase, hyphenated paths with logical folder prefixes
+- `memory/` for persistent facts and preferences
+- `handoffs/` for session-to-session project continuity docs
+- `skills/` for skill definition pages
+- Always set `isPublished: true`</code></pre>
+
+  <hr>
+
+  <h3>4. The <code>my-skill-creator</code> Skill</h3>
+
+  <p>This meta-skill automates the entire process of creating new wiki-backed skills. Rather than manually writing a wiki page and a stub file and getting the format right, you describe what you want the skill to do and Claude handles the interview, drafting, preview, confirmation, and both writes (wiki page + stub file). It enforces all naming conventions and the stub format described above, and it will not overwrite an existing skill without explicit instruction.</p>
+
+  <p>Wiki page path: <code>skills/my-skill-creator</code></p>
+
+  <pre><code><span class="comment">---
+name: my-skill-creator
+description: &gt;
+  Create new wiki-backed Claude skills. Use whenever you want to
+  make a new skill — phrases like "let's make a skill for X",
+  "turn this into a skill", "I need a skill that...", or
+  "create a new skill". Gathers requirements via interview,
+  writes the wiki page and stub file after your confirmation.
+tags: [skill, skill-creator, meta, wiki-backed]
+---</span>
+
+# My Skill Creator
+
+A meta-skill for creating new wiki-backed Claude skills. The
+authoritative instructions for each skill live in the wiki; a
+thin stub file is imported on the desktop side so Claude can
+find the skill in its manifest.
+
+## What this skill produces
+
+For every new skill, two artifacts are created:
+
+1. **A wiki page at `skills/[skill-name]`** — the authoritative
+   skill content. Opens with a frontmatter block (`name`,
+   `description`, optional `tags`), followed by full Markdown
+   instructions.
+
+2. **A local stub file** (at a designated import folder) — a thin
+   pointer that fetches the wiki page and executes its
+   instructions when invoked. Import this stub once via the
+   Cowork desktop app Customize menu.
+
+## Process
+
+**Step 1 — Interview.** Ask the user:
+- What should this skill do?
+- When should it trigger (what phrases would invoke it)?
+- What is the expected output?
+- Any edge cases or dependencies?
+
+Gather enough detail to write complete, unambiguous skill
+instructions.
+
+**Step 2 — Pre-flight checks.**
+- Verify no wiki page exists at `skills/[skill-name]`
+- Verify no stub file already exists at the target path
+- Abort and notify on any conflict — never overwrite silently
+
+**Step 3 — Preview and confirm.**
+Print the full proposed wiki page body and stub file contents
+to chat. Ask: "Confirm and I will create the wiki page and
+write the stub file." Wait for explicit confirmation before
+writing anything.
+
+**Step 4 — Execute both writes.**
+- Create the wiki page via `wiki_create_page`
+- Write the stub file to the designated import folder
+
+**Step 5 — Remind the user to import the stub.**
+Output the wiki page URL and stub file path, then remind the
+user to import the stub via the Cowork desktop app
+Customize menu.
+
+## Conventions
+- Skill names: lowercase, hyphenated, no spaces
+- Wiki path: always `skills/[skill-name]`
+- The description in the frontmatter block is the routing signal —
+  make it specific and trigger-oriented
+- One confirmation covers both writes
+- On any conflict, abort and notify — do not overwrite</code></pre>
+
+  <hr>
+
+  <div class="note">
+    <strong>The big picture:</strong> Together these four patterns — the startup directive, the stub format, the memory-wiki skill, and the skill creator — form a self-contained, wiki-managed AI instruction system. Your standing instructions, behavioral rules, skill definitions, and memory all live in one place you can browse and edit from any device on your network. Claude bootstraps itself from that source at every session start, and new skills can be added without touching any local files beyond the initial one-time stub import.
+  </div>
 
   <hr>
 
