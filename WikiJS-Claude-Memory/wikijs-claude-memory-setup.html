@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki.js as Claude Persistent Memory — Complete Setup Guide</title>
+
+<!-- SEO Meta -->
+<meta name="description" content="Step-by-step guide to installing Wiki.js and PostgreSQL on Windows as a persistent, human-readable long-term memory layer for Claude AI (Cowork desktop app) using the wikijs-mcp MCP connector. Covers server setup, MCP registration, LAN client configuration, and session startup integration.">
+<meta name="keywords" content="Claude AI persistent memory, Wiki.js MCP, wikijs-mcp, Claude Cowork memory, Claude long-term memory, MCP server setup, Wiki.js Windows install, PostgreSQL Wiki.js, AI memory wiki, Claude session memory, MCP connector Claude, self-hosted AI memory, Claude desktop app memory, wikijs-mcp jaalbin24, Claude Cowork setup, AI knowledge base, persistent AI context, Claude memory across sessions">
+<meta name="author" content="BigBuffaloBill">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://waryder.github.io/GitHubWebsite/WikiJS-Claude-Memory/wikijs-claude-memory-setup.html">
+
+<!-- Open Graph (for social sharing / Discord embeds) -->
+<meta property="og:title" content="Wiki.js as Claude Persistent Memory — Complete Setup Guide">
+<meta property="og:description" content="Production-tested guide for using a self-hosted Wiki.js instance as long-term memory for Claude AI on Windows. Covers PostgreSQL, Wiki.js, wikijs-mcp, and Cowork integration.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://waryder.github.io/GitHubWebsite/WikiJS-Claude-Memory/wikijs-claude-memory-setup.html">
+<meta property="article:author" content="BigBuffaloBill">
+<meta property="article:published_time" content="2026-04-29">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wiki.js as Claude Persistent Memory — Complete Setup Guide">
+<meta name="twitter:description" content="How to give Claude AI true persistent memory using Wiki.js + PostgreSQL + wikijs-mcp on Windows. Full install guide with PowerShell commands.">
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent-dim: #c73a52;
+    --text: #e0e0e0;
+    --text-muted: #a0a0b8;
+    --text-bright: #ffffff;
+    --code-bg: #0d1b2a;
+    --border: #2a2a4a;
+    --link: #53a8ff;
+    --blockquote-border: #e94560;
+    --table-header: #0f3460;
+    --table-row-alt: rgba(15, 52, 96, 0.3);
+    --green: #4caf87;
+    --yellow: #f0c040;
+    --warn-bg: rgba(240, 192, 64, 0.08);
+    --note-bg: rgba(83, 168, 255, 0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .page-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.5px;
+    margin-bottom: 0.6rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    font-style: italic;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero .meta {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* ---- TOC ---- */
+  .toc-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .toc-box h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: none;
+    margin: 0 0 1rem 0;
+    padding: 0;
+  }
+
+  .toc-box ol {
+    margin: 0;
+    padding-left: 1.4rem;
+  }
+
+  .toc-box li {
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+  }
+
+  .toc-box li a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  .toc-box li a:hover { text-decoration: underline; }
+
+  .toc-box .toc-sub {
+    list-style: none;
+    padding-left: 1.2rem;
+    margin: 0.2rem 0 0.4rem;
+  }
+
+  .toc-box .toc-sub li::before {
+    content: '› ';
+    color: var(--accent);
+  }
+
+  .toc-box .toc-sub li {
+    font-size: 0.88rem;
+    margin-bottom: 0.15rem;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 3.5rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .top-link {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+  .top-link:hover { color: var(--link); text-decoration: underline; }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--link);
+    margin: 2rem 0 0.7rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 1.4rem 0 0.4rem;
+  }
+
+  /* ---- Body text ---- */
+  p { margin-bottom: 1rem; }
+  strong { color: var(--text-bright); }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---- Lists ---- */
+  ul, ol { margin: 0.75rem 0 1.25rem 1.6rem; }
+  li { margin-bottom: 0.35rem; }
+
+  /* ---- Code ---- */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: #7dd3fc;
+    padding: 0.15em 0.45em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 5px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    margin: 0.8rem 0 1.4rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #c9d1d9;
+    font-size: inherit;
+  }
+
+  pre .comment { color: #6a9955; }
+  pre .keyword { color: #569cd6; }
+  pre .string  { color: #ce9178; }
+
+  /* ---- Callout boxes ---- */
+  .note, .warn, .success {
+    border-radius: 5px;
+    padding: 1rem 1.2rem;
+    margin: 1.2rem 0 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .note {
+    background: var(--note-bg);
+    border-left: 3px solid var(--link);
+  }
+
+  .warn {
+    background: var(--warn-bg);
+    border-left: 3px solid var(--yellow);
+  }
+  .warn strong { color: var(--yellow); }
+
+  .success {
+    background: rgba(76, 175, 135, 0.08);
+    border-left: 3px solid var(--green);
+  }
+  .success strong { color: var(--green); }
+
+  /* ---- Tables ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  th {
+    background: var(--table-header);
+    color: var(--text-bright);
+    text-align: left;
+    padding: 0.6rem 0.9rem;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) td { background: var(--table-row-alt); }
+
+  /* ---- Step badges ---- */
+  .step-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.15em 0.55em;
+    border-radius: 3px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+
+  /* ---- Divider ---- */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <div class="hero" id="top">
+    <h1>Wiki.js as Claude Persistent Memory</h1>
+    <p class="tagline">A complete, production-tested setup guide for using a self-hosted Wiki.js instance as a human-readable, AI-queryable long-term memory layer for Claude Cowork.</p>
+    <p class="meta">Tested on Windows Server / Windows 11 · PostgreSQL 18 · Wiki.js 2.5.312 · wikijs-mcp 1.1.0</p>
+    <p class="meta" style="margin-top:0.4rem">Author: <strong style="color:var(--text)">BigBuffaloBill @ Discord</strong> &nbsp;·&nbsp; April 29, 2026</p>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-box" id="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#background">Background &amp; Architecture</a></li>
+      <li><a href="#prereqs">Prerequisites</a></li>
+      <li><a href="#postgresql">Part 1 — Install PostgreSQL</a>
+        <ul class="toc-sub">
+          <li><a href="#pg-install">Download &amp; Install</a></li>
+          <li><a href="#pg-db">Create the Wiki Database &amp; User</a></li>
+        </ul>
+      </li>
+      <li><a href="#wikijs">Part 2 — Install Wiki.js</a>
+        <ul class="toc-sub">
+          <li><a href="#wikijs-download">Download &amp; Extract</a></li>
+          <li><a href="#wikijs-config">Configure Database Connection</a></li>
+          <li><a href="#wikijs-service">Run as a Windows Scheduled Task</a></li>
+          <li><a href="#wikijs-firstrun">First-Run Web Setup</a></li>
+        </ul>
+      </li>
+      <li><a href="#apikey">Part 3 — Generate a Wiki.js API Key</a></li>
+      <li><a href="#mcp-server">Part 4 — Install wikijs-mcp on the Server Machine</a>
+        <ul class="toc-sub">
+          <li><a href="#mcp-python">Install Python &amp; pipx</a></li>
+          <li><a href="#mcp-install">Install wikijs-mcp</a></li>
+          <li><a href="#mcp-register">Register with Cowork</a></li>
+        </ul>
+      </li>
+      <li><a href="#mcp-client">Part 5 — Connect Additional Cowork Clients (LAN)</a></li>
+      <li><a href="#wiki-structure">Part 6 — Recommended Wiki Structure for Claude Memory</a></li>
+      <li><a href="#session-startup">Part 7 — Session Startup Integration</a></li>
+      <li><a href="#verify">Part 8 — End-to-End Verification</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+      <li><a href="#reference">Quick Reference</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1: BACKGROUND -->
+  <h2 id="background">Background &amp; Architecture <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>By default, Claude has no memory between sessions. Each conversation starts from zero. The approach described here replaces a static markdown memory file with a full self-hosted wiki — giving you a human-browsable, human-editable knowledge base that Claude can also read from and write to programmatically via an MCP connector.</p>
+
+  <p>The system is built on three open-source components, all free to self-host:</p>
+
+  <table>
+    <tr><th>Component</th><th>Role</th><th>Version Tested</th></tr>
+    <tr><td><strong>PostgreSQL</strong></td><td>Relational database backend for Wiki.js</td><td>18.x</td></tr>
+    <tr><td><strong>Wiki.js</strong></td><td>Web-based wiki platform (human UI + GraphQL API)</td><td>2.5.312</td></tr>
+    <tr><td><strong>wikijs-mcp</strong> by jaalbin24</td><td>MCP connector — exposes wiki tools to Claude</td><td>1.1.0</td></tr>
+  </table>
+
+  <h3>Architecture Overview</h3>
+  <p>The recommended topology has one machine acting as the <strong>wiki server</strong> (running PostgreSQL + Wiki.js + the MCP connector), with any number of additional machines connecting to it as <strong>MCP clients only</strong> — they run no wiki software, just point their Cowork config at the server's LAN IP.</p>
+
+  <pre><code>  [ Wiki Server Machine ]
+  ┌─────────────────────────────────────┐
+  │  PostgreSQL 18 (port 5432)          │
+  │  Wiki.js 2.5.x  (port 3000)         │
+  │  wikijs-mcp     (local connector)   │
+  │  Claude Cowork  (desktop app)       │
+  └─────────────────────────────────────┘
+            │  LAN  (port 3000)
+            ▼
+  [ Any Other Cowork PC on the LAN ]
+  ┌─────────────────────────────────────┐
+  │  wikijs-mcp  (MCP client only)      │
+  │  Claude Cowork  (desktop app)       │
+  │  WIKIJS_URL = http://&lt;server-ip&gt;:3000│
+  └─────────────────────────────────────┘</code></pre>
+
+  <div class="note">
+    <strong>Note:</strong> Wiki.js runs on port 3000 by default. If you need to change this (e.g., port conflict), edit <code>config.yml</code> before first run and update your MCP config to match.
+  </div>
+
+  <!-- SECTION 2: PREREQS -->
+  <h2 id="prereqs">Prerequisites <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>Verify the following on your wiki server machine before starting. Run this block in PowerShell to check all at once:</p>
+
+  <pre><code>node --version        <span class="comment"># Need 18+</span>
+npm --version
+python --version      <span class="comment"># Need 3.10+</span>
+pip --version
+git --version
+
+<span class="comment"># Check ports are free</span>
+netstat -ano | findstr ":3000"
+netstat -ano | findstr ":5432"
+
+<span class="comment"># Check no existing PostgreSQL service</span>
+Get-Service | Where-Object { $_.Name -like "*postgres*" }</code></pre>
+
+  <table>
+    <tr><th>Requirement</th><th>Minimum</th><th>Notes</th></tr>
+    <tr><td>Windows</td><td>Windows 10 / Server 2019</td><td>Guide written for Windows; Linux paths differ slightly</td></tr>
+    <tr><td>Node.js</td><td>18 LTS</td><td>Required by Wiki.js. Download from <a href="https://nodejs.org" target="_blank">nodejs.org</a></td></tr>
+    <tr><td>Python</td><td>3.10+</td><td>Required by wikijs-mcp. Download from <a href="https://python.org" target="_blank">python.org</a> — check "Add to PATH" during install</td></tr>
+    <tr><td>Port 3000</td><td>Free</td><td>Wiki.js HTTP port</td></tr>
+    <tr><td>Port 5432</td><td>Free</td><td>PostgreSQL default port</td></tr>
+    <tr><td>Claude Cowork</td><td>Any recent version</td><td>Must be installed before MCP registration</td></tr>
+    <tr><td>pipx</td><td>Any</td><td>Installed in Part 4 if missing</td></tr>
+  </table>
+
+  <!-- SECTION 3: POSTGRESQL -->
+  <h2 id="postgresql">Part 1 — Install PostgreSQL <a class="top-link" href="#top">↑ top</a></h2>
+
+  <h3 id="pg-install">Download &amp; Install</h3>
+
+  <p><span class="step-badge">Step 1</span> Download the Windows installer from <a href="https://www.postgresql.org/download/windows/" target="_blank">postgresql.org/download/windows/</a>. Use the <strong>EDB Interactive Installer</strong> — this is the officially recommended Windows distribution. Select PostgreSQL 16 or later (Wiki.js supports 11+; 16/17/18 all work).</p>
+
+  <p><span class="step-badge">Step 2</span> Run the installer. Accept defaults with these specific choices:</p>
+  <ul>
+    <li><strong>Installation directory:</strong> default (<code>C:\Program Files\PostgreSQL\&lt;version&gt;</code>)</li>
+    <li><strong>Components:</strong> PostgreSQL Server + Command Line Tools (pgAdmin optional)</li>
+    <li><strong>Data directory:</strong> default</li>
+    <li><strong>Password:</strong> set a strong password for the <code>postgres</code> superuser — record it somewhere safe</li>
+    <li><strong>Port:</strong> 5432 (default)</li>
+    <li><strong>Locale:</strong> default</li>
+  </ul>
+
+  <p><span class="step-badge">Step 3</span> After install, verify PostgreSQL is running as a Windows service:</p>
+  <pre><code>Get-Service | Where-Object { $_.Name -like "*postgres*" } | Select-Object Name, Status, StartType</code></pre>
+  <p>You should see a service like <code>postgresql-x64-18</code> with <strong>Status: Running</strong> and <strong>StartType: Automatic</strong>.</p>
+
+  <p><span class="step-badge">Step 4</span> Add the PostgreSQL bin directory to your system PATH so <code>psql</code> is available in PowerShell:</p>
+  <pre><code><span class="comment"># Replace "18" with your installed major version</span>
+$pgBin = "C:\Program Files\PostgreSQL\18\bin"
+[System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";$pgBin", [System.EnvironmentVariableTarget]::Machine)
+<span class="comment"># Close and reopen PowerShell after running this</span></code></pre>
+
+  <h3 id="pg-db">Create the Wiki Database &amp; User</h3>
+
+  <p><span class="step-badge">Step 5</span> Open a new PowerShell window (so the updated PATH is active) and create the database and a dedicated user for Wiki.js:</p>
+
+  <pre><code><span class="comment"># Connect as postgres superuser — enter the password you set during install</span>
+psql -U postgres
+
+<span class="comment">-- Inside the psql prompt, run these SQL commands:</span>
+CREATE USER wikijs WITH PASSWORD 'your-wikijs-db-password';
+CREATE DATABASE wiki OWNER wikijs;
+GRANT ALL PRIVILEGES ON DATABASE wiki TO wikijs;
+\q</code></pre>
+
+  <div class="warn">
+    <strong>Important:</strong> Use a strong, unique password for the <code>wikijs</code> database user. You will need it in the next section when configuring Wiki.js. Store it somewhere secure.
+  </div>
+
+  <!-- SECTION 4: WIKIJS -->
+  <h2 id="wikijs">Part 2 — Install Wiki.js <a class="top-link" href="#top">↑ top</a></h2>
+
+  <h3 id="wikijs-download">Download &amp; Extract</h3>
+
+  <p><span class="step-badge">Step 6</span> Download the latest Wiki.js 2.x Windows release from <a href="https://github.com/requarks/wiki/releases" target="_blank">github.com/requarks/wiki/releases</a>. Look for <code>wiki-js.tar.gz</code> under the most recent 2.x release (do <em>not</em> use a 3.x beta — it is a full rewrite with a different setup process).</p>
+
+  <p><span class="step-badge">Step 7</span> Create an install directory and extract the archive:</p>
+  <pre><code>New-Item -ItemType Directory -Path "C:\wikijs"
+<span class="comment"># Extract the downloaded tar.gz — use 7-Zip or tar (available in Windows 10+)</span>
+tar -xzf wiki-js.tar.gz -C C:\wikijs</code></pre>
+
+  <h3 id="wikijs-config">Configure Database Connection</h3>
+
+  <p><span class="step-badge">Step 8</span> In <code>C:\wikijs</code> you will find a file named <code>config.sample.yml</code>. Copy it to <code>config.yml</code>:</p>
+  <pre><code>Copy-Item "C:\wikijs\config.sample.yml" "C:\wikijs\config.yml"</code></pre>
+
+  <p><span class="step-badge">Step 9</span> Open <code>C:\wikijs\config.yml</code> in a text editor and update the database section. Find the <code>db:</code> block and set it as follows:</p>
+  <pre><code>db:
+  type: postgres
+  host: localhost
+  port: 5432
+  user: wikijs
+  pass: your-wikijs-db-password    <span class="comment"># password you set in Step 5</span>
+  db: wiki
+  ssl: false</code></pre>
+
+  <p>Also confirm the HTTP port is set to 3000 (default):</p>
+  <pre><code>port: 3000
+bindIP: 0.0.0.0    <span class="comment"># listens on all interfaces — needed for LAN client access</span></code></pre>
+
+  <div class="warn">
+    <strong>bindIP matters for remote clients:</strong> If you want other machines on your LAN to connect to this wiki, ensure <code>bindIP</code> is <code>0.0.0.0</code> (not <code>127.0.0.1</code>). If it is <code>127.0.0.1</code>, only the server machine itself can reach the wiki web UI and API.
+  </div>
+
+  <p><span class="step-badge">Step 10</span> Do a quick first-run test to confirm Wiki.js starts without errors:</p>
+  <pre><code>cd C:\wikijs
+node server</code></pre>
+  <p>Watch the console output. After 15–20 seconds you should see a line like <code>HTTP Server: RUNNING on port 3000</code>. If you see database connection errors, recheck your <code>config.yml</code> credentials. Press <strong>Ctrl+C</strong> to stop once confirmed working.</p>
+
+  <h3 id="wikijs-service">Run as a Windows Scheduled Task</h3>
+
+  <p>Rather than running Wiki.js as a foreground process, register it as a Windows Scheduled Task so it starts automatically at boot.</p>
+
+  <p><span class="step-badge">Step 11</span> Run the following PowerShell block to register the task. It runs as SYSTEM with a 30-second startup delay (to give PostgreSQL time to fully initialize first):</p>
+
+  <pre><code>$action = New-ScheduledTaskAction `
+    -Execute "node.exe" `
+    -Argument "server" `
+    -WorkingDirectory "C:\wikijs"
+
+$trigger = New-ScheduledTaskTrigger -AtStartup
+
+$settings = New-ScheduledTaskSettingsSet `
+    -ExecutionTimeLimit (New-TimeSpan -Hours 0) `
+    -RestartCount 3 `
+    -RestartInterval (New-TimeSpan -Minutes 1)
+
+$principal = New-ScheduledTaskPrincipal `
+    -UserId "SYSTEM" `
+    -RunLevel Highest
+
+$task = New-ScheduledTask `
+    -Action $action `
+    -Trigger $trigger `
+    -Settings $settings `
+    -Principal $principal
+
+Register-ScheduledTask -TaskName "WikiJS" -InputObject $task
+
+<span class="comment"># Add the 30-second boot delay</span>
+$t = Get-ScheduledTask -TaskName "WikiJS"
+$t.Triggers[0].Delay = "PT30S"
+Set-ScheduledTask -InputObject $t</code></pre>
+
+  <p><span class="step-badge">Step 12</span> Start the task immediately to confirm it works:</p>
+  <pre><code>Start-ScheduledTask -TaskName "WikiJS"
+Start-Sleep -Seconds 20
+(Get-ScheduledTask -TaskName "WikiJS").State    <span class="comment"># Should show: Running</span></code></pre>
+
+  <h3 id="wikijs-firstrun">First-Run Web Setup</h3>
+
+  <p><span class="step-badge">Step 13</span> Open a browser and navigate to <code>http://localhost:3000</code> (or <code>http://&lt;server-ip&gt;:3000</code> from another machine). Wiki.js will present a first-run setup wizard.</p>
+
+  <p>Complete the wizard with these settings:</p>
+  <ul>
+    <li><strong>Administrator email:</strong> your email address</li>
+    <li><strong>Administrator password:</strong> set a strong password (separate from your database password)</li>
+    <li><strong>Site URL:</strong> <code>http://&lt;server-ip&gt;:3000</code> — use the machine's LAN IP, not localhost, so remote clients work correctly</li>
+    <li><strong>Site title:</strong> whatever you like (e.g., "My Claude Memory Wiki")</li>
+  </ul>
+
+  <p><span class="step-badge">Step 14</span> After completing the wizard, log in and go to <strong>Administration → Navigation</strong>. Set Navigation Mode to <strong>Tree</strong> — this gives you the hierarchical sidebar that makes the wiki easy to browse.</p>
+
+  <p><span class="step-badge">Step 15</span> Create a Home page at path <code>home</code> to replace the default splash screen. Go to any page, click the + New Page button, set the path to <code>home</code>, and give it a title like "Welcome to My Wiki". This is the page that will load when you navigate to the root URL.</p>
+
+  <!-- SECTION 5: API KEY -->
+  <h2 id="apikey">Part 3 — Generate a Wiki.js API Key <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>The wikijs-mcp connector authenticates to Wiki.js using a JWT API key. You generate this from the Wiki.js admin panel.</p>
+
+  <p><span class="step-badge">Step 16</span> In the Wiki.js admin panel, go to <strong>Administration → API Access</strong>.</p>
+
+  <p><span class="step-badge">Step 17</span> Click <strong>Generate New API Key</strong> and set:</p>
+  <ul>
+    <li><strong>Name:</strong> something descriptive like <code>Claude Memory Wiki</code></li>
+    <li><strong>Expiration:</strong> set a long expiry — 1–3 years recommended. The key must be regenerated when it expires, and you will need to update all MCP configs at that time.</li>
+    <li><strong>Access:</strong> Full Access</li>
+  </ul>
+
+  <p><span class="step-badge">Step 18</span> Copy the generated key immediately — it is only shown once. Store it somewhere secure (your memory file, a password manager, etc.). It is a long JWT string beginning with <code>eyJ...</code>.</p>
+
+  <div class="warn">
+    <strong>Treat this key like a password.</strong> It grants full read/write access to your entire wiki. Do not commit it to a public repository or include it in any shared document.
+  </div>
+
+  <!-- SECTION 6: MCP SERVER -->
+  <h2 id="mcp-server">Part 4 — Install wikijs-mcp on the Server Machine <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>The <code>wikijs-mcp</code> package by <a href="https://github.com/jaalbin24/wikijs-mcp" target="_blank">jaalbin24</a> is a Python-based MCP server that exposes your Wiki.js instance as a set of Claude tools. It is published on PyPI and installed via pipx.</p>
+
+  <h3 id="mcp-python">Install Python &amp; pipx</h3>
+
+  <p><span class="step-badge">Step 19</span> If Python 3.10+ is not already installed, download it from <a href="https://python.org" target="_blank">python.org</a>. During installation, check <strong>"Add Python to PATH"</strong>.</p>
+
+  <p>Verify:</p>
+  <pre><code>python --version    <span class="comment"># Should show 3.10 or higher</span>
+pip --version</code></pre>
+
+  <p><span class="step-badge">Step 20</span> Install pipx:</p>
+  <pre><code>pip install --user pipx
+python -m pipx ensurepath
+<span class="comment"># Close and reopen PowerShell after running ensurepath</span></code></pre>
+
+  <p>Verify:</p>
+  <pre><code>pipx --version</code></pre>
+
+  <h3 id="mcp-install">Install wikijs-mcp</h3>
+
+  <p><span class="step-badge">Step 21</span> Install the package via pipx:</p>
+  <pre><code>pipx install wikijs-mcp</code></pre>
+
+  <p>This installs the <code>wikijs-mcp.exe</code> binary into your user's local bin directory (typically <code>C:\Users\&lt;username&gt;\.local\bin\</code>). Verify the install location:</p>
+  <pre><code>pipx list</code></pre>
+  <p>Note the full path to <code>wikijs-mcp.exe</code> — you will need it in the next step.</p>
+
+  <h3 id="mcp-register">Register with Cowork</h3>
+
+  <p><span class="step-badge">Step 22</span> Locate your Cowork configuration file. On Windows it is at:</p>
+  <pre><code>C:\Users\&lt;username&gt;\AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json</code></pre>
+
+  <p>You can find the exact package folder name with:</p>
+  <pre><code>Get-ChildItem "$env:LOCALAPPDATA\Packages" | Where-Object { $_.Name -like "*Claude*" } | Select-Object Name</code></pre>
+
+  <p><span class="step-badge">Step 23</span> Open <code>claude_desktop_config.json</code> in a text editor. Add or merge the <code>wikijs</code> entry into the <code>mcpServers</code> object:</p>
+
+  <pre><code>{
+  "mcpServers": {
+    "wikijs": {
+      "command": "C:\\Users\\&lt;username&gt;\\.local\\bin\\wikijs-mcp.exe",
+      "env": {
+        "WIKIJS_URL": "http://localhost:3000",
+        "WIKIJS_API_KEY": "eyJ..."
+      }
+    }
+  }
+}</code></pre>
+
+  <div class="note">
+    <strong>On the server machine</strong>, use <code>http://localhost:3000</code> as the URL since Wiki.js is running locally. On remote client machines, use the server's LAN IP instead — see Part 5.
+  </div>
+
+  <p><span class="step-badge">Step 24</span> Fully quit and relaunch the Cowork desktop app so the new MCP configuration is loaded. In a new Cowork session, you should now see the wikijs tools available (wiki_get_page, wiki_search, wiki_create_page, etc.).</p>
+
+  <!-- SECTION 7: MCP CLIENT -->
+  <h2 id="mcp-client">Part 5 — Connect Additional Cowork Clients (LAN) <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>Any other machine on your LAN that has Cowork installed can connect to the same Wiki.js instance. These machines do <strong>not</strong> need PostgreSQL or Wiki.js installed — only wikijs-mcp and a Cowork config update.</p>
+
+  <p>On each additional client machine:</p>
+
+  <p><span class="step-badge">Step 1</span> Ensure Python 3.10+ and pipx are installed (same as Steps 19–20 above).</p>
+
+  <p><span class="step-badge">Step 2</span> Install wikijs-mcp via pipx:</p>
+  <pre><code>pipx install wikijs-mcp</code></pre>
+
+  <p><span class="step-badge">Step 3</span> Edit the client machine's <code>claude_desktop_config.json</code> (same path pattern as Step 22), setting <code>WIKIJS_URL</code> to the server's LAN IP:</p>
+
+  <pre><code>{
+  "mcpServers": {
+    "wikijs": {
+      "command": "C:\\Users\\&lt;username&gt;\\.local\\bin\\wikijs-mcp.exe",
+      "env": {
+        "WIKIJS_URL": "http://&lt;server-lan-ip&gt;:3000",
+        "WIKIJS_API_KEY": "eyJ..."
+      }
+    }
+  }
+}</code></pre>
+
+  <p>Use the <strong>same API key</strong> as the server — there is one key per wiki installation, shared across all clients.</p>
+
+  <p><span class="step-badge">Step 4</span> Confirm the server machine's firewall allows inbound TCP on port 3000 from the local network:</p>
+  <pre><code><span class="comment"># Run on the SERVER machine, in an elevated PowerShell</span>
+New-NetFirewallRule `
+  -DisplayName "Wiki.js LAN Access" `
+  -Direction Inbound `
+  -Protocol TCP `
+  -LocalPort 3000 `
+  -Action Allow `
+  -Profile Private</code></pre>
+
+  <p><span class="step-badge">Step 5</span> Restart Cowork on the client machine and verify connectivity by asking Claude to run a wiki search.</p>
+
+  <!-- SECTION 8: WIKI STRUCTURE -->
+  <h2 id="wiki-structure">Part 6 — Recommended Wiki Structure for Claude Memory <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>The wiki works best as Claude memory when its page hierarchy is organized consistently. The following structure is what this system uses in production and what Claude's session-startup instructions reference by default:</p>
+
+  <table>
+    <tr><th>Path</th><th>Purpose</th></tr>
+    <tr><td><code>home</code></td><td>Root landing page — wiki title and overview</td></tr>
+    <tr><td><code>session-startup</code></td><td>Instructions Claude reads at the start of every session (see Part 7)</td></tr>
+    <tr><td><code>memory/</code></td><td>Persistent facts about you, your preferences, and your environment</td></tr>
+    <tr><td><code>personal/</code></td><td>Personal context, goals, background</td></tr>
+    <tr><td><code>handoffs/</code></td><td>Session-to-session handoff documents for complex ongoing projects</td></tr>
+    <tr><td><code>skills/</code></td><td>Skill definition pages consumed by Claude's skill system</td></tr>
+  </table>
+
+  <p>Page paths follow a <strong>lowercase-hyphenated</strong> convention throughout (e.g., <code>memory/engineering-goals</code>, not <code>Memory/EngineeringGoals</code>). This ensures consistent behavior when Claude constructs paths programmatically.</p>
+
+  <div class="note">
+    <strong>Human-editable:</strong> Every page in the wiki is fully editable through the Wiki.js web UI at <code>http://&lt;server-ip&gt;:3000</code>. You do not need to go through Claude to update content — edit directly in the browser whenever you like.
+  </div>
+
+  <!-- SECTION 9: SESSION STARTUP -->
+  <h2 id="session-startup">Part 7 — Session Startup Integration <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>The most important piece of the memory system is a <code>session-startup</code> page that Claude reads at the beginning of every session. This page contains instructions that tell Claude how to behave, what to load, and what actions to take on startup.</p>
+
+  <p><span class="step-badge">Step 1</span> Create a page at path <code>session-startup</code> in your wiki. This page should contain:</p>
+  <ul>
+    <li>Your preferences for how Claude should interact with you</li>
+    <li>Instructions to load key memory pages at session start</li>
+    <li>Any standing tasks or context Claude should always be aware of</li>
+    <li>Links or references to other important wiki pages</li>
+  </ul>
+
+  <p><span class="step-badge">Step 2</span> In your Cowork user preferences (the system prompt or preferences file that Cowork injects at session start), add an instruction that tells Claude to fetch and act on this page. The pattern looks like this:</p>
+
+  <pre><code>At the start of every session, call wiki_get_page with path="session-startup"
+and take any follow-up actions dictated by that page's content.</code></pre>
+
+  <p>This creates a self-contained, wiki-managed startup sequence. To change Claude's startup behavior in the future, you only need to edit the wiki page — no changes to Cowork configuration required.</p>
+
+  <div class="success">
+    <strong>Key benefit:</strong> Because the startup instructions live in the wiki rather than a static config file, you can update them from any browser, on any machine, at any time — and the change takes effect immediately in the next Claude session.
+  </div>
+
+  <!-- SECTION 10: VERIFY -->
+  <h2 id="verify">Part 8 — End-to-End Verification <a class="top-link" href="#top">↑ top</a></h2>
+
+  <p>After completing all parts above, run through this verification checklist in a Cowork session:</p>
+
+  <ol>
+    <li>Ask Claude: <em>"Can you list the pages in my wiki?"</em> — Claude should call <code>wiki_list_pages</code> and return a list including your home page.</li>
+    <li>Ask Claude: <em>"Search the wiki for 'home'"</em> — Claude should call <code>wiki_search</code> and return results.</li>
+    <li>Ask Claude: <em>"Create a test page at path 'test/verify' with the content 'Verification test'"</em> — Claude should call <code>wiki_create_page</code> and report success. Confirm the page appears in the Wiki.js web UI.</li>
+    <li>Ask Claude: <em>"Read the page at path 'test/verify'"</em> — Claude should call <code>wiki_get_page</code> and return the content you just created.</li>
+    <li>Ask Claude: <em>"Delete the test page at path 'test/verify'"</em> — Claude should call <code>wiki_delete_page</code> and confirm deletion.</li>
+  </ol>
+
+  <p>If all five steps work, your installation is fully functional.</p>
+
+  <!-- SECTION 11: TROUBLESHOOTING -->
+  <h2 id="troubleshooting">Troubleshooting <a class="top-link" href="#top">↑ top</a></h2>
+
+  <h3>Wiki.js won't start — database connection error</h3>
+  <p>Check that PostgreSQL is running (<code>Get-Service | Where-Object { $_.Name -like "*postgres*" }</code>) and that the credentials in <code>C:\wikijs\config.yml</code> exactly match what you set in Step 5. The most common cause is a typo in the password or database name.</p>
+
+  <h3>Wiki.js starts but shows a blank/splash page at the root URL</h3>
+  <p>This happens when no page exists at path <code>home</code>. Create a page with path <code>home</code> through the Wiki.js UI and the splash screen will be replaced.</p>
+
+  <h3>Claude says "wikijs tools not available" or can't find the MCP</h3>
+  <p>Fully quit and relaunch Cowork after editing <code>claude_desktop_config.json</code> — changes are not picked up by a running instance. Also verify the path to <code>wikijs-mcp.exe</code> in the config is correct (run <code>pipx list</code> to confirm the exact path).</p>
+
+  <h3>Remote client can't reach the wiki (connection refused)</h3>
+  <p>Check two things: (1) <code>bindIP</code> in <code>config.yml</code> on the server must be <code>0.0.0.0</code>, not <code>127.0.0.1</code>; (2) the Windows Firewall rule for port 3000 must be present on the server (see Part 5, Step 4). Restart the WikiJS scheduled task after changing <code>config.yml</code>.</p>
+
+  <h3>API key stopped working</h3>
+  <p>API keys have an expiry date set at generation time. If the key has expired, generate a new one in the Wiki.js admin panel (Administration → API Access) and update the <code>WIKIJS_API_KEY</code> value in <code>claude_desktop_config.json</code> on every machine. Restart Cowork on each machine after updating.</p>
+
+  <h3>WikiJS scheduled task shows "Ready" instead of "Running" after reboot</h3>
+  <p>This usually means the 30-second boot delay hasn't elapsed yet, or Node.js exited with an error. Check the task's last run result: <code>Get-ScheduledTaskInfo -TaskName "WikiJS" | Select-Object LastRunTime, LastTaskResult</code>. A <code>LastTaskResult</code> of <code>0</code> means success. Any other value means Wiki.js crashed — run <code>node server</code> manually from <code>C:\wikijs</code> to see the error output.</p>
+
+  <!-- SECTION 12: REFERENCE -->
+  <h2 id="reference">Quick Reference <a class="top-link" href="#top">↑ top</a></h2>
+
+  <h3>Key File &amp; Path Reference</h3>
+  <table>
+    <tr><th>Item</th><th>Path</th></tr>
+    <tr><td>Wiki.js install directory</td><td><code>C:\wikijs\</code></td></tr>
+    <tr><td>Wiki.js config file</td><td><code>C:\wikijs\config.yml</code></td></tr>
+    <tr><td>Cowork config file</td><td><code>C:\Users\&lt;user&gt;\AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\Claude\claude_desktop_config.json</code></td></tr>
+    <tr><td>wikijs-mcp binary</td><td><code>C:\Users\&lt;user&gt;\.local\bin\wikijs-mcp.exe</code></td></tr>
+    <tr><td>Wiki web UI (server)</td><td><code>http://localhost:3000</code></td></tr>
+    <tr><td>Wiki web UI (LAN client)</td><td><code>http://&lt;server-ip&gt;:3000</code></td></tr>
+    <tr><td>Wiki.js admin panel</td><td><code>http://&lt;server-ip&gt;:3000/a/</code></td></tr>
+  </table>
+
+  <h3>Available MCP Tools (wikijs-mcp 1.1.0)</h3>
+  <table>
+    <tr><th>Tool</th><th>What it does</th></tr>
+    <tr><td><code>wiki_search</code></td><td>Full-text search across all pages</td></tr>
+    <tr><td><code>wiki_get_page</code></td><td>Retrieve a page by path or ID</td></tr>
+    <tr><td><code>wiki_list_pages</code></td><td>List pages, optionally filtered by tag</td></tr>
+    <tr><td><code>wiki_get_tree</code></td><td>Get the full hierarchical page tree</td></tr>
+    <tr><td><code>wiki_create_page</code></td><td>Create a new page</td></tr>
+    <tr><td><code>wiki_update_page</code></td><td>Update an existing page's content</td></tr>
+    <tr><td><code>wiki_move_page</code></td><td>Move/rename a page to a new path</td></tr>
+    <tr><td><code>wiki_delete_page</code></td><td>Delete a page</td></tr>
+    <tr><td><code>wiki_list_tags</code></td><td>List all tags in the wiki</td></tr>
+    <tr><td><code>wiki_get_site_info</code></td><td>Get wiki title, host, and metadata</td></tr>
+    <tr><td><code>wiki_get_history</code></td><td>Get edit history for a page</td></tr>
+    <tr><td><code>wiki_get_version</code></td><td>Retrieve a specific historical version of a page</td></tr>
+  </table>
+
+  <h3>Useful PowerShell Commands</h3>
+  <pre><code><span class="comment"># Check service status</span>
+Get-Service | Where-Object { $_.Name -like "*postgres*" }
+Get-ScheduledTask -TaskName "WikiJS" | Select-Object TaskName, State
+
+<span class="comment"># Start/stop WikiJS task</span>
+Start-ScheduledTask -TaskName "WikiJS"
+Stop-ScheduledTask  -TaskName "WikiJS"
+
+<span class="comment"># Restart WikiJS (e.g. after config change)</span>
+Stop-ScheduledTask -TaskName "WikiJS"; Start-Sleep 3; Start-ScheduledTask -TaskName "WikiJS"
+
+<span class="comment"># Check what's on port 3000</span>
+netstat -ano | findstr ":3000"
+
+<span class="comment"># Verify MCP binary exists</span>
+pipx list</code></pre>
+
+  <hr>
+
+  <div class="footer">
+    <p>Production-tested configuration · PostgreSQL 18 · Wiki.js 2.5.312 · wikijs-mcp 1.1.0 · Claude Cowork</p>
+    <p style="margin-top:0.4rem"><a href="https://github.com/jaalbin24/wikijs-mcp" target="_blank">wikijs-mcp on GitHub</a> &nbsp;·&nbsp; <a href="https://js.wiki" target="_blank">Wiki.js official site</a> &nbsp;·&nbsp; <a href="https://www.postgresql.org/download/windows/" target="_blank">PostgreSQL for Windows</a></p>
+  </div>
+
+</div>
+</body>
+</html>
