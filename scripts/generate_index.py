@@ -76,7 +76,7 @@ def main() -> None:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Site Index</title>
+  <title>Big Buffalo Bill Web Resources - Site Index</title>
   <style>
     :root {{ color-scheme: light dark; font-family: system-ui, sans-serif; }}
     body {{ max-width: 900px; margin: 2rem auto; padding: 0 1.25rem; line-height: 1.5; }}
@@ -89,7 +89,7 @@ def main() -> None:
   </style>
 </head>
 <body>
-  <h1>Site Index</h1>
+  <h1>Big Buffalo Bill Web Resources - Site Index</h1>
   <p class="meta">Auto-generated. Updated on every push to <code>main</code>.</p>
   <ul>
 {body}
