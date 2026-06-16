@@ -202,21 +202,21 @@
 <!-- Scale (bottom left) -->
 <div id="scalectl">
   <label>Scale</label>
-  <input type="range" id="scaleSlider" min="0.5" max="5" step="0.05" value="1.15">
+  <input type="range" id="scaleSlider" min="0.5" max="5" step="0.0125" value="1.15">
   <span id="scaleVal">1.15&times;</span>
 </div>
 
 <!-- Reactivity (bottom left, above Sensitivity) -->
 <div id="reactivity">
   <label>Reactivity</label>
-  <input type="range" id="reactSlider" min="0" max="1.5" step="0.05" value="0.35">
+  <input type="range" id="reactSlider" min="0" max="1.5" step="0.0125" value="0.35">
   <span id="reactVal">0.35&times;</span>
 </div>
 
 <!-- Sensitivity (bottom left) -->
 <div id="sensitivity">
   <label>Sensitivity</label>
-  <input type="range" id="gainSlider" min="0.1" max="4" step="0.05" value="1">
+  <input type="range" id="gainSlider" min="0.1" max="4" step="0.0125" value="1">
   <span id="gainVal">1.0&times;</span>
 </div>
 
@@ -296,7 +296,9 @@ const FRAG = `
     else if (uType >= 10) zoom = 1.05 + 0.12*sin(uTime*0.10) + uBass * 1.4;
     else                 zoom = 1.3  + uBass * 1.8;
 
-    vec2 p = (vUv - 0.5) * vec2(5.0 * aspect, 5.0) / zoom + center;
+    float effZoom = zoom;
+    if (uType < 10) effZoom = zoom * uScale;   // Scale slider magnifies classic fractals (kaleido modes handle uScale in the fold)
+    vec2 p = (vUv - 0.5) * vec2(5.0 * aspect, 5.0) / effZoom + center;
 
     float jAngle;
     vec2  jC = vec2(0.0);
