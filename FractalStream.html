@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fractal Stream</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; }
+    canvas { display: block; width: 100vw; height: 100vh; }
+
+    /* ── Permission overlay ──────────────────────────────────── */
+    #overlay {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 10;
+      background: radial-gradient(ellipse at center, #06071a 30%, transparent 80%);
+      transition: opacity 0.8s;
+    }
+    #overlay.gone { opacity: 0; pointer-events: none; }
+    h1 {
+      font-family: sans-serif; font-weight: 100;
+      letter-spacing: 10px; font-size: 24px; color: #5ef5d7;
+      text-transform: uppercase; margin-bottom: 40px;
+      text-shadow: 0 0 50px rgba(94,245,215,0.6);
+    }
+    #startBtn {
+      padding: 18px 44px; font-size: 13px; font-family: sans-serif;
+      letter-spacing: 5px; text-transform: uppercase; color: #5ef5d7;
+      cursor: pointer; background: rgba(94,245,215,0.04);
+      border: 1px solid rgba(94,245,215,0.3); border-radius: 6px;
+      transition: all 0.3s;
+    }
+    #startBtn:hover {
+      background: rgba(94,245,215,0.1); border-color: rgba(94,245,215,0.7);
+      box-shadow: 0 0 40px rgba(94,245,215,0.2);
+    }
+    #startBtn:disabled { opacity: 0.5; cursor: default; }
+    .hint {
+      margin-top: 20px; max-width: 420px; text-align: center;
+      font-family: sans-serif; font-size: 11px; line-height: 1.9;
+      color: rgba(94,245,215,0.3);
+    }
+    .hint strong { color: rgba(94,245,215,0.65); }
+
+    /* ── Fractal picker — top centre ─────────────────────────── */
+    #picker {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      z-index: 20; opacity: 1.0; transition: opacity 0.3s;
+    }
+    #picker:hover { opacity: 1.0; }
+    .prow { display: flex; gap: 5px; }
+    .fp {
+      padding: 5px 11px; font-family: monospace; font-size: 10px;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: #000; cursor: pointer;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid #000;
+      border-radius: 3px; transition: all 0.2s; white-space: nowrap;
+    }
+    .fp:hover { color: #5ef5d7; border-color: rgba(94,245,215,0.5); }
+    .fp.active {
+      color: #5ef5d7; border-color: rgba(94,245,215,0.7);
+      background: rgba(94,245,215,0.10);
+      box-shadow: 0 0 8px rgba(94,245,215,0.25);
+    }
+
+    /* ── Audio meter — bottom right ──────────────────────────── */
+    #meter {
+      position: fixed; bottom: 22px; right: 22px;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+      z-index: 20; pointer-events: none; opacity: 1.0;
+      transition: opacity 0.3s;
+    }
+    #meter:hover { opacity: 1.0; }
+    #modeTag {
+      font-family: monospace; font-size: 10px; letter-spacing: 3px;
+      padding: 3px 9px; border-radius: 3px; transition: all 0.4s;
+    }
+    #modeTag.demo { color: #000; border: 1px solid #000; }
+    #modeTag.live { color: #00ff88; border: 1px solid #00ff88;
+                    text-shadow: 0 0 8px #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.3); }
+    #bars { display: flex; align-items: flex-end; gap: 8px; }
+    .bcol { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .blabel { font-family: monospace; font-size: 10px; color: #000; letter-spacing: 1px; }
+    .btrack {
+      width: 28px; height: 150px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid #000;
+      border-radius: 4px; overflow: hidden;
+      display: flex; flex-direction: column-reverse;
+    }
+    .bfill { width: 100%; height: 0%; border-radius: 3px 3px 0 0; transition: height 0.04s linear; }
+    #fB { background: linear-gradient(to top, #ff2200, #ff7700); box-shadow: 0 0 14px #ff4400; }
+    #fM { background: linear-gradient(to top, #00cc55, #00ffaa); box-shadow: 0 0 14px #00ff88; }
+    #fH { background: linear-gradient(to top, #2255ff, #cc33ff); box-shadow: 0 0 14px #7744ff; }
+
+    /* ── Sensitivity slider — bottom left ────────────────────── */
+    #sensitivity {
+      position: fixed; bottom: 22px; left: 22px;
+      display: flex; align-items: center; gap: 10px;
+      z-index: 20; opacity: 1.0; transition: opacity 0.3s;
+    }
+    #sensitivity:hover { opacity: 1.0; }
+    #sensitivity label {
+      font-family: monospace; font-size: 10px; letter-spacing: 2px;
+      color: #000; text-transform: uppercase; white-space: nowrap;
+    }
+    #gainSlider, #reactSlider, #scaleSlider {
+      -webkit-appearance: none; appearance: none;
+      width: 220px; height: 3px;
+      background: #000; border-radius: 2px; outline: none; cursor: pointer;
+    }
+    #gainSlider::-webkit-slider-thumb, #reactSlider::-webkit-slider-thumb, #scaleSlider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+      background: #5ef5d7; box-shadow: 0 0 8px #5ef5d7; cursor: pointer;
+    }
+    #gainSlider::-moz-range-thumb, #reactSlider::-moz-range-thumb, #scaleSlider::-moz-range-thumb {
+      width: 14px; height: 14px; border-radius: 50%; border: none;
+      background: #5ef5d7; box-shadow: 0 0 8px #5ef5d7; cursor: pointer;
+    }
+    #gainVal, #reactVal, #scaleVal { font-family: monospace; font-size: 10px; color: #000; min-width: 32px; }
+
+    /* ── Reactivity + Scale sliders — bottom left, above Sensitivity ── */
+    #reactivity, #scalectl {
+      position: fixed; left: 22px;
+      display: flex; align-items: center; gap: 10px;
+      z-index: 20; opacity: 1.0; transition: opacity 0.3s;
+    }
+    #reactivity { bottom: 50px; }
+    #scalectl   { bottom: 78px; }
+    #reactivity label, #scalectl label {
+      font-family: monospace; font-size: 10px; letter-spacing: 2px;
+      color: #000; text-transform: uppercase; white-space: nowrap;
+    }
+
+    /* ── Misc hint ───────────────────────────────────────────── */
+    #dblhint {
+      position: fixed; bottom: 106px; left: 22px;
+      font-family: monospace; font-size: 10px; letter-spacing: 1px;
+      color: #000; z-index: 5; pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="cv"></canvas>
+
+<!-- Permission overlay -->
+<div id="overlay">
+  <h1>Fractal Stream</h1>
+  <button id="startBtn">Enable System Audio</button>
+  <p class="hint">
+    When prompted, choose <strong>Entire Screen</strong> and
+    check <strong>Share system audio</strong>, then click Share.
+  </p>
+</div>
+
+<!-- Fractal picker (top centre) -->
+<div id="picker">
+  <div class="prow">
+    <button class="fp active" data-t="0">Julia&sup2;</button>
+    <button class="fp"        data-t="1">Mandelbrot</button>
+    <button class="fp"        data-t="2">Burn&middot;Ship</button>
+    <button class="fp"        data-t="3">Newton</button>
+    <button class="fp"        data-t="4">Julia&sup3;</button>
+  </div>
+  <div class="prow">
+    <button class="fp" data-t="5">Tricorn</button>
+    <button class="fp" data-t="6">Julia&sup4;</button>
+    <button class="fp" data-t="7">Multi&sup4;</button>
+    <button class="fp" data-t="8">Phoenix</button>
+    <button class="fp" data-t="9">Nova</button>
+  </div>
+  <div class="prow">
+    <button class="fp" data-t="10">Mandala</button>
+    <button class="fp" data-t="11">Kaleido</button>
+    <button class="fp" data-t="12">Tunnel</button>
+    <button class="fp" data-t="13">Rosette</button>
+    <button class="fp" data-t="14">Vortex</button>
+  </div>
+  <div class="prow">
+    <button class="fp" data-t="15">Lotus</button>
+    <button class="fp" data-t="16">Prism</button>
+    <button class="fp" data-t="17">Spiral</button>
+    <button class="fp" data-t="18">Halo</button>
+    <button class="fp" data-t="19">Portal</button>
+  </div>
+</div>
+
+<!-- Audio meter (bottom right) -->
+<div id="meter">
+  <div id="modeTag" class="demo">DEMO</div>
+  <div id="bars">
+    <div class="bcol"><div class="btrack"><div class="bfill" id="fB"></div></div><div class="blabel">B</div></div>
+    <div class="bcol"><div class="btrack"><div class="bfill" id="fM"></div></div><div class="blabel">M</div></div>
+    <div class="bcol"><div class="btrack"><div class="bfill" id="fH"></div></div><div class="blabel">H</div></div>
+  </div>
+</div>
+
+<!-- Scale (bottom left) -->
+<div id="scalectl">
+  <label>Scale</label>
+  <input type="range" id="scaleSlider" min="0.5" max="5" step="0.05" value="1.15">
+  <span id="scaleVal">1.15&times;</span>
+</div>
+
+<!-- Reactivity (bottom left, above Sensitivity) -->
+<div id="reactivity">
+  <label>Reactivity</label>
+  <input type="range" id="reactSlider" min="0" max="1.5" step="0.05" value="0.35">
+  <span id="reactVal">0.35&times;</span>
+</div>
+
+<!-- Sensitivity (bottom left) -->
+<div id="sensitivity">
+  <label>Sensitivity</label>
+  <input type="range" id="gainSlider" min="0.1" max="4" step="0.05" value="1">
+  <span id="gainVal">1.0&times;</span>
+</div>
+
+<div id="dblhint">double-click &middot; fullscreen</div>
+
+<script>
+// =======================================================================
+//  FRACTAL AUDIO VISUALISER — 10 Fractal Types
+//
+//  0  Julia2      z^2 + c          (rotating c at r=0.7885)
+//  1  Mandelbrot  z^2 + c          (c = pixel, z0 = 0)
+//  2  Burn-Ship   |abs(z)|^2 + c   (Burning Ship Mandelbrot)
+//  3  Newton      z - (z^3-1)/3z^2 (basin coloring, 3 roots)
+//  4  Julia3      z^3 + c          (rotating c at r=0.5)
+//  5  Tricorn     conj(z)^2 + c    (Mandelbar)
+//  6  Julia4      z^4 + c          (rotating c at r=0.6)
+//  7  Multi4      z^4 + c          (Multibrot, c = pixel)
+//  8  Phoenix     z^2 + c + p*z-1  (Phoenix Julia, p = -0.5)
+//  9  Nova        Newton z^3 + c   (Newton + perturbation)
+// =======================================================================
+
+const cv = document.getElementById('cv');
+const gl = cv.getContext('webgl', { antialias: false });
+if (!gl) { alert('WebGL not supported.'); throw new Error(); }
+
+// Vertex shader (shared)
+const VERT = `
+  attribute vec2 aPos;
+  varying   vec2 vUv;
+  void main() {
+    vUv = aPos * 0.5 + 0.5;
+    gl_Position = vec4(aPos, 0.0, 1.0);
+  }
+`;
+
+// Fragment shader — all 10 fractal types
+const FRAG = `
+  precision highp float;
+
+  uniform vec2  uRes;
+  uniform float uBass, uMid, uHigh, uTime, uScale;
+  uniform int   uType;
+
+  varying vec2 vUv;
+
+  vec2 cmul(vec2 a, vec2 b) {
+    return vec2(a.x*b.x - a.y*b.y, a.x*b.y + a.y*b.x);
+  }
+  vec2 cdiv(vec2 a, vec2 b) {
+    float d = dot(b,b);
+    return vec2(dot(a,b), a.y*b.x - a.x*b.y) / d;
+  }
+  vec2 ccube(vec2 z) {
+    return vec2(z.x*(z.x*z.x - 3.0*z.y*z.y),
+                z.y*(3.0*z.x*z.x - z.y*z.y));
+  }
+
+  vec3 pal(float t) {
+    return 0.5 + 0.5 * cos(6.2832 * (vec3(0.0, 0.33, 0.67) + t));
+  }
+
+  void main() {
+    float aspect = uRes.x / uRes.y;
+
+    float zoom   = 1.25;
+    vec2  center = vec2(0.0);
+
+    if (uType == 0) zoom = 1.25 + 0.18*sin(uTime*0.11) + uBass * 2.2;
+    else if (uType == 1) { center = vec2(-0.65, 0.0); zoom = 0.85 + uBass * 0.5; }
+    else if (uType == 2) { center = vec2(-0.4, -0.5); zoom = 0.85 + uBass * 0.5; }
+    else if (uType == 3) zoom = 1.3  + uBass * 1.8;
+    else if (uType == 4) zoom = 1.1  + uBass * 2.0;
+    else if (uType == 5) { center = vec2(-0.2, 0.0); zoom = 0.85 + uBass * 0.6; }
+    else if (uType == 6) zoom = 1.15 + uBass * 2.0;
+    else if (uType == 7) zoom = 0.85 + uBass * 0.6;
+    else if (uType == 8) zoom = 1.2  + uBass * 2.0;
+    else if (uType >= 10) zoom = 1.05 + 0.12*sin(uTime*0.10) + uBass * 1.4;
+    else                 zoom = 1.3  + uBass * 1.8;
+
+    vec2 p = (vUv - 0.5) * vec2(5.0 * aspect, 5.0) / zoom + center;
+
+    float jAngle;
+    vec2  jC = vec2(0.0);
+    if (uType == 0) { jAngle = uTime*0.055 + uMid*4.0;  jC = 0.7885 * vec2(cos(jAngle), sin(jAngle)); }
+    if (uType == 4) { jAngle = uTime*0.040 + uMid*3.5;  jC = 0.500  * vec2(cos(jAngle), sin(jAngle)); }
+    if (uType == 6) { jAngle = uTime*0.045 + uMid*3.5;  jC = 0.600  * vec2(cos(jAngle), sin(jAngle)); }
+    if (uType == 8) { jAngle = uTime*0.060 + uMid*2.5;  jC = 0.300  * vec2(cos(jAngle), sin(jAngle)); }
+
+    float novaR = 0.08 + uBass * 0.45;
+    float novaA = uTime*0.09 + uMid*2.0;
+    vec2  novaC = novaR * vec2(cos(novaA), sin(novaA));
+
+    float pParam = -0.5 + uMid * 0.15;
+
+    // ── Kaleidoscope / tunnel modes (types 10–19) ──────────────
+    //  Fold the plane into N mirrored wedges around the centre to
+    //  get repeated instances in a circle, optionally pull inward
+    //  for a tunnel, then sample a rotating Julia set in that space.
+    if (uType >= 10) {
+      float sides = 6.0, spin = 0.05, spiral = 0.0, tun = 0.0, cr = 0.75;
+      if      (uType == 10) { sides = 6.0;  spin = 0.05;  cr = 0.7885; }
+      else if (uType == 11) { sides = 8.0;  spin = 0.09;  cr = 0.70;   }
+      else if (uType == 12) { sides = 5.0;  spin = 0.04;  tun = 1.0; cr = 0.74; }
+      else if (uType == 13) { sides = 12.0; spin = 0.03;  cr = 0.66;   }
+      else if (uType == 14) { sides = 10.0; spin = 0.18;  cr = 0.79;   }
+      else if (uType == 15) { sides = 7.0;  spin = 0.05;  cr = 0.72;   }
+      else if (uType == 16) { sides = 4.0;  spin = 0.08;  cr = 0.76;   }
+      else if (uType == 17) { sides = 6.0;  spin = 0.05;  spiral = 1.6; cr = 0.7885; }
+      else if (uType == 18) { sides = 16.0; spin = 0.025; cr = 0.68;   }
+      else                  { sides = 8.0;  spin = 0.07;  tun = 1.0; cr = 0.75; }
+
+      float r   = length(p);
+      float a   = atan(p.y, p.x);
+      float seg = 6.2832 / sides;
+      a = a + uTime * spin + uMid * 1.5 + spiral * r;
+      a = abs(mod(a, seg) - seg * 0.5);          // mirrored wedge fold
+      if (tun > 0.5) {
+        r = fract(log(r + 0.0015) * 1.1 - uTime * 0.30 - uBass * 1.4) * 2.2;
+      } else {
+        r *= 0.72 + 0.22 * sin(uTime * 0.16) + uBass * 0.45;
+      }
+      p = vec2(cos(a), sin(a)) * r / uScale;   // Scale slider: pure magnify, no audio coupling
+
+      jAngle = uTime * 0.05 + uMid * 2.5;
+      jC = cr * vec2(cos(jAngle), sin(jAngle));
+    }
+
+    vec2 z, c;
+    if      (uType == 0) { z = p;          c = jC; }
+    else if (uType == 1) { z = vec2(0.0);  c = p;  }
+    else if (uType == 2) { z = vec2(0.0);  c = p;  }
+    else if (uType == 3) { z = p;          c = vec2(0.0); }
+    else if (uType == 4) { z = p;          c = jC; }
+    else if (uType == 5) { z = vec2(0.0);  c = p;  }
+    else if (uType == 6) { z = p;          c = jC; }
+    else if (uType == 7) { z = vec2(0.0);  c = p;  }
+    else if (uType == 8) { z = p;          c = jC; }
+    else if (uType == 9) { z = p;          c = novaC; }
+    else                 { z = p;          c = jC; }
+
+    vec2  zprev   = vec2(0.0);
+    float sn      = 0.0;
+    bool  escaped   = false;
+    bool  converged = false;
+    float trapR   = 1e6;
+    float basin   = 0.0;
+
+    const vec2 ROOT0 = vec2( 1.000,  0.000);
+    const vec2 ROOT1 = vec2(-0.500,  0.866);
+    const vec2 ROOT2 = vec2(-0.500, -0.866);
+
+    for (int i = 0; i < 150; i++) {
+      float x2 = z.x*z.x, y2 = z.y*z.y, r2 = x2+y2;
+      trapR = min(trapR, abs(sqrt(r2) - 1.0));
+
+      vec2 znew;
+
+      if (uType == 0 || uType == 1 || uType >= 10) {
+        znew = vec2(x2-y2, 2.0*z.x*z.y) + c;
+
+      } else if (uType == 2) {
+        znew = vec2(x2-y2, 2.0*abs(z.x)*abs(z.y)) + c;
+
+      } else if (uType == 3) {
+        vec2 z3  = ccube(z);
+        vec2 num = z3 + z3 + vec2(1.0, 0.0);
+        vec2 z2  = vec2(x2-y2, 2.0*z.x*z.y);
+        vec2 den = 3.0 * z2;
+        float dl = dot(den, den);
+        if (dl < 1e-10) break;
+        znew = cdiv(num, den);
+
+      } else if (uType == 4) {
+        znew = ccube(z) + c;
+
+      } else if (uType == 5) {
+        znew = vec2(x2-y2, -2.0*z.x*z.y) + c;
+
+      } else if (uType == 6 || uType == 7) {
+        float sx = x2-y2, sy = 2.0*z.x*z.y;
+        znew = vec2(sx*sx - sy*sy, 2.0*sx*sy) + c;
+
+      } else if (uType == 8) {
+        vec2 ztemp = z;
+        znew  = vec2(x2-y2, 2.0*z.x*z.y) + c + pParam * zprev;
+        zprev = ztemp;
+
+      } else {
+        vec2 z3  = ccube(z);
+        vec2 num = z3 + z3 + vec2(1.0, 0.0);
+        vec2 z2  = vec2(x2-y2, 2.0*z.x*z.y);
+        vec2 den = 3.0 * z2;
+        float dl = dot(den, den);
+        if (dl < 1e-10) break;
+        znew = cdiv(num, den) + c;
+      }
+
+      z = znew;
+
+      if (uType == 3 || uType == 9) {
+        float d0 = length(z - ROOT0);
+        float d1 = length(z - ROOT1);
+        float d2 = length(z - ROOT2);
+        float dm = min(d0, min(d1, d2));
+        if (dm < 0.003) {
+          basin = (d0 < d1 && d0 < d2) ? 0.0 : (d1 < d2 ? 1.0 : 2.0);
+          sn = float(i);
+          converged = true;
+          break;
+        }
+        if (uType == 9 && dot(z,z) > 1e6) {
+          sn = float(i); escaped = true; break;
+        }
+      } else {
+        float nr2 = dot(z,z);
+        if (nr2 > 256.0) {
+          sn = float(i) - log2(log2(nr2)) + 4.0;
+          escaped = true;
+          break;
+        }
+      }
+
+      sn = float(i + 1);
+    }
+
+    float colorPhase = uTime * 0.10 + uHigh * 3.5;
+    vec3  col;
+
+    if ((uType == 3 || uType == 9) && converged) {
+      float hue    = basin / 3.0 + colorPhase;
+      float bright = max(0.0, 1.0 - sn / 120.0) + uBass * 0.4;
+      col = pal(hue) * (0.25 + bright * 1.8);
+
+    } else if ((uType == 3 || uType == 9) && !converged && !escaped) {
+      col = vec3(0.03 + uBass * 0.04);
+
+    } else if (escaped) {
+      float t = sn * 0.055 + colorPhase;
+      col = pal(t);
+      float boost = 0.65 + uBass * 3.5;
+      col *= boost;
+      col += pow(max(col - 0.4, vec3(0.0)), vec3(1.8)) * uBass * 2.0;
+
+    } else {
+      float t   = trapR * 7.0 + colorPhase + 0.5;
+      col       = pal(t) * (0.08 + trapR * 0.5 + uBass * 0.35);
+      float glw = exp(-trapR * 14.0);
+      col      += glw * pal(colorPhase + 0.25) * (0.35 + uBass * 0.5);
+    }
+
+    gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+  }
+`;
+
+function mkShader(type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    throw new Error('Shader:\n' + gl.getShaderInfoLog(s));
+  return s;
+}
+function mkProg(vs, fs) {
+  const p = gl.createProgram();
+  gl.attachShader(p, mkShader(gl.VERTEX_SHADER,   vs));
+  gl.attachShader(p, mkShader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS))
+    throw new Error('Link:\n' + gl.getProgramInfoLog(p));
+  return p;
+}
+
+const prog = mkProg(VERT, FRAG);
+gl.useProgram(prog);
+
+const qbuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, qbuf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+const aPosLoc = gl.getAttribLocation(prog, 'aPos');
+gl.enableVertexAttribArray(aPosLoc);
+gl.vertexAttribPointer(aPosLoc, 2, gl.FLOAT, false, 0, 0);
+
+const uRes  = gl.getUniformLocation(prog, 'uRes');
+const uBass = gl.getUniformLocation(prog, 'uBass');
+const uMid  = gl.getUniformLocation(prog, 'uMid');
+const uHigh = gl.getUniformLocation(prog, 'uHigh');
+const uTime = gl.getUniformLocation(prog, 'uTime');
+const uType = gl.getUniformLocation(prog, 'uType');
+const uScale = gl.getUniformLocation(prog, 'uScale');
+
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width  = Math.round(window.innerWidth  * dpr);
+  cv.height = Math.round(window.innerHeight * dpr);
+  gl.viewport(0, 0, cv.width, cv.height);
+}
+window.addEventListener('resize', resize);
+resize();
+
+cv.addEventListener('dblclick', () => {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+  else document.exitFullscreen();
+});
+
+let fractalType = 0;
+document.querySelectorAll('.fp').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.fp').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    fractalType = parseInt(btn.dataset.t, 10);
+  });
+});
+
+const gainSlider = document.getElementById('gainSlider');
+const gainVal    = document.getElementById('gainVal');
+let gain = 1.0;
+gainSlider.addEventListener('input', () => {
+  gain = parseFloat(gainSlider.value);
+  gainVal.textContent = gain.toFixed(2) + 'x';
+});
+
+const reactSlider = document.getElementById('reactSlider');
+const reactVal    = document.getElementById('reactVal');
+let react = 0.35;
+reactSlider.addEventListener('input', () => {
+  react = parseFloat(reactSlider.value);
+  reactVal.textContent = react.toFixed(2) + 'x';
+});
+let baseB = 0, baseM = 0, baseH = 0;
+
+const scaleSlider = document.getElementById('scaleSlider');
+const scaleVal    = document.getElementById('scaleVal');
+let scale = 1.15;
+scaleSlider.addEventListener('input', () => {
+  scale = parseFloat(scaleSlider.value);
+  scaleVal.textContent = scale.toFixed(2) + 'x';
+});
+
+let analyser = null, freqData = null, nyquist = 22050;
+let bass = 0, mid = 0, high = 0;
+const SM = 0.16;
+const sm = (o, n) => o + (n - o) * SM;
+
+const fB      = document.getElementById('fB');
+const fM      = document.getElementById('fM');
+const fH      = document.getElementById('fH');
+const modeTag = document.getElementById('modeTag');
+
+const t0 = performance.now();
+
+function frame(now) {
+  requestAnimationFrame(frame);
+  const t = (now - t0) * 0.001;
+
+  if (analyser && freqData) {
+    analyser.getByteFrequencyData(freqData);
+    const bins = freqData.length;
+    let bS=0,mS=0,hS=0,bN=0,mN=0,hN=0;
+    for (let i = 0; i < bins; i++) {
+      const freq = (i / bins) * nyquist;
+      const amp  = freqData[i] / 255;
+      if      (freq < 80)   { bS+=amp; bN++; }
+      else if (freq < 3500) { mS+=amp; mN++; }
+      else                  { hS+=amp; hN++; }
+    }
+    bass = sm(bass, bN ? Math.min(1, bS/bN * 7.0) : 0);
+    mid  = sm(mid,  mN ? Math.min(1, mS/mN * 4.0) : 0);
+    high = sm(high, hN ? Math.min(1, hS/hN * 8.0) : 0);
+  } else {
+    bass = sm(bass, 0.10 + 0.08 * Math.sin(t * 0.43));
+    mid  = sm(mid,  0.22 + 0.14 * Math.sin(t * 0.26 + 1.8));
+    high = sm(high, 0.05 + 0.04 * Math.abs(Math.sin(t * 0.77)));
+  }
+
+  const b = Math.min(1, bass * gain);
+  const m = Math.min(1, mid  * gain);
+  const h = Math.min(1, high * gain);
+  fB.style.height = (b * 100).toFixed(1) + '%';
+  fM.style.height = (m * 100).toFixed(1) + '%';
+  fH.style.height = (h * 100).toFixed(1) + '%';
+
+  // Reactivity: keep a slow baseline (operating point set by Sensitivity),
+  // scale only the fast excursion around it so the visuals are less jumpy.
+  baseB += (b - baseB) * 0.015;
+  baseM += (m - baseM) * 0.015;
+  baseH += (h - baseH) * 0.015;
+  const rb = Math.max(0, Math.min(1, baseB + (b - baseB) * react));
+  const rm = Math.max(0, Math.min(1, baseM + (m - baseM) * react));
+  const rh = Math.max(0, Math.min(1, baseH + (h - baseH) * react));
+
+  gl.uniform2f(uRes,  cv.width, cv.height);
+  gl.uniform1f(uBass, rb);
+  gl.uniform1f(uMid,  rm);
+  gl.uniform1f(uHigh, rh);
+  gl.uniform1f(uTime, t);
+  gl.uniform1i(uType, fractalType);
+  gl.uniform1f(uScale, scale);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+}
+
+requestAnimationFrame(frame);
+
+const overlay  = document.getElementById('overlay');
+const startBtn = document.getElementById('startBtn');
+
+startBtn.addEventListener('click', async () => {
+  startBtn.disabled    = true;
+  startBtn.textContent = 'Requesting...';
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+
+    if (stream.getAudioTracks().length === 0) {
+      alert('No audio track captured.\n\nPlease:\n  1. Choose "Entire Screen"\n  2. Check "Share system audio"\n  3. Click Share');
+      stream.getTracks().forEach(t => t.stop());
+      startBtn.disabled    = false;
+      startBtn.textContent = 'Enable System Audio';
+      return;
+    }
+
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    nyquist = ctx.sampleRate / 2;
+    analyser = ctx.createAnalyser();
+    analyser.fftSize              = 4096;
+    analyser.smoothingTimeConstant = 0.75;
+    ctx.createMediaStreamSource(stream).connect(analyser);
+    freqData = new Uint8Array(analyser.frequencyBinCount);
+
+    stream.getTracks().forEach(track => {
+      track.onended = () => {
+        analyser = freqData = null;
+        modeTag.className   = 'demo';
+        modeTag.textContent = 'DEMO';
+      };
+    });
+
+    overlay.classList.add('gone');
+    modeTag.className   = 'live';
+    modeTag.textContent = 'LIVE';
+
+  } catch (err) {
+    if (err.name !== 'NotAllowedError') { console.error(err); alert('Failed: ' + err.message); }
+    startBtn.disabled    = false;
+    startBtn.textContent = 'Enable System Audio';
+  }
+});
+</script>
+</body>
+</html>
