@@ -99,7 +99,7 @@
 
     /* ── Sensitivity slider — bottom left ────────────────────── */
     #sensitivity {
-      position: fixed; bottom: 22px; left: 22px;
+      position: fixed; bottom: 70px; left: 22px;
       display: flex; align-items: center; gap: 10px;
       z-index: 20; opacity: 1.0; transition: opacity 0.3s;
     }
@@ -129,16 +129,30 @@
       display: flex; align-items: center; gap: 10px;
       z-index: 20; opacity: 1.0; transition: opacity 0.3s;
     }
-    #reactivity { bottom: 50px; }
-    #scalectl   { bottom: 78px; }
+    #reactivity { bottom: 98px; }
+    #scalectl   { bottom: 126px; }
     #reactivity label, #scalectl label {
       font-family: monospace; font-size: 10px; letter-spacing: 2px;
       color: #000; text-transform: uppercase; white-space: nowrap;
     }
 
+    /* ── Pin Base Pattern toggle — bottom centre ─────────────── */
+    #pinBtn {
+      position: fixed; bottom: 22px; left: 22px;
+      z-index: 20; padding: 8px 16px;
+      font-family: monospace; font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; cursor: pointer; color: #fff;
+      background: #555; border: 1px solid #888; border-radius: 4px;
+      transition: all 0.2s;
+    }
+    #pinBtn.on {
+      background: #0a8a3f; border-color: #00ff88;
+      box-shadow: 0 0 10px rgba(0,255,136,0.4);
+    }
+
     /* ── Misc hint ───────────────────────────────────────────── */
     #dblhint {
-      position: fixed; bottom: 106px; left: 22px;
+      position: fixed; bottom: 154px; left: 22px;
       font-family: monospace; font-size: 10px; letter-spacing: 1px;
       color: #000; z-index: 5; pointer-events: none;
     }
@@ -204,27 +218,29 @@
 </div>
 
 <!-- Scale (bottom left) -->
-<div id="scalectl">
+<div id="scalectl" title="Like a magnifier setting on the whole image.">
   <label>Scale</label>
   <input type="range" id="scaleSlider" min="0.5" max="5" step="0.0125" value="1.15">
   <span id="scaleVal">1.15&times;</span>
 </div>
 
 <!-- Reactivity (bottom left, above Sensitivity) -->
-<div id="reactivity">
+<div id="reactivity" title="How much the pattern is affected by sounds.">
   <label>Reactivity</label>
   <input type="range" id="reactSlider" min="0" max="1.5" step="0.0125" value="0.35">
   <span id="reactVal">0.35&times;</span>
 </div>
 
 <!-- Sensitivity (bottom left) -->
-<div id="sensitivity">
+<div id="sensitivity" title="Think of this like a baseline for Reactivity; it's like injecting some amount of 'reaction result' independent of sound.">
   <label>Sensitivity</label>
   <input type="range" id="gainSlider" min="0.1" max="4" step="0.0125" value="1">
   <span id="gainVal">1.0&times;</span>
 </div>
 
 <div id="dblhint">double-click &middot; fullscreen</div>
+
+<button id="pinBtn" title="Toggle this button when you see a pattern you like. Hit it again to unlock.">Pin Base Pattern</button>
 
 <script>
 // =======================================================================
@@ -261,7 +277,7 @@ const FRAG = `
   precision highp float;
 
   uniform vec2  uRes;
-  uniform float uBass, uMid, uHigh, uTime, uScale;
+  uniform float uBass, uMid, uHigh, uTime, uScale, uCBaseTime;
   uniform int   uType;
 
   varying vec2 vUv;
@@ -346,7 +362,7 @@ const FRAG = `
       }
       p = vec2(cos(a), sin(a)) * r / uScale;   // Scale slider: pure magnify, no audio coupling
 
-      jAngle = uTime * 0.05 + uMid * 2.5;
+      jAngle = uCBaseTime * 0.05 + uMid * 2.5;   // base drift frozen when Pin is on; mids stay live
       jC = cr * vec2(cos(jAngle), sin(jAngle));
     }
 
@@ -511,6 +527,7 @@ const uHigh = gl.getUniformLocation(prog, 'uHigh');
 const uTime = gl.getUniformLocation(prog, 'uTime');
 const uType = gl.getUniformLocation(prog, 'uType');
 const uScale = gl.getUniformLocation(prog, 'uScale');
+const uCBaseTime = gl.getUniformLocation(prog, 'uCBaseTime');
 
 function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -560,6 +577,14 @@ scaleSlider.addEventListener('input', () => {
   scaleVal.textContent = scale.toFixed(2) + 'x';
 });
 
+let pinned = false, pinT = 0, curT = 0;
+const pinBtn = document.getElementById('pinBtn');
+pinBtn.addEventListener('click', () => {
+  pinned = !pinned;
+  if (pinned) pinT = curT;            // snapshot the slow clock drift; mids stay live
+  pinBtn.classList.toggle('on', pinned);
+});
+
 let analyser = null, freqData = null, nyquist = 22050;
 let bass = 0, mid = 0, high = 0;
 const SM = 0.16;
@@ -575,6 +600,7 @@ const t0 = performance.now();
 function frame(now) {
   requestAnimationFrame(frame);
   const t = (now - t0) * 0.001;
+  curT = t;
 
   if (analyser && freqData) {
     analyser.getByteFrequencyData(freqData);
@@ -619,6 +645,7 @@ function frame(now) {
   gl.uniform1f(uTime, t);
   gl.uniform1i(uType, fractalType);
   gl.uniform1f(uScale, scale);
+  gl.uniform1f(uCBaseTime, pinned ? pinT : t);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
 
