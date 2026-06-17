@@ -631,11 +631,16 @@ scaleSlider.addEventListener('input', () => {
   scaleVal.textContent = scale.toFixed(2) + 'x';
 });
 
-let pinned = false, pinT = 0, curT = 0;
+let pinned = false, pinValue = 0, baseOffset = 0, curT = 0;
 const pinBtn = document.getElementById('pinBtn');
 pinBtn.addEventListener('click', () => {
-  pinned = !pinned;
-  if (pinned) pinT = curT;            // snapshot the slow clock drift; mids stay live
+  if (!pinned) {
+    pinValue = curT - baseOffset;     // freeze the running base where it is; mids stay live
+    pinned = true;
+  } else {
+    baseOffset = curT;                // unpin: reset c's circle back to origin (opening state)
+    pinned = false;
+  }
   pinBtn.classList.toggle('on', pinned);
 });
 
@@ -699,7 +704,7 @@ function frame(now) {
   gl.uniform1f(uTime, t);
   gl.uniform1i(uType, fractalType);
   gl.uniform1f(uScale, scale);
-  gl.uniform1f(uCBaseTime, pinned ? pinT : t);
+  gl.uniform1f(uCBaseTime, pinned ? pinValue : (t - baseOffset));
   gl.uniform1i(uPal, palType);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
