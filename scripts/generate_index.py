@@ -59,7 +59,7 @@ def render(node: dict, path_prefix: str = "") -> str:
         if key == "__files__":
             continue
         sub_prefix = f"{path_prefix}{key}/"
-        parts.append(f'    <li class="folder"><details open><summary>{escape(key)}/</summary>')
+        parts.append(f'    <li class="folder"><details><summary>{escape(key)}/</summary>')
         parts.append("      <ul>")
         parts.append(render(sub, sub_prefix))
         parts.append("      </ul>")
