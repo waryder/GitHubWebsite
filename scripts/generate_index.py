@@ -23,21 +23,30 @@ SKIP_FILES = {"index.html"}
 def build_tree(root: Path) -> dict:
     """Return a nested dict: {folder_name: {...children..., '__files__': [filenames]}}"""
     tree: dict = {"__files__": []}
-    for entry in sorted(root.iterdir(), key=lambda p: (p.is_file(), p.name.lower())):
-        if entry.name.startswith("."):
+    # Files inside ai-newsletters/ are dated pages (YYYY-MM-DD.html) — list newest first.
+    # Everything else keeps the original ascending alphabetical order.
+    reverse_files = root.name == "ai-newsletters"
+    dirs = sorted(
+        (e for e in root.iterdir() if e.is_dir() and not e.name.startswith(".")),
+        key=lambda p: p.name.lower(),
+    )
+    files = sorted(
+        (e for e in root.iterdir() if e.is_file() and not e.name.startswith(".")),
+        key=lambda p: p.name.lower(),
+        reverse=reverse_files,
+    )
+    for entry in dirs:
+        if entry.name in SKIP_DIRS:
             continue
-        if entry.is_dir():
-            if entry.name in SKIP_DIRS:
-                continue
-            sub = build_tree(entry)
-            # Only include the folder if it has any html descendants
-            if has_pages(sub):
-                tree[entry.name] = sub
-        else:
-            if entry.name in SKIP_FILES:
-                continue
-            if entry.suffix.lower() in INCLUDE_EXT:
-                tree["__files__"].append(entry.name)
+        sub = build_tree(entry)
+        # Only include the folder if it has any html descendants
+        if has_pages(sub):
+            tree[entry.name] = sub
+    for entry in files:
+        if entry.name in SKIP_FILES:
+            continue
+        if entry.suffix.lower() in INCLUDE_EXT:
+            tree["__files__"].append(entry.name)
     return tree
 
 
