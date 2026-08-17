@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate index.html — nested tree of every .html/.htm page in the repo.
+Generate index.html - nested tree of every .html/.htm page in the repo.
 Run by .github/workflows/generate-index.yml on every push to main.
 """
 
@@ -23,8 +23,6 @@ SKIP_FILES = {"index.html"}
 def build_tree(root: Path) -> dict:
     """Return a nested dict: {folder_name: {...children..., '__files__': [filenames]}}"""
     tree: dict = {"__files__": []}
-    # Files inside ai-newsletters/ are dated pages (YYYY-MM-DD.html) — list newest first.
-    # Everything else keeps the original ascending alphabetical order.
     reverse_files = root.name == "ai-newsletters"
     dirs = sorted(
         (e for e in root.iterdir() if e.is_dir() and not e.name.startswith(".")),
@@ -39,7 +37,6 @@ def build_tree(root: Path) -> dict:
         if entry.name in SKIP_DIRS:
             continue
         sub = build_tree(entry)
-        # Only include the folder if it has any html descendants
         if has_pages(sub):
             tree[entry.name] = sub
     for entry in files:
@@ -56,14 +53,19 @@ def has_pages(node: dict) -> bool:
     return any(has_pages(v) for k, v in node.items() if k != "__files__")
 
 
-def render(node: dict, path_prefix: str = "") -> str:
-    """Recursively render the tree to nested <ul>/<li> HTML."""
+def render(node: dict, path_prefix: str = "/") -> str:
+    """Recursively render the tree to nested <ul>/<li> HTML.
+
+    path_prefix is an ABSOLUTE URL path (always starts with '/') so every
+    emitted <a href> is site-root-anchored. This prevents Cloudflare Pages'
+    unknown-path fallback (which serves index.html for any missing route) from
+    combining with relative link resolution to compound path segments like
+    ai-newsletters/ai-newsletters/... on repeated clicks.
+    """
     parts: list[str] = []
-    # Files at this level
     for fname in node.get("__files__", []):
-        href = f"{path_prefix}{fname}" if path_prefix else fname
+        href = f"{path_prefix}{fname}"
         parts.append(f'    <li class="file"><a href="{escape(href)}">{escape(fname)}</a></li>')
-    # Subfolders
     for key, sub in node.items():
         if key == "__files__":
             continue
