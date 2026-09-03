@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Newsletter — 2026-09-03</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #0f1115; color: #e6e6e6; line-height: 1.6; }
+  h1 { color: #fff; border-bottom: 2px solid #4a90e2; padding-bottom: 10px; }
+  h2 { color: #4a90e2; margin-top: 40px; }
+  .summary { background: #1b1e26; border-left: 4px solid #4a90e2; padding: 14px 18px; margin: 20px 0; border-radius: 4px; }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 10px; }
+  a { color: #7fb2ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #2a2e38; }
+  th { color: #4a90e2; }
+  .back-link { display: inline-block; margin-top: 40px; padding: 10px 16px; background: #1b1e26; border-radius: 6px; }
+  .none { color: #9aa0aa; font-style: italic; }
+</style>
+</head>
+<body>
+<h1>AI Newsletter — 2026-09-03</h1>
+
+<div class="summary">
+No SingularityNET product news in the last 24h on ASI:Chain, Hyperon, or OmegaClaw; no new AI models listed on OpenRouter today (newest remains Meta Muse Spark 1.3, dated 2026-09-02); the YouTube channel sweep could not be completed for a fifth consecutive day, though this run narrowed the fault to the XML feed endpoint specifically.
+</div>
+
+<h2>SingularityNET</h2>
+<p class="none">No news in last 24h on ASI:Chain, Hyperon, or OmegaClaw.</p>
+<p>The <a href="https://singularitynet.io/updates/" target="_blank" rel="noopener">SingularityNET updates feed</a> was read directly and its newest post is still dated 2026-07-23. Nothing on ASI:Chain, Hyperon, or OmegaClaw was published in the last 24 hours. For reference, the most recent substantive product milestones remain the
+<a href="https://singularitynet.io/singularitynet-launches-asichain-devnet-and-hyperon-agi-framework/" target="_blank" rel="noopener">ASI:Chain DevNet and Hyperon AGI Framework Alpha 1 launch</a>
+(Web Summit Lisbon, November 2025), the
+<a href="https://singularitynet.io/hyperclaw-a-cognitive-orchestration-layer-for-the-road-to-agi/" target="_blank" rel="noopener">HyperClaw cognitive orchestration layer</a>
+design proposal, and the OmegaClaw
+<a href="https://coinfomania.com/omegaclaw-launches-hypersprint-1-to-boost-community/" target="_blank" rel="noopener">HyperSprint #1</a>
+community program from August &mdash; all well outside today's window.</p>
+
+<h2>YouTube Channels</h2>
+<div class="summary">
+<strong>Sweep not completed &mdash; fifth consecutive day.</strong> This run did make diagnostic progress worth recording: <code>web_fetch</code> now <em>does</em> reach youtube.com channel pages (it returns handle, canonical channel ID, and About text &mdash; e.g. <code>@peterdiamandis</code> resolves cleanly to <code>UCvxm0qTrGN_1LMYgUaftWyQ</code>), but the same tool returns a completely empty body for <code>youtube.com/feeds/videos.xml?channel_id=...</code>, with the verified ID, with and without a cache-busting parameter. The channel pages carry no video listings, so they cannot substitute for the feed. The in-app browser still refuses navigation to youtube.com outright, the Claude in Chrome extension reports no connected browsers, and a search-engine fallback returned only a stale index with no reliable publish dates. So the fault is now isolated to the XML feed endpoint rather than to youtube.com as a whole. Per the standing per-channel rule, all nine channels are listed below and explicitly marked <em>not checked</em> &mdash; none is being reported as empty. This needs Bill's attention.
+</div>
+<ul>
+  <li><strong>Peter Diamandis</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>Alex Wissner-Gross</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>Imagination in Action</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>Nate B Jones</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>Ben Goertzel</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>Tom Bilyeu</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>Manolo Remiddi</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>David Shapiro</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+  <li><strong>Brighter with Herbert</strong> &mdash; <span class="none">Not checked (feed endpoint returned empty)</span></li>
+</ul>
+
+<h2>New AI Models on OpenRouter</h2>
+<p class="none">No new models listed with today's date (2026-09-03) on OpenRouter.</p>
+<p>The full catalogue was pulled from
+<a href="https://openrouter.ai/api/v1/models" target="_blank" rel="noopener">openrouter.ai/api/v1/models</a>
+and filtered on each entry's <code>created</code> timestamp against today's UTC window. Nothing carries today's date. The newest entries are
+<a href="https://openrouter.ai/meta/muse-spark-1.3" target="_blank" rel="noopener">Meta: Muse Spark 1.3</a>
+and its Contributor variant, both created 2026-09-02 &mdash; a multimodal reasoning model aimed at long-running agentic, multi-agent, and coding workflows &mdash; followed by
+<a href="https://openrouter.ai/google/gemini-3.8-flash" target="_blank" rel="noopener">Google: Gemini 3.8 Flash</a>, also 2026-09-02.</p>
+
+<h2>Reference Links</h2>
+<table>
+  <tr><th>Link</th></tr>
+  <tr><td><a href="https://openrouter.ai/rankings#benchmarks" target="_blank" rel="noopener">https://openrouter.ai/rankings#benchmarks</a></td></tr>
+  <tr><td><a href="https://openrouter.ai/models?order=most-popular" target="_blank" rel="noopener">https://openrouter.ai/models?order=most-popular</a></td></tr>
+  <tr><td><a href="https://openrouter.ai/models?order=newest" target="_blank" rel="noopener">https://openrouter.ai/models?order=newest</a></td></tr>
+  <tr><td><a href="https://openrouter.ai/models?order=pricing-high-to-low" target="_blank" rel="noopener">https://openrouter.ai/models?order=pricing-high-to-low</a></td></tr>
+  <tr><td><a href="https://openrouter.ai/models?order=pricing-low-to-high" target="_blank" rel="noopener">https://openrouter.ai/models?order=pricing-low-to-high</a></td></tr>
+</table>
+
+<h2>More from Bill</h2>
+<div class="summary">
+<a href="https://substack.com/@williamryder1" target="_blank" rel="noopener">BigBuffaloBill's What I Want the World to Know!</a>
+&mdash; essays by William Ryder, computer scientist and serial entrepreneur, on artificial intelligence, technology infrastructure, and the places where innovation collides with politics and public opinion.
+</div>
+
+<a class="back-link" href="index.html">&larr; Back to Newsletter Index</a>
+</body>
+</html>
