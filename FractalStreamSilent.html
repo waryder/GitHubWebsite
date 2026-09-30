@@ -61,6 +61,7 @@
       position: fixed; top: 16px; left: 16px;
       display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
       z-index: 20; opacity: 1.0; transition: opacity 0.3s;
+      max-width: calc(100vw - 32px);   /* never wider than the viewport */
     }
     #picker:hover { opacity: 1.0; }
     /* ── Palette picker — top right ──────────────────────────── */
@@ -68,8 +69,19 @@
       position: fixed; top: 16px; right: 16px;
       display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
       z-index: 20; opacity: 1.0; transition: opacity 0.3s;
+      max-width: calc(100vw - 32px);   /* never wider than the viewport */
     }
-    .prow { display: flex; gap: 5px; }
+    /* Each button row scrolls horizontally when wider than the screen;   */
+    /* scrollbar hidden so it drags cleanly on touch with no visual track */
+    .prow {
+      display: flex; gap: 5px;
+      max-width: 100%; overflow-x: auto;
+      scrollbar-width: none;            /* Firefox: hide scrollbar */
+      -ms-overflow-style: none;         /* legacy Edge: hide scrollbar */
+      -webkit-overflow-scrolling: touch;/* smooth momentum scroll on iOS */
+    }
+    .prow::-webkit-scrollbar { display: none; }  /* Chrome/Safari: hide scrollbar */
+    .fp, .cp { flex: 0 0 auto; }        /* buttons keep their size, never shrink */
     .fp, .cp {
       padding: 5px 11px; font-family: monospace; font-size: 10px;
       letter-spacing: 1px; text-transform: uppercase;
