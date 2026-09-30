@@ -82,6 +82,13 @@
     }
     .prow::-webkit-scrollbar { display: none; }  /* Chrome/Safari: hide scrollbar */
     .fp, .cp { flex: 0 0 auto; }        /* buttons keep their size, never shrink */
+
+    /* ── Small screens: stack palette below picker so they can't collide ── */
+    @media (max-width: 700px) {
+      #picker  { left: 8px; right: 8px; max-width: none; }        /* full-width, top */
+      #palette { left: 8px; right: 8px; top: 150px;               /* below the 4 picker rows */
+                 max-width: none; align-items: flex-start; }      /* left-align rows */
+    }
     .fp, .cp {
       padding: 5px 11px; font-family: monospace; font-size: 10px;
       letter-spacing: 1px; text-transform: uppercase;
