@@ -1,0 +1,386 @@
+<!doctype html>
+<!-- GodseedColors.html | C:\Repos\GitHubWebsite\GodseedColors.html | A procedural, touch-friendly alien botanical sanctuary. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071315">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%23071315%27/%3E%3Cpath d=%27M16 27V6M16 18L7 10M16 15L25 7%27 stroke=%27%23a8f5d0%27 stroke-width=%273%27 fill=%27none%27/%3E%3C/svg%3E">
+<meta name="description" content="Plant a little wonder. Grow a luminous alien garden on a floating island among the stars.">
+<title>GODSEED — A little world, made by you</title>
+<style>
+/* The interface stays quiet so the living sculpture remains the focal point. */
+:root{color-scheme:dark;--ink:#f3f0df;--muted:#a2b9b6;--mint:#a8f5d0;--edge:#b5eadc26;--glass:#0a1b20d9}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050e14;color:var(--ink);font-family:Arial,Helvetica,sans-serif}button,select{font:inherit}button{cursor:pointer;color:inherit}button:disabled{opacity:.4;cursor:wait}button:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--mint);outline-offset:5px}button{min-height:44px;border:1px solid var(--edge);border-radius:10px;background:#ffffff06;padding:10px 15px;transition:background .2s,border-color .2s}button:hover{background:#c6ffe216;border-color:#c6ffe255}button[aria-pressed=true]{background:#a8f5d01c;border-color:var(--mint);color:var(--mint)}button.primary{background:var(--mint);color:#0a2620;border-color:var(--mint);font-weight:700}button.primary:hover{background:#ceffe8}.eyebrow{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--mint)}
+#scene{position:absolute;inset:0;touch-action:none;outline:none}#scene canvas{display:block;width:100%;height:100%}.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 52% 43%,transparent 35%,#020b1266 100%)}header{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(24px + env(safe-area-inset-top)) 34px 18px;pointer-events:none}header>*{pointer-events:auto}.wordmark{font-size:24px;font-weight:500;letter-spacing:.3em}.brand small{display:block;font-size:9px;letter-spacing:.26em;color:var(--muted);margin-top:8px}.top-actions{display:flex;gap:10px;align-items:center}.status{display:flex;gap:8px;align-items:center;font-size:10px;letter-spacing:.13em;color:var(--muted);margin-right:14px}.status i{width:5px;height:5px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint)}.glass{background:var(--glass);border:1px solid var(--edge);backdrop-filter:blur(20px);box-shadow:0 12px 60px #0003}
+#intro{position:absolute;left:5%;top:28%;width:315px;border-radius:18px;padding:26px}#intro h1{font-family:Georgia,serif;font-weight:400;font-size:43px;line-height:1.08;letter-spacing:-.035em;margin:16px 0}#intro h1 em{color:var(--mint);font-weight:400}#intro p{color:var(--muted);font-size:13px;line-height:1.8;margin:0 0 20px}.intro-actions{display:grid;gap:9px}#intro .footnote{margin:14px 0 0;font-size:10px;color:#91aaa5;text-align:center}.intro-close{position:absolute;right:9px;top:8px;border:none;padding:0;width:44px;color:var(--muted);font-size:20px}
+#coordinates{position:absolute;left:34px;bottom:175px;pointer-events:none;color:#a5c1bd8c;font-size:9px;line-height:2;letter-spacing:.2em}#coordinates strong{font-weight:400;color:#e3eee8ba}#garden-caption{position:absolute;right:34px;bottom:175px;text-align:right;pointer-events:none}#garden-caption div{font-family:Georgia,serif;font-size:21px;font-style:italic;color:#e7f2e4b0}#garden-caption small{font-size:9px;letter-spacing:.2em;color:var(--muted)}
+#dock{position:absolute;bottom:calc(23px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(890px,calc(100% - 48px));border-radius:17px;padding:15px 20px}.dock-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.dock-heading .hint{font-size:11px;color:var(--muted)}.dock-heading .eyebrow{font-size:9px}.dock-body{display:flex;gap:18px;align-items:center}.species{display:flex;gap:7px;flex:1}.seed{flex:1;min-width:88px;padding:8px 10px;text-align:left;display:flex;gap:10px;align-items:center}.seed svg{width:22px;height:28px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.2}.seed strong{display:block;font-size:11px;font-weight:500}.seed small{display:block;font-size:9px;color:var(--muted);margin-top:4px}.seed:nth-child(2){color:#f2afe6}.seed:nth-child(3){color:#f7d38b}.seed:nth-child(4){color:#7cddd1}.dock-tools{display:flex;gap:7px;padding-left:18px;border-left:1px solid var(--edge)}#plantButton{font-size:12px;white-space:nowrap}#panelToggle{display:none}#count{font-size:10px;color:var(--mint);font-variant-numeric:tabular-nums}#toast{position:absolute;left:50%;bottom:190px;transform:translateX(-50%);padding:11px 20px;border-radius:30px;color:var(--ink);font-size:12px;max-width:90%;text-align:center;pointer-events:none;opacity:0;transition:opacity .25s}#toast.show{opacity:1}
+.modal{border:1px solid var(--edge);background:#0b1b21f5;color:var(--ink);border-radius:20px;padding:28px;width:min(460px,calc(100% - 28px));max-height:85dvh;overflow:auto;box-shadow:0 30px 120px #0009}.modal::backdrop{background:#01080db3;backdrop-filter:blur(7px)}.modal h2{font-family:Georgia,serif;font-size:30px;font-weight:400;margin:8px 0 18px}.modal p,.modal li{font-size:13px;line-height:1.8;color:var(--muted)}.modal ul{padding-left:19px}.modal .close{float:right;margin:-10px -10px 0 8px;border:0;font-size:19px;width:44px}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.settings-grid button{font-size:12px}.field{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin:20px 0}.field select{min-height:44px;background:#132e33;color:var(--ink);border:1px solid var(--edge);border-radius:8px;padding:8px}.danger{color:#ffc5bf}.divider{height:1px;background:var(--edge);margin:22px 0}.error{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 70%,#163b3a,#060e16);z-index:20}.error section{max-width:420px;padding:28px;text-align:center}.error h1{font:36px Georgia,serif}.error p{line-height:1.8;color:var(--muted)}[hidden]{display:none!important}#loading{position:absolute;inset:0;display:grid;place-items:center;background:#061018;z-index:15;transition:opacity .5s}.loading-inner{text-align:center}.loading-inner strong{font-size:24px;letter-spacing:.3em;font-weight:400}.loading-inner p{color:var(--muted);font-size:12px}.loading-orbit{width:54px;height:54px;border:1px solid #a8f5d033;border-top-color:var(--mint);border-radius:50%;margin:0 auto 26px;animation:orbit 2s linear infinite}@keyframes orbit{to{transform:rotate(360deg)}}
+@media(max-width:760px){header{padding:calc(16px + env(safe-area-inset-top)) 18px 10px}.wordmark{font-size:20px}.brand small{font-size:8px}.status{display:none}.top-actions{gap:6px}.top-actions button{padding:8px 12px;font-size:11px}#intro{left:18px;top:auto;bottom:calc(174px + env(safe-area-inset-bottom));width:260px;padding:20px}#intro h1{font-size:31px;margin:12px 0}#intro p{font-size:12px;line-height:1.6;margin-bottom:14px}#intro .footnote{display:none}#coordinates,#garden-caption{display:none}#dock{bottom:calc(12px + env(safe-area-inset-bottom));width:calc(100% - 24px);padding:11px 12px;border-radius:15px}.dock-heading{margin-bottom:9px}.dock-heading .hint{font-size:9px}.dock-heading .eyebrow{display:none}#panelToggle{display:block;min-height:44px;padding:2px 6px;border:none;font-size:10px;color:var(--muted)}.dock-body{gap:8px;flex-wrap:wrap}.species{width:100%;gap:5px}.seed{min-width:0;padding:8px 6px;justify-content:center;gap:5px}.seed svg{width:17px}.seed strong{font-size:10px}.seed small{display:none}.dock-tools{padding:0;border:0;width:100%;display:none}.expanded .dock-tools{display:flex}.dock-tools button{flex:1}#dock.collapsed .dock-body{display:none}#toast{bottom:165px;width:max-content;max-width:90%}}
+/* Compact onboarding keeps the world visible on phones and every action reachable in landscape. */
+@media(max-width:760px){#intro{width:calc(100% - 36px);bottom:calc(166px + env(safe-area-inset-bottom));padding:18px}#intro h1{font-size:28px;margin:10px 0}#intro h1 br{display:none}#intro h1 br::after{content:' '}#intro h1 em{display:block}#intro p{font-size:12px;margin-bottom:12px}#intro p br{display:none}.intro-actions{grid-template-columns:1fr 1fr;gap:8px}.intro-actions button{font-size:12px;padding:9px 7px}.dock-heading{gap:9px}.dock-heading .hint{font-size:11px;line-height:1.5;flex:1}#count{white-space:nowrap}#panelToggle{min-width:60px}#coordinates{display:none}}
+@media(max-height:560px){header{padding:12px 18px}.brand small,.status,#coordinates,#garden-caption{display:none}.wordmark{font-size:18px}#intro{left:18px;top:74px;bottom:auto;width:280px;max-height:calc(100dvh - 180px);overflow:auto;padding:15px}#intro h1{font-size:24px;margin:8px 0}#intro h1 br{display:none}#intro h1 em{display:block}#intro p,#intro .footnote{display:none}#intro .eyebrow{font-size:8px;margin-right:30px}.intro-actions{grid-template-columns:1fr 1fr}.intro-actions button{font-size:11px;padding:6px}#dock{bottom:10px;padding:8px 12px;width:calc(100% - 28px)}.dock-heading{margin-bottom:5px}.dock-heading .eyebrow{display:none}.dock-heading .hint{font-size:11px}.seed{min-width:0}.seed small{display:none}.dock-body{gap:8px}.dock-tools{padding-left:8px}.modal{max-height:calc(100dvh - 22px);padding:20px}#toast{bottom:110px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+</head>
+<body>
+<main id="scene" role="application" aria-label="Interactive alien garden. Drag to orbit, wheel or pinch to zoom. Choose a species and tap the island to plant, or use the Plant seed button." tabindex="0"></main>
+<div class="vignette"></div>
+<header><div class="brand"><div class="wordmark">GODSEED<span style="color:var(--mint)">.</span></div><small>A LITTLE WORLD, MADE BY YOU</small></div><div class="top-actions"><span class="status"><i></i> SANCTUARY ONLINE</span><button id="helpButton" aria-label="Open planting help">Help</button><button id="worldButton" aria-label="Open garden and world controls">World <span aria-hidden="true">↗</span></button></div></header>
+<button id="plantColors" class="glass" style="position:absolute;top:calc(86px + env(safe-area-inset-top));right:18px;max-width:calc(100% - 36px);font-size:12px" title="Cycle the colors of every plant; the island and sky stay unchanged.">Plant colors: Pastel · 1/10 ↻</button>
+<section id="intro" class="glass" aria-labelledby="introTitle"><button class="intro-close" id="closeIntro" aria-label="Dismiss introduction">×</button><div class="eyebrow">Somewhere, beyond the ordinary</div><h1 id="introTitle">Let a strange <br>little world <br><em>take root.</em></h1><p>Crystalline trees. Luminous blooms. <br>An island that comes alive with every seed.</p><div class="intro-actions"><button class="primary" id="startButton">Start planting <span aria-hidden="true">↗</span></button><button id="introDemo">Grow a demo garden</button></div><p class="footnote">No rules. No score. Just a little wonder.</p></section>
+<div id="coordinates"><strong>EXOBOTANICAL RESERVE / 001</strong><br>UNMAPPED SPACE · LIFE DETECTED<br>EST. JUST NOW</div>
+<div id="garden-caption"><div>Life finds a way. You give it one.</div><small>YOUR OWN POCKET OF THE UNIVERSE</small></div>
+<section id="dock" class="glass" aria-label="Planting controls"><div class="dock-heading"><span class="eyebrow">Choose your seed</span><span class="hint" id="gestureHint">Click the island to plant · Drag to orbit · Scroll to zoom</span><span id="count" aria-live="polite">0 / 60 plants</span><button id="panelToggle" aria-expanded="true" aria-controls="dockBody">Hide seeds</button></div><div class="dock-body" id="dockBody"><div class="species" role="group" aria-label="Seed species">
+<button class="seed" data-species="tree" aria-pressed="true" aria-label="Select Prism tree"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29V5M12 21L3 12M12 15L20 7M3 12V5M20 7V1M12 10L6 4"/></svg><span><strong>Prism</strong><small>Crystal tree</small></span></button>
+<button class="seed" data-species="mushroom" aria-pressed="false" aria-label="Select Halo mushroom"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M3 15C3 1 21 1 21 15ZM10 15V26H14V15M5 11H19"/></svg><span><strong>Halo</strong><small>Moon mushroom</small></span></button>
+<button class="seed" data-species="flower" aria-pressed="false" aria-label="Select Sol flower"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 28V15M12 20L5 16M12 12C-3 14 4 0 12 8C20 0 27 14 12 12C20 23 2 23 12 12Z"/></svg><span><strong>Sol</strong><small>Star bloom</small></span></button>
+<button class="seed" data-species="fern" aria-pressed="false" aria-label="Select Tide fern"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 28V3M12 24L3 18M12 19L3 12M12 14L6 7M12 24L21 18M12 19L21 12M12 14L18 7"/></svg><span><strong>Tide</strong><small>Alien fern</small></span></button></div><div class="dock-tools"><button class="primary" id="plantButton">Plant seed +</button><button id="pauseButton" aria-pressed="false" aria-label="Pause garden animation">Pause</button></div></div></section>
+<div id="toast" class="glass" role="status" aria-live="polite"></div>
+<dialog id="helpDialog" class="modal"><button class="close" data-close aria-label="Close help">×</button><div class="eyebrow">A field guide to your universe</div><h2>A seed is all it takes.</h2><ul><li><strong>Choose a seed</strong> from the four labeled species below.</li><li><strong>Tap or click the island</strong> to plant. Every plant has its own shape.</li><li><strong>Drag</strong> to look around. <strong>Pinch or scroll</strong> to move closer.</li><li>On a keyboard, use <strong>Plant seed</strong> in World or below. With the scene focused, arrow keys orbit, + / − zoom, and Enter plants.</li><li><strong>World</strong> holds demo planting, fast growth, pause, camera tour, atmosphere, picture download, and reset. Choose <strong>Lite graphics</strong> if your phone feels slow.</li></ul><p>Your garden lives in this tab. Reloading begins a new sanctuary. Nothing is uploaded or saved automatically.</p><button class="primary" data-close>Let's grow something</button></dialog>
+<dialog id="worldDialog" class="modal"><button class="close" data-close aria-label="Close world controls">×</button><div class="eyebrow">Make yourself at home</div><h2>Your little universe.</h2><div class="settings-grid"><button id="worldPlant" class="primary">Plant selected seed +</button><button id="demoButton">Grow demo garden</button><button id="fastButton" aria-pressed="false">Fast growth: off</button><button id="worldPause" aria-pressed="false">Pause animation</button><button id="tourButton" aria-pressed="false">Camera tour: off</button><button id="pictureButton">Save a picture ↓</button></div><label class="field">Atmosphere<select id="palette"><option value="lagoon">Emerald dusk</option><option value="violet">Violet dream</option><option value="ember">Amber eclipse</option></select></label><label class="field">Graphics<select id="graphics"><option value="balanced">Balanced glow</option><option value="lite">Lite · smoother on phones</option></select></label><p id="qualityNote">Adaptive rendering · bounded garden capacity</p><div class="divider"></div><button id="resetButton" class="danger">Reset garden…</button><p>Reset removes your plants and leaves the island ready for a fresh beginning.</p></dialog>
+<dialog id="resetDialog" class="modal"><div class="eyebrow">A fresh beginning</div><h2>Let this garden go?</h2><p>All planted life will be removed. This cannot be undone.</p><div class="settings-grid"><button data-close>Keep my garden</button><button id="confirmReset" class="danger">Reset garden</button></div></dialog>
+<div id="loading" role="status"><div class="loading-inner"><div class="loading-orbit"></div><strong>GODSEED.</strong><p>Finding a place among the stars…</p></div></div>
+<div id="error" class="error" hidden><section><div class="eyebrow">The universe is still here</div><h1>A little trouble reaching it.</h1><p id="errorMessage">This garden needs WebGL and a connection to load its 3D engine. Check your connection, enable hardware acceleration, then try again.</p><button class="primary" onclick="location.reload()">Try again</button></section></div>
+<script>
+// showGardenError: Give network and GPU failures a useful, finite fallback.
+window.showGardenError = function(message) { document.getElementById('loading').hidden=true; document.getElementById('error').hidden=false; if(message) document.getElementById('errorMessage').textContent=message; };
+// A failed module download must not leave an indefinite loading screen.
+window.gardenLoadDeadline=setTimeout(()=>{if(!window.godseedTest?.ready) window.showGardenError();},25000);
+</script>
+<script type="module">
+// The entire garden is generated locally; pinned CDN modules are the only dependencies.
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const $=id=>document.getElementById(id); // $: Resolve named interface elements.
+const mobile=matchMedia('(pointer:coarse)').matches || innerWidth<760;
+const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const cap=mobile?40:60, plants=[], pulses=[], queued=[], paletteColors={lagoon:0x12343c,violet:0x281c43,ember:0x352324};
+let renderer,scene,camera,controls,composer,bloom,ground,stars,spores,halo,nebula,ready=false;
+let selected='tree',paused=false,fast=false,tour=false,lite=false,time=0,last=0,toastTimer,frame=0;
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),clock=new THREE.Clock();
+const materials={}, sharedGeometries=new Set();
+
+// random: Choose an inclusive floating-point range for organic variation.
+function random(a,b){return a+Math.random()*(b-a);}
+// notify: Announce a brief action result without obstructing the garden.
+function notify(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3200);}
+// glowTexture: Paint a reusable soft light particle with no downloaded assets.
+function glowTexture(){
+ const canvas=document.createElement('canvas');canvas.width=128;canvas.height=128;
+ const ctx=canvas.getContext('2d'),gradient=ctx.createRadialGradient(64,64,0,64,64,64);
+ gradient.addColorStop(0,'rgba(255,255,255,1)');gradient.addColorStop(.12,'rgba(255,255,255,.8)');gradient.addColorStop(.38,'rgba(255,255,255,.16)');gradient.addColorStop(1,'rgba(255,255,255,0)');
+ ctx.fillStyle=gradient;ctx.fillRect(0,0,128,128);return new THREE.CanvasTexture(canvas);
+}
+const glow=glowTexture();
+// material: Register shared lit surfaces; reset never disposes resources still in use.
+function material(name,color,emission=0,intensity=0){materials[name]=new THREE.MeshStandardMaterial({color,emissive:emission,emissiveIntensity:intensity,roughness:.6,metalness:.2,flatShading:true});return materials[name];}
+// setupMaterials: Give species distinct mineral, luminous, and botanical surfaces.
+function setupMaterials(){
+ material('bark',0x214c49,0x0c4840,.35);material('mint',0x75edbc,0x40ffc0,1.35);
+ material('pink',0xd27ac2,0xff57d6,1.05);material('stem',0x7e6993,0x654878,.3);
+ material('gold',0xffd990,0xffb94d,1.65);material('leaf',0x297e71,0x25c6a7,.65);
+ material('rock',0x10232b,0x071922,.25);material('soil',0x123237,0x062d2a,.3);
+ materials.ring=new THREE.MeshBasicMaterial({color:0x69d6b1,transparent:true,opacity:.3,side:THREE.DoubleSide,depthWrite:false});
+}
+// Plant-only materials keep every environmental color exactly as in the original page.
+const plantMaterials={}, plantMaterialNames=['bark','mint','pink','stem','gold','leaf'];
+const plantMonochrome={value:0}; // Shared uniform neutralizes colored lighting for the grayscale palette only.
+let plantPaletteIndex=0; // The original pastel palette is the initial state.
+const plantPalettes=[
+ {name:'Pastel'}, // Preserve the original materials exactly when cycling back to the beginning.
+ {name:'Cyberpunk',colors:[0x260c38,0x00eaff,0xff007c,0x38114e,0xffdc00,0x7400ff]}, // Electric cyan, hot pink, ultraviolet, yellow.
+ {name:'High Contrast',colors:[0x060609,0xffffff,0xff2300,0x080809,0xffde00,0x004cff]}, // Ink, white, red, yellow, royal blue.
+ {name:'Matrix',colors:[0x191c1a,0x00ff24,0x404640,0x101410,0xadff00,0x008a20]}, // Neon greens against graphite greys.
+ {name:'Grayscale',colors:[0x181818,0xf0f0f0,0x707070,0x303030,0xffffff,0xababab]}, // Neutral light and dark, including the final lit surface.
+ {name:'Inferno',colors:[0x280508,0xff1800,0xff7300,0x401006,0xffdb00,0xa9002c]}, // Lava red, burnt orange, molten gold.
+ {name:'Deep Ocean',colors:[0x071938,0x0077ff,0x3900bb,0x10264f,0x00ffdf,0x006f94]}, // Cobalt, indigo, turquoise.
+ {name:'Sunset',colors:[0x3a102c,0xff0066,0x9d00e8,0x511d48,0xffaa00,0xda3042]}, // Raspberry, violet, tangerine.
+ {name:'Candy Pop',colors:[0x331540,0x00db8d,0xff238d,0x571147,0xffbe00,0x0092ff]}, // Saturated playful jewel colors.
+ {name:'Surprise Mix'} // Generate a fresh coordinated combination on each visit to this slot.
+];
+// setupPlantMaterials: Clone the six plant surfaces once; all planted geometry shares these clones.
+function setupPlantMaterials(){
+ for(const name of plantMaterialNames){
+  const mat=materials[name].clone(); // Never mutate the originals used by ground stones and the floating crystal.
+  mat.onBeforeCompile=shader=>{ // Grayscale applies to plants after lighting, tone mapping, and fog.
+   shader.uniforms.uPlantMonochrome=plantMonochrome;
+   shader.fragmentShader='uniform float uPlantMonochrome;\n'+shader.fragmentShader;
+   shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>','#include <fog_fragment>\ngl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722))), uPlantMonochrome);');
+  };
+  mat.customProgramCacheKey=()=> 'godseed-plant-palette-v1'; // Share one shader variant between all six surfaces.
+  plantMaterials[name]=mat;
+ }
+}
+// surpriseColors: Choose a fresh vivid harmony with dark stems instead of pale random RGB noise.
+function surpriseColors(){
+ const hue=Math.random(),offsets=[0,.0,.38,.38,.16,.63]; // Related hues keep each random result intentionally coordinated.
+ return offsets.map((offset,index)=>new THREE.Color().setHSL((hue+offset)%1,.95,index===0||index===3?.12:.43).getHex());
+}
+// cyclePlantColors: Recolor existing and future plants in place without resetting any growth or camera state.
+function cyclePlantColors(){
+ plantPaletteIndex=(plantPaletteIndex+1)%plantPalettes.length; // Wrap the single button through all ten combinations.
+ const palette=plantPalettes[plantPaletteIndex],colors=palette.colors||(plantPaletteIndex?surpriseColors():null);
+ plantMonochrome.value=palette.name==='Grayscale'?1:0; // Prevent colored world lights tinting the grayscale plants.
+ plantMaterialNames.forEach((name,index)=>{
+  const mat=plantMaterials[name],source=materials[name]; // These shared clones update every plant immediately.
+  if(!colors){mat.color.copy(source.color);mat.emissive.copy(source.emissive);mat.emissiveIntensity=source.emissiveIntensity;return;}
+  mat.color.setHex(colors[index]);mat.emissive.setHex(colors[index]); // Match glow to the new surface hue.
+  mat.emissiveIntensity=index===0||index===3?.10:.65; // Keep stems dark and colors saturated rather than washed-out pastel.
+ });
+ $('plantColors').textContent=`Plant colors: ${palette.name} · ${plantPaletteIndex+1}/${plantPalettes.length} ↻`;
+ notify(`${palette.name} plant palette applied.`); // Existing status announcements describe the change accessibly.
+}
+
+// setupRenderer: Bound device resolution and enable filmic bloom on both phone and desktop.
+function setupRenderer(){
+ renderer=new THREE.WebGLRenderer({antialias:!mobile,alpha:false,powerPreference:'high-performance',preserveDrawingBuffer:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.25:1.65));renderer.setSize(innerWidth,innerHeight);
+ renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;$('scene').appendChild(renderer.domElement);
+ scene=new THREE.Scene();scene.background=new THREE.Color(0x061018);scene.fog=new THREE.FogExp2(0x07161e,.012);
+ camera=new THREE.PerspectiveCamera(43,innerWidth/innerHeight,.1,180);camera.position.set(18,15,23);
+ controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.8,0);controls.enableDamping=!reduced;controls.dampingFactor=.055;
+ controls.minDistance=14;controls.maxDistance=43;controls.minPolarAngle=.3;controls.maxPolarAngle=1.45;controls.enablePan=false;controls.autoRotateSpeed=.35;
+ controls.touches.ONE=THREE.TOUCH.ROTATE;controls.touches.TWO=THREE.TOUCH.DOLLY_ROTATE;
+ composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));
+ bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.65,.65,.78);composer.addPass(bloom);composer.addPass(new OutputPass());
+ renderer.domElement.addEventListener('webglcontextlost',event=>{event.preventDefault();ready=false;window.showGardenError('Your graphics connection was interrupted. Close other graphics-heavy tabs, then reload your sanctuary.');});
+}
+// addLights: Illuminate facets without costly realtime shadows.
+function addLights(){
+ scene.add(new THREE.HemisphereLight(0x93d8df,0x0b1725,2.3));
+ const key=new THREE.DirectionalLight(0xbcffe0,3.2);key.position.set(-7,13,8);scene.add(key);
+ const rim=new THREE.DirectionalLight(0xad6ff2,3.7);rim.position.set(6,5,-9);scene.add(rim);
+ const heart=new THREE.PointLight(0x45ffbe,35,22,2);heart.position.set(0,3,0);scene.add(heart);
+}
+// mesh: Build a static object and retain its geometry for the lifetime of the world.
+function mesh(geometry,mat,parent=scene){const object=new THREE.Mesh(geometry,mat);parent.add(object);sharedGeometries.add(geometry);return object;}
+// createIsland: Shape a low-poly suspended obsidian landmass and etched orbital rings.
+function createIsland(){
+ const body=mesh(new THREE.CylinderGeometry(8.6,2.5,4.7,13,3),materials.rock);body.position.y=-2.44;
+ const positions=body.geometry.attributes.position;for(let i=0;i<positions.count;i++){const y=positions.getY(i);if(y<2.2){positions.setX(i,positions.getX(i)*random(.85,1.15));positions.setZ(i,positions.getZ(i)*random(.85,1.15));}}body.geometry.computeVertexNormals();
+ ground=mesh(new THREE.CylinderGeometry(8.55,8.65,.24,64),materials.soil);ground.position.y=-.12;
+ for(const radius of [8.2,8.35,6.1]){const ring=mesh(new THREE.RingGeometry(radius,radius+.018,128),materials.ring);ring.rotation.x=-Math.PI/2;ring.position.y=.016;}
+ for(let i=0;i<34;i++){const a=random(0,Math.PI*2),r=random(7.8,8.6),rock=mesh(new THREE.IcosahedronGeometry(random(.25,.7),0),materials.rock);rock.position.set(Math.cos(a)*r,-.08,Math.sin(a)*r);rock.scale.y=random(.6,1.7);}
+ const crystal=mesh(new THREE.OctahedronGeometry(1.3,0),materials.mint);crystal.position.set(0,-4.7,0);crystal.scale.set(.55,1.8,.55);
+ halo=mesh(new THREE.TorusGeometry(10.5,.018,5,160),materials.ring);halo.rotation.x=Math.PI/2;halo.position.y=-2.4;
+ for(let i=0;i<18;i++){const shard=mesh(new THREE.OctahedronGeometry(random(.12,.4)),materials.rock),a=random(0,Math.PI*2),r=random(10,14);shard.position.set(Math.cos(a)*r,random(-5,-2),Math.sin(a)*r);shard.rotation.set(random(0,3),random(0,3),0);}
+}
+// createNebulaTexture: Paint a deliberately asymmetric cloud field in local canvas space.
+function createNebulaTexture(){
+ const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=512;const ctx=canvas.getContext('2d');
+ for(let i=0;i<55;i++){const x=random(100,920),y=220+Math.sin(x*.007)*80+random(-55,55),r=random(50,190),g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,i%3?'rgba(55,154,136,.035)':'rgba(146,77,177,.055)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,1024,512);}
+ return new THREE.CanvasTexture(canvas);
+}
+// createSky: Surround the island with stars, a soft nebula, and a distant eclipsed moon.
+function createSky(){
+ const data=[],colors=[];for(let i=0;i<(mobile?900:1800);i++){const v=new THREE.Vector3(random(-1,1),random(-.3,1),random(-1,1)).normalize().multiplyScalar(random(65,95));data.push(v.x,v.y,v.z);const c=new THREE.Color().setHSL(random(.42,.75),.3,random(.5,1));colors.push(c.r,c.g,c.b);}
+ const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(data,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+ stars=new THREE.Points(geometry,new THREE.PointsMaterial({size:.17,map:glow,transparent:true,vertexColors:true,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(stars);
+ nebula=new THREE.Sprite(new THREE.SpriteMaterial({map:createNebulaTexture(),transparent:true,opacity:.65,depthWrite:false,blending:THREE.AdditiveBlending}));nebula.position.set(-12,21,-44);nebula.scale.set(115,57,1);scene.add(nebula);
+ const moon=mesh(new THREE.SphereGeometry(3.1,40,24),new THREE.MeshBasicMaterial({color:0x0a1b25}));moon.position.set(17,15,-35);
+ const rim=mesh(new THREE.TorusGeometry(3.12,.025,6,96),new THREE.MeshBasicMaterial({color:0x779e96}));rim.position.copy(moon.position);rim.lookAt(camera.position);
+ const moonGlow=new THREE.Sprite(new THREE.SpriteMaterial({map:glow,color:0x588e8b,transparent:true,opacity:.16,depthWrite:false,blending:THREE.AdditiveBlending}));moonGlow.position.set(17,15,-35.5);moonGlow.scale.set(13,13,1);scene.add(moonGlow);
+}
+// createGroundLife: Scatter small luminous stones and grass without per-blade draw calls.
+function createGroundLife(){
+ const shards=new THREE.InstancedMesh(new THREE.OctahedronGeometry(.07),materials.mint,mobile?95:160),dummy=new THREE.Object3D();
+ for(let i=0;i<shards.count;i++){const a=random(0,Math.PI*2),r=Math.sqrt(Math.random())*8;dummy.position.set(Math.cos(a)*r,.06,Math.sin(a)*r);dummy.scale.set(1,random(1,3),1);dummy.rotation.y=a;dummy.updateMatrix();shards.setMatrixAt(i,dummy.matrix);}scene.add(shards);
+ const data=[];for(let i=0;i<(mobile?140:280);i++)data.push(random(-11,11),random(.1,9),random(-11,11));
+ const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(data,3));
+ spores=new THREE.Points(geometry,new THREE.PointsMaterial({map:glow,color:0xb1ffdc,size:.095,transparent:true,opacity:.75,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(spores);
+}
+// bucket: Collect transformed geometry for a single draw call per plant material.
+function bucket(parts,name,geometry,position,scale,rotation){
+ const object=new THREE.Object3D();if(position)object.position.copy(position);if(scale)object.scale.copy(scale);if(rotation)object.quaternion.copy(rotation);object.updateMatrix();geometry.applyMatrix4(object.matrix);
+ // Normalize indexed primitives before merging them with non-indexed crystal polyhedra.
+ if(geometry.index){const expanded=geometry.toNonIndexed();geometry.dispose();geometry=expanded;}
+ (parts[name]??=[]).push(geometry);
+}
+// branch: Align a tapered crystal stem between two local positions.
+function branch(parts,name,start,end,radius){
+ const delta=end.clone().sub(start),q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),delta.clone().normalize());
+ bucket(parts,name,new THREE.CylinderGeometry(radius*.55,radius,delta.length(),5),start.clone().add(end).multiplyScalar(.5),null,q);
+}
+// crystalTip: Add a stretched faceted bud to the end of a prism branch.
+function crystalTip(parts,p,size){bucket(parts,'mint',new THREE.OctahedronGeometry(size),p,new THREE.Vector3(.7,1.8,.7));}
+// treeShape: Recursively grow an angular silhouette with luminous terminal crystals.
+function treeShape(parts){
+ const height=random(2.7,4.4),root=new THREE.Vector3(),top=new THREE.Vector3(random(-.2,.2),height*.57,0);branch(parts,'bark',root,top,.16);
+ // fork: Split branches at each level while limiting geometry depth.
+ function fork(start,length,angle,depth){
+  const end=start.clone().add(new THREE.Vector3(Math.cos(angle)*length*.66,length*.75,Math.sin(angle)*length*.66));branch(parts,depth?'bark':'mint',start,end,.037+depth*.035);
+  if(depth>0){fork(end,length*.66,angle+random(.6,1.3),depth-1);fork(end,length*.69,angle-random(.6,1.3),depth-1);}else crystalTip(parts,end,random(.14,.26));
+ }
+ for(let i=0;i<5;i++)fork(top.clone().multiplyScalar(random(.55,1)),height*random(.37,.55),i*Math.PI*.4+random(-.3,.3),2);
+ crystalTip(parts,new THREE.Vector3(0,height*.92,0),.33);
+}
+// mushroomShape: Compose a small cluster of jewel-like, gilled umbrella mushrooms.
+function mushroomShape(parts){
+ for(let i=0;i<4;i++){
+  const x=i?random(-.6,.6):0,z=i?random(-.5,.5):0,h=i?random(.4,1.1):random(1.3,2),r=h*.52;
+  branch(parts,'stem',new THREE.Vector3(x,0,z),new THREE.Vector3(x,h,z),.07);
+  bucket(parts,'pink',new THREE.SphereGeometry(r,18,8,0,Math.PI*2,0,Math.PI/2),new THREE.Vector3(x,h,z),new THREE.Vector3(1,.52,1));
+  const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),Math.PI/2);
+  bucket(parts,'pink',new THREE.TorusGeometry(r,.025,4,24),new THREE.Vector3(x,h,z),null,q);
+  for(let j=0;j<8;j++){const a=j*Math.PI/4;branch(parts,'gold',new THREE.Vector3(x,h-.08,z),new THREE.Vector3(x+Math.cos(a)*r*.9,h-.04,z+Math.sin(a)*r*.9),.009);}
+ }
+}
+// flowerShape: Arrange six luminous diamond petals around a warm central seed.
+function flowerShape(parts){
+ for(let k=0;k<3;k++){
+  const x=random(-.4,.4),z=random(-.4,.4),h=random(.6,1.45);branch(parts,'leaf',new THREE.Vector3(x,0,z),new THREE.Vector3(x,h,z),.03);
+  bucket(parts,'gold',new THREE.IcosahedronGeometry(.14,1),new THREE.Vector3(x,h,z));
+  for(let j=0;j<6;j++){const a=j*Math.PI/3,q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),-.7);q.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-a));bucket(parts,'gold',new THREE.OctahedronGeometry(.22),new THREE.Vector3(x+Math.cos(a)*.24,h+.04,z+Math.sin(a)*.24),new THREE.Vector3(.6,1.8,.35),q);}
+ }
+}
+// fernShape: Create feathered alien fronds from repeated paired mineral leaflets.
+function fernShape(parts){
+ for(let f=0;f<6;f++){
+  const a=f*Math.PI/3,reach=random(.65,1.1),h=random(.7,1.3),end=new THREE.Vector3(Math.cos(a)*reach,h,Math.sin(a)*reach);branch(parts,'leaf',new THREE.Vector3(),end,.026);
+  for(let j=1;j<7;j++){const t=j/7,p=end.clone().multiplyScalar(t),width=Math.sin(t*Math.PI)*.3;for(const sign of [-1,1]){const tip=p.clone().add(new THREE.Vector3(Math.cos(a+sign*1.2)*width,.1,Math.sin(a+sign*1.2)*width));branch(parts,'leaf',p,tip,.021);}}
+  bucket(parts,'mint',new THREE.OctahedronGeometry(.055),end);
+ }
+}
+// buildPlant: Merge pieces, releasing intermediate geometries immediately.
+function buildPlant(species){
+ const parts={},group=new THREE.Group();({tree:treeShape,mushroom:mushroomShape,flower:flowerShape,fern:fernShape})[species](parts);
+ for(const [name,geometries] of Object.entries(parts)){const merged=mergeGeometries(geometries,false);geometries.forEach(g=>g.dispose());group.add(new THREE.Mesh(merged,plantMaterials[name]));}
+ group.rotation.y=random(0,Math.PI*2);group.userData.size=random(.8,1.18);return group;
+}
+// updateCount: Keep both sighted and assistive interface counters in sync.
+function updateCount(){$('count').textContent=`${plants.length} / ${cap} plants`;}
+// plantingPulse: Mark the exact planting location with a temporary expanding ring.
+function plantingPulse(x,z){
+ if(reduced)return;if(pulses.length>=10){const old=pulses.shift();scene.remove(old.mesh);old.mesh.geometry.dispose();old.mesh.material.dispose();}
+ const ring=new THREE.Mesh(new THREE.RingGeometry(.18,.22,48),new THREE.MeshBasicMaterial({color:0xa2ffd7,transparent:true,opacity:.85,side:THREE.DoubleSide,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.set(x,.035,z);scene.add(ring);pulses.push({mesh:ring,age:0});
+}
+// plant: Add bounded procedural life, optionally starting fully grown for the opening tableau.
+function plant(species,x,z,mature=false){
+ if(plants.length>=cap){notify('Your sanctuary is full. Reset in World to begin another.');return false;}
+ const object=buildPlant(species);object.position.set(x,0,z);const growth=mature||reduced?1:.015;object.scale.setScalar(growth*object.userData.size);scene.add(object);plants.push({object,growth,species});if(!mature)plantingPulse(x,z);updateCount();return true;
+}
+// randomSpot: Prefer open ground without blocking planting when a garden gets dense.
+function randomSpot(){
+ let spot;for(let i=0;i<24;i++){const a=random(0,Math.PI*2),r=Math.sqrt(Math.random())*7.3;spot={x:Math.cos(a)*r,z:Math.sin(a)*r};if(plants.every(p=>Math.hypot(p.object.position.x-spot.x,p.object.position.z-spot.z)>1.15))break;}return spot;
+}
+// plantSelected: Provide a complete keyboard-accessible alternative to canvas raycasting.
+function plantSelected(){const p=randomSpot();if(plant(selected,p.x,p.z)){hideIntro();notify(`${{tree:'Prism tree',mushroom:'Halo mushrooms',flower:'Sol blooms',fern:'Tide fern'}[selected]} planted${paused?' · resume to watch it grow':''}.`);}}
+// starterGarden: Frame a carefully varied scene before the first interaction.
+function starterGarden(){
+ const layout=[['tree',-2,-1.8],['tree',2,-3.2],['tree',3.9,.4],['mushroom',-3.7,1.9],['mushroom',1.3,1.7],['mushroom',-4,-3.4],['flower',-.5,3.6],['flower',4.7,2.8],['fern',-1.5,1.3],['fern',3.5,-1.8],['fern',-5.6,.1],['flower',.1,-4.8],['mushroom',-2.1,4.9],['fern',3.1,4.6]];
+ layout.forEach(([kind,x,z])=>plant(kind,x,z,true));
+}
+// demoGarden: Queue a mixed garden gradually rather than rebuilding or freezing the scene.
+function demoGarden(){
+ hideIntro();const available=cap-plants.length-queued.length;if(available<=0){notify('Your garden is full. Reset in World for a fresh demo.');return;}
+ for(let i=0;i<Math.min(18,available);i++)queued.push({species:['tree','mushroom','flower','fern','mushroom','flower'][i%6],delay:i*.3});
+ if(paused)setPaused(false);notify('A new constellation of life is taking root.');
+}
+// disposePlant: Release only per-plant merged geometry; shared materials remain alive.
+function disposePlant(plant){scene.remove(plant.object);plant.object.traverse(o=>{if(o.isMesh)o.geometry.dispose();});}
+// resetGarden: Cancel pending seeds and dispose all dynamic geometry and ring materials.
+function resetGarden(){
+ plants.forEach(disposePlant);plants.length=0;queued.length=0;
+ pulses.forEach(p=>{scene.remove(p.mesh);p.mesh.geometry.dispose();p.mesh.material.dispose();});pulses.length=0;
+ updateCount();$('resetDialog').close();notify('A quiet island. A new beginning.');
+}
+// hideIntro: Retire onboarding without hiding the always-available help guide.
+function hideIntro(){$('intro').hidden=true;}
+// setPaused: Freeze biological motion and keep the two pause controls consistent.
+function setPaused(value){paused=value;for(const id of ['pauseButton','worldPause']){$(id).setAttribute('aria-pressed',String(value));$(id).textContent=value?'Resume animation':id==='pauseButton'?'Pause':'Pause animation';$(id).setAttribute('aria-label',value?'Resume garden animation':'Pause garden animation');}}
+// setTour: Keep camera motion explicitly opt-in, especially for reduced-motion visitors.
+function setTour(value){tour=value;controls.autoRotate=value&&!paused;$('tourButton').setAttribute('aria-pressed',String(value));$('tourButton').textContent=`Camera tour: ${value?'on':'off'}`;}
+// openDialog: Use native modal focus trapping and restore focus on close.
+function openDialog(id){$(id).showModal();}
+// renderGarden: Lite mode skips the bloom passes to reduce phone GPU work.
+function renderGarden(){if(lite)renderer.render(scene,camera);else composer.render();}
+// setGraphics: Apply a lower resolution and no postprocessing on slower devices.
+function setGraphics(value){lite=value==='lite';const ratio=lite?Math.min(devicePixelRatio,1):Math.min(devicePixelRatio,mobile?1.25:1.65);renderer.setPixelRatio(ratio);composer.setPixelRatio(ratio);resize();notify(lite?'Lite graphics enabled: lower resolution, no bloom.':'Balanced glow restored.');}
+// savePicture: Render immediately so a paused garden also downloads correctly.
+function savePicture(){
+ try{renderGarden();const link=document.createElement('a');link.download='godseed-sanctuary.png';link.href=renderer.domElement.toDataURL('image/png');link.click();notify('Your sanctuary picture is ready.');}catch(error){notify('Picture download was unavailable in this browser. Try a screenshot.');}
+}
+// bindButtons: Wire every labeled control to real state, with no placeholder actions.
+function bindButtons(){
+ document.querySelectorAll('[data-species]').forEach(button=>button.addEventListener('click',()=>{selected=button.dataset.species;document.querySelectorAll('[data-species]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));}));
+ document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
+ $('startButton').onclick=()=>{hideIntro();notify(mobile?'Choose a seed, then tap the island to plant.':'Choose a seed, then click the island to plant.');};$('closeIntro').onclick=hideIntro;
+ $('introDemo').onclick=demoGarden;$('demoButton').onclick=()=>{demoGarden();$('worldDialog').close();};
+ $('helpButton').onclick=()=>openDialog('helpDialog');$('worldButton').onclick=()=>openDialog('worldDialog');
+ $('plantButton').onclick=plantSelected;$('worldPlant').onclick=()=>{plantSelected();$('worldDialog').close();};
+ $('pauseButton').onclick=$('worldPause').onclick=()=>setPaused(!paused);
+ $('fastButton').onclick=()=>{fast=!fast;$('fastButton').setAttribute('aria-pressed',String(fast));$('fastButton').textContent=`Fast growth: ${fast?'on':'off'}`;};
+ $('tourButton').onclick=()=>setTour(!tour);$('pictureButton').onclick=savePicture;
+ $('resetButton').onclick=()=>{$('worldDialog').close();openDialog('resetDialog');};$('confirmReset').onclick=resetGarden;
+ $('palette').onchange=event=>{scene.fog.color.setHex(paletteColors[event.target.value]);scene.background.copy(scene.fog.color).multiplyScalar(.35);nebula.material.color.setHex({lagoon:0xffffff,violet:0xeeaaff,ember:0xffb885}[event.target.value]);};
+ $('graphics').onchange=event=>setGraphics(event.target.value);
+ $('plantColors').onclick=cyclePlantColors; // The only new UI control cycles all plant colors.
+ $('panelToggle').onclick=()=>{const collapsed=$('dock').classList.toggle('collapsed');$('panelToggle').setAttribute('aria-expanded',String(!collapsed));$('panelToggle').textContent=collapsed?'Show seeds':'Hide seeds';};
+}
+// plantAtPointer: Intersect only the island, never the sky or foreground interface.
+function plantAtPointer(event){
+ const rect=renderer.domElement.getBoundingClientRect();pointer.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(pointer,camera);
+ const hit=raycaster.intersectObject(ground)[0];if(hit&&hit.point.y>-.05&&Math.hypot(hit.point.x,hit.point.z)<7.9){hideIntro();plant(selected,hit.point.x,hit.point.z);}else notify('Plant on the island’s glowing surface.');
+}
+// bindPointer: Distinguish taps from orbit drags, including multi-touch pinch gestures.
+function bindPointer(){
+ const active=new Set();let start=null,moved=false;
+ renderer.domElement.addEventListener('pointerdown',event=>{active.add(event.pointerId);if(active.size===1){start={x:event.clientX,y:event.clientY,at:performance.now()};moved=false;}else moved=true;});
+ renderer.domElement.addEventListener('pointermove',event=>{if(start&&Math.hypot(event.clientX-start.x,event.clientY-start.y)>7)moved=true;});
+ renderer.domElement.addEventListener('pointerup',event=>{if(active.size===1&&start&&!moved&&performance.now()-start.at<650&&event.button===0)plantAtPointer(event);active.delete(event.pointerId);if(!active.size)start=null;});
+ renderer.domElement.addEventListener('pointercancel',event=>{active.delete(event.pointerId);moved=true;start=null;});
+ $('scene').addEventListener('keydown',keyboardCamera);
+ controls.addEventListener('start',()=>{if(tour)setTour(false);});
+}
+// keyboardCamera: Offer orbit, zoom, and planting without a pointing device.
+function keyboardCamera(event){
+ if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-','Enter',' '].includes(event.key))return;event.preventDefault();
+ if(event.key==='Enter'||event.key===' '){plantSelected();return;}
+ const offset=camera.position.clone().sub(controls.target),sphere=new THREE.Spherical().setFromVector3(offset);
+ if(event.key==='ArrowLeft')sphere.theta-=.12;if(event.key==='ArrowRight')sphere.theta+=.12;
+ if(event.key==='ArrowUp')sphere.phi-=.1;if(event.key==='ArrowDown')sphere.phi+=.1;
+ if(event.key==='+'||event.key==='=')sphere.radius*=.92;if(event.key==='-')sphere.radius*=1.08;
+ sphere.phi=THREE.MathUtils.clamp(sphere.phi,.3,1.45);sphere.radius=THREE.MathUtils.clamp(sphere.radius,14,43);camera.position.copy(controls.target).add(new THREE.Vector3().setFromSpherical(sphere));controls.update();
+}
+// resize: Preserve the sculpture's framing across orientation and viewport changes.
+function resize(){
+ camera.aspect=innerWidth/innerHeight; // Preserve a minimum horizontal view so portrait phones can see the whole island.
+ camera.fov=Math.max(43,THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(43)/2)/camera.aspect)));camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);
+ $('gestureHint').textContent=mobile?'Tap island to plant · Drag to orbit · Pinch to zoom':'Click the island to plant · Drag to orbit · Scroll to zoom';
+}
+// advanceGrowth: Progress plants and scheduled demonstration seeds using bounded frame delta.
+function advanceGrowth(dt){
+ for(const p of plants){p.growth=Math.min(1,p.growth+dt*(fast?1.9:.33));const eased=1-Math.pow(1-p.growth,3);p.object.scale.setScalar(Math.max(.008,eased)*p.object.userData.size);}
+ for(let i=queued.length-1;i>=0;i--){queued[i].delay-=dt;if(queued[i].delay<=0){const p=randomSpot();plant(queued[i].species,p.x,p.z);queued.splice(i,1);}}
+ for(let i=pulses.length-1;i>=0;i--){const p=pulses[i];p.age+=dt;p.mesh.scale.setScalar(1+p.age*5);p.mesh.material.opacity=Math.max(0,.8-p.age*.5);if(p.age>1.6){scene.remove(p.mesh);p.mesh.geometry.dispose();p.mesh.material.dispose();pulses.splice(i,1);}}
+}
+// animate: Keep simulation time bounded; invisible tabs do not accumulate growth debt.
+function animate(){
+ if(!ready)return;requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.hidden)return;
+ if(!paused){advanceGrowth(dt);if(!reduced){time+=dt;spores.rotation.y=time*.025;spores.position.y=Math.sin(time*.3)*.2;halo.rotation.z=time*.02;stars.rotation.y=time*.002;}}
+ controls.autoRotate=tour&&!paused;controls.update();renderGarden();frame++;
+}
+// exposeState: Return immutable snapshots suitable for black-box browser verification.
+function exposeState(){
+ Object.defineProperty(window,'godseedTest',{configurable:false,get:()=>Object.freeze({ready,plantCount:plants.length,cap,quality:mobile?'mobile':'desktop',lite,paused,fast,tour,selected,pendingSeeds:queued.length,reducedMotion:reduced,growth:plants.map(p=>Number(p.growth.toFixed(3))),drawCalls:renderer.info.render.calls,geometryCount:renderer.info.memory.geometries,frame})});
+}
+// boot: Build and render the opening garden before dismissing the loading state.
+function boot(){
+ try{setupMaterials();setupPlantMaterials();setupRenderer();addLights();createIsland();createSky();createGroundLife();starterGarden();bindButtons();bindPointer();resize();
+  addEventListener('resize',resize);$('qualityNote').textContent=`${mobile?'Mobile-balanced':'Desktop'} rendering · ${cap} plants maximum${reduced?' · reduced motion respected':''}`;
+  ready=true;exposeState();controls.update();composer.render();$('loading').hidden=true;clearTimeout(window.gardenLoadDeadline);$('error').hidden=true;animate();
+ }catch(error){console.error('[GODSEED/Godseed] Unable to initialize garden:',error);window.showGardenError();}
+}
+boot();
+</script>
+</body>
+</html>
