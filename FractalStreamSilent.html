@@ -56,52 +56,41 @@
     .hint + .hint { margin-top: 8px; }
     .hint strong { color: rgba(94,245,215,0.65); }
 
-    /* ── Fractal picker — top centre ─────────────────────────── */
+    /* ── Fractal picker (dropdown) — top left ────────────────── */
     #picker {
       position: fixed; top: 16px; left: 16px;
-      display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
       z-index: 20; opacity: 1.0; transition: opacity 0.3s;
-      max-width: calc(100vw - 32px);   /* never wider than the viewport */
     }
     #picker:hover { opacity: 1.0; }
-    /* ── Palette picker — top right ──────────────────────────── */
+    /* ── Palette picker (dropdown) — top right ───────────────── */
     #palette {
       position: fixed; top: 16px; right: 16px;
-      display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
       z-index: 20; opacity: 1.0; transition: opacity 0.3s;
+    }
+    /* Shared dropdown look — dark, teal-accented, matches the app theme */
+    #picker select, #palette select {
+      padding: 7px 12px; font-family: monospace; font-size: 12px;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: #5ef5d7; cursor: pointer;
+      background: rgba(6,7,26,0.85);
+      border: 1px solid rgba(94,245,215,0.35);
+      border-radius: 4px; outline: none;
       max-width: calc(100vw - 32px);   /* never wider than the viewport */
     }
-    /* Each button row scrolls horizontally when wider than the screen;   */
-    /* scrollbar hidden so it drags cleanly on touch with no visual track */
-    .prow {
-      display: flex; gap: 5px;
-      max-width: 100%; overflow-x: auto;
-      scrollbar-width: none;            /* Firefox: hide scrollbar */
-      -ms-overflow-style: none;         /* legacy Edge: hide scrollbar */
-      -webkit-overflow-scrolling: touch;/* smooth momentum scroll on iOS */
+    #picker select:hover, #palette select:hover,
+    #picker select:focus, #palette select:focus {
+      border-color: rgba(94,245,215,0.7);
+      box-shadow: 0 0 10px rgba(94,245,215,0.25);
     }
-    .prow::-webkit-scrollbar { display: none; }  /* Chrome/Safari: hide scrollbar */
-    .fp, .cp { flex: 0 0 auto; }        /* buttons keep their size, never shrink */
+    #picker select option, #palette select option {
+      background: #06071a; color: #5ef5d7;   /* readable dropdown list on dark theme */
+    }
 
-    /* ── Small screens: stack palette below picker so they can't collide ── */
+    /* ── Small screens: keep overlay text inside the viewport so the page  */
+    /*    never grows wider than the screen (which would push fixed UI off) */
     @media (max-width: 700px) {
-      #picker  { left: 8px; right: 8px; max-width: none; }        /* full-width, top */
-      #palette { left: 8px; right: 8px; top: 150px;               /* below the 4 picker rows */
-                 max-width: none; align-items: flex-start; }      /* left-align rows */
-    }
-    .fp, .cp {
-      padding: 5px 11px; font-family: monospace; font-size: 10px;
-      letter-spacing: 1px; text-transform: uppercase;
-      color: #000; cursor: pointer;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid #000;
-      border-radius: 3px; transition: all 0.2s; white-space: nowrap;
-    }
-    .fp:hover, .cp:hover { color: #5ef5d7; border-color: rgba(94,245,215,0.5); }
-    .fp.active, .cp.active {
-      color: #5ef5d7; border-color: rgba(94,245,215,0.7);
-      background: rgba(94,245,215,0.10);
-      box-shadow: 0 0 8px rgba(94,245,215,0.25);
+      h1 { font-size: 16px; letter-spacing: 5px; }  /* narrower title */
+      .hint { max-width: 88vw; }                    /* hint text wraps within screen */
     }
 
     /* ── Audio meter — bottom right ──────────────────────────── */
@@ -214,52 +203,44 @@
   </p>
 </div>
 
-<!-- Fractal picker (top centre) -->
+<!-- Fractal picker (top left) — dropdown; selection applies immediately -->
 <div id="picker">
-  <div class="prow">
-    <button class="fp active" data-t="0">Julia&sup2;</button>
-    <button class="fp"        data-t="1">Mandelbrot</button>
-    <button class="fp"        data-t="2">Burn&middot;Ship</button>
-    <button class="fp"        data-t="3">Newton</button>
-    <button class="fp"        data-t="4">Julia&sup3;</button>
-  </div>
-  <div class="prow">
-    <button class="fp" data-t="5">Tricorn</button>
-    <button class="fp" data-t="6">Julia&sup4;</button>
-    <button class="fp" data-t="7">Multi&sup4;</button>
-    <button class="fp" data-t="8">Phoenix</button>
-    <button class="fp" data-t="9">Nova</button>
-  </div>
-  <div class="prow">
-    <button class="fp" data-t="10">Mandala</button>
-    <button class="fp" data-t="11">Kaleido</button>
-    <button class="fp" data-t="12">Tunnel</button>
-    <button class="fp" data-t="13">Rosette</button>
-    <button class="fp" data-t="14">Vortex</button>
-  </div>
-  <div class="prow">
-    <button class="fp" data-t="15">Lotus</button>
-    <button class="fp" data-t="16">Prism</button>
-    <button class="fp" data-t="17">Spiral</button>
-    <button class="fp" data-t="18">Halo</button>
-    <button class="fp" data-t="19">Portal</button>
-  </div>
+  <select id="fractalSel" title="Choose the fractal pattern">
+    <option value="0"  selected>Julia²</option>
+    <option value="1">Mandelbrot</option>
+    <option value="2">Burn·Ship</option>
+    <option value="3">Newton</option>
+    <option value="4">Julia³</option>
+    <option value="5">Tricorn</option>
+    <option value="6">Julia⁴</option>
+    <option value="7">Multi⁴</option>
+    <option value="8">Phoenix</option>
+    <option value="9">Nova</option>
+    <option value="10">Mandala</option>
+    <option value="11">Kaleido</option>
+    <option value="12">Tunnel</option>
+    <option value="13">Rosette</option>
+    <option value="14">Vortex</option>
+    <option value="15">Lotus</option>
+    <option value="16">Prism</option>
+    <option value="17">Spiral</option>
+    <option value="18">Halo</option>
+    <option value="19">Portal</option>
+  </select>
 </div>
 
-<!-- Palette picker (top right) -->
+<!-- Palette picker (top right) — dropdown; selection applies immediately -->
 <div id="palette">
-  <div class="prow">
-    <button class="cp active" data-p="0">Pastel</button>
-    <button class="cp" data-p="1">Monochrome</button>
-    <button class="cp" data-p="2">Neon</button>
-    <button class="cp" data-p="3">Dark</button>
-  </div>
-  <div class="prow">
-    <button class="cp" data-p="4">Pumpkin</button>
-    <button class="cp" data-p="5">Blues</button>
-    <button class="cp" data-p="6">Purples</button>
-    <button class="cp" data-p="7">Greens</button>
-  </div>
+  <select id="palSel" title="Choose the color palette">
+    <option value="0" selected>Pastel</option>
+    <option value="1">Monochrome</option>
+    <option value="2">Neon</option>
+    <option value="3">Dark</option>
+    <option value="4">Pumpkin</option>
+    <option value="5">Blues</option>
+    <option value="6">Purples</option>
+    <option value="7">Greens</option>
+  </select>
 </div>
 
 <!-- Audio meter (bottom right) -->
@@ -621,22 +602,18 @@ cv.addEventListener('dblclick', () => {
   else document.exitFullscreen();
 });
 
+// Fractal dropdown — picking an option applies it immediately
 let fractalType = 0;
-document.querySelectorAll('.fp').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.fp').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    fractalType = parseInt(btn.dataset.t, 10);
-  });
+const fractalSel = document.getElementById('fractalSel');
+fractalSel.addEventListener('change', () => {
+  fractalType = parseInt(fractalSel.value, 10);
 });
 
+// Palette dropdown — picking an option applies it immediately
 let palType = 0;
-document.querySelectorAll('#palette .cp').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#palette .cp').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    palType = parseInt(btn.dataset.p, 10);
-  });
+const palSel = document.getElementById('palSel');
+palSel.addEventListener('change', () => {
+  palType = parseInt(palSel.value, 10);
 });
 
 const gainSlider = document.getElementById('gainSlider');
