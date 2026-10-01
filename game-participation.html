@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Known Game Participation</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; background: #12151c; color: #e7ebf3; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; }
+  .wrap { position: relative; max-width: 920px; margin: 0 auto; padding: 32px 20px 48px; }
+  .fleet-mark { position: absolute; top: 24px; right: 20px; width: 210px; height: 210px; }
+  #games-view > h1, #games-view > .sub, #games-view > .legend, #games-view > label.search, #games-view > .meta,
+  #game-view > p, #game-view > h1, #game-view > .stats, #game-view > #game-note,
+  #player-view > p, #player-view > h1, #player-view > .stats { margin-right: 230px; }
+  #game-view > .table-wrap, #player-view > .table-wrap { margin-top: 48px; }
+  @media (max-width: 720px) {
+    .fleet-mark { position: static; display: block; width: 140px; height: 140px; margin: 0 0 12px auto; }
+    #games-view > h1, #games-view > .sub, #games-view > .legend, #games-view > label.search, #games-view > .meta,
+    #game-view > p, #game-view > h1, #game-view > .stats, #game-view > #game-note,
+    #player-view > p, #player-view > h1, #player-view > .stats { margin-right: 0; }
+    #game-view > .table-wrap, #player-view > .table-wrap { margin-top: 0; }
+  }
+  h1 { margin: 0; font-size: 28px; letter-spacing: 0.02em; }
+  h2 { margin: 36px 0 8px; font-size: 20px; letter-spacing: 0.04em; }
+  .site-home { margin: 0 0 18px; }
+  .sub, .meta, .foot { color: #8b93a7; }
+  .sub { margin: 8px 0 0; font-size: 15px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 18px 0; }
+  .legend-text { font-size: 14px; }
+  .chip { display: inline-block; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 700; }
+  .chip.plays { background: #143528; color: #3ecf8e; }
+  .chip.owns { background: #3a2d14; color: #e0b15a; }
+  .chip.tried { background: #2c3140; color: #f4f1e8; }
+  .chip.blank { background: #232838; color: #9aa3b5; }
+  label.search { display: block; margin: 0 0 12px; color: #8b93a7; font-size: 13px; }
+  input[type="search"] { display: block; width: 100%; max-width: 320px; margin-top: 6px; box-sizing: border-box; background: #1a1f2b; color: #e7ebf3; border: 1px solid #2a3142; border-radius: 6px; padding: 8px 10px; font: inherit; }
+  .meta { font-size: 13px; margin: 0 0 10px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: #1a1f2b; }
+  th { background: #6d7cff; color: #f7f8ff; text-align: left; font-size: 12px; letter-spacing: 0.06em; padding: 12px 14px; }
+  td { padding: 11px 14px; border-top: 1px solid #2a3142; font-size: 15px; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; width: 72px; }
+  .total { font-weight: 700; }
+  .zero { color: #5c6578; }
+  .name { font-weight: 600; }
+  .name a { color: inherit; text-decoration: none; }
+  .name a:hover { text-decoration: underline; }
+  .btn, .back { color: #f7f8ff; text-decoration: none; font-weight: 700; }
+  .btn { display: inline-block; background: #6d7cff; border-radius: 6px; padding: 6px 12px; font-size: 13px; }
+  .back { color: #9aa8ff; font-size: 14px; }
+  .note { margin: 14px 0; padding: 10px 12px; background: #232838; border-left: 3px solid #e0b15a; }
+  .stats { display: flex; gap: 22px; margin: 16px 0; }
+  .stat b { display: block; font-size: 22px; }
+  .stat span { color: #8b93a7; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .foot { font-size: 13px; line-height: 1.45; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <img class="fleet-mark" src="GalacticFleetGamers_icon.png" alt="Galactic Fleet Gamers">
+  <p class="site-home"><a class="back" href="https://bigbuffalobill-web.pages.dev/">← Site index</a></p>
+  <section id="games-view">
+    <h1>KNOWN GAME PARTICIPATION</h1>
+    <p class="sub">Pick a game. The list stays on one screen as the roster grows.</p>
+    <div class="legend" id="legend"></div>
+    <label class="search">Find a game
+      <input id="find" type="search" placeholder="Type a game name">
+    </label>
+    <p class="meta" id="games-meta"></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>GAME</th>
+            <th class="num">PLAYERS</th>
+            <th class="num">PLAYS</th>
+            <th class="num">OWNS</th>
+            <th class="num">TRIED</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="games-body"></tbody>
+      </table>
+    </div>
+    <h2>PLAYERS</h2>
+    <p class="sub">Pick a player to see the games they have recorded.</p>
+    <label class="search">Find a player
+      <input id="find-player" type="search" placeholder="Type a player name">
+    </label>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PLAYER</th>
+            <th class="num">GAMES</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="players-body"></tbody>
+      </table>
+    </div>
+    <div id="footnotes"></div>
+  </section>
+  <section id="player-view" hidden>
+    <p><a class="back" href="#">← All games and players</a></p>
+    <h1 id="player-title"></h1>
+    <div class="stats" id="player-stats"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>GAME</th><th>STATUS</th><th>NOTE</th></tr>
+        </thead>
+        <tbody id="player-body"></tbody>
+      </table>
+    </div>
+    <p class="foot">Only recorded games are listed. A missing game was not reported.</p>
+  </section>
+  <section id="game-view" hidden>
+    <p><a class="back" href="#">← All games and players</a></p>
+    <h1 id="game-title"></h1>
+    <div class="stats" id="game-stats"></div>
+    <div id="game-note"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>MEMBER</th><th>STATUS</th><th>NOTE</th></tr>
+        </thead>
+        <tbody id="game-body"></tbody>
+      </table>
+    </div>
+    <p class="foot">Only recorded members are listed. A missing member was not reported. That is not the same as “does not play.”</p>
+  </section>
+</main>
+<script id="chart" type="application/json">{
+  "title": "KNOWN GAME PARTICIPATION",
+  "legend": [
+    {
+      "id": "plays",
+      "label": "X",
+      "meaning": "participates"
+    },
+    {
+      "id": "blank",
+      "label": "Blank",
+      "meaning": "not reported"
+    },
+    {
+      "id": "owns",
+      "label": "Has",
+      "meaning": "owns"
+    },
+    {
+      "id": "tried",
+      "label": "Tried",
+      "meaning": "has tried"
+    }
+  ],
+  "footnotes": [
+    "* JDog / Dune: \"no crossplay yet\" (as reported).",
+    "Dune assumed to mean Dune: Awakening."
+  ],
+  "games": [
+    {
+      "id": "no-mans-sky",
+      "name": "No Man's Sky"
+    },
+    {
+      "id": "dune-awakening",
+      "name": "Dune: Awakening",
+      "note": "Dune assumed to mean Dune: Awakening."
+    },
+    {
+      "id": "windrose",
+      "name": "Windrose"
+    },
+    {
+      "id": "once-human",
+      "name": "Once Human"
+    },
+    {
+      "id": "runescape-dragonwilds",
+      "name": "RuneScape: Dragonwilds"
+    },
+    {
+      "id": "enshrouded",
+      "name": "Enshrouded"
+    },
+    {
+      "id": "valheim",
+      "name": "Valheim"
+    },
+    {
+      "id": "the-elder-scrolls-online",
+      "name": "The Elder Scrolls Online"
+    },
+    {
+      "id": "minecraft",
+      "name": "Minecraft"
+    },
+    {
+      "id": "destiny-2",
+      "name": "Destiny 2"
+    },
+    {
+      "id": "the-first-descendant",
+      "name": "The First Descendant"
+    },
+    {
+      "id": "palworld",
+      "name": "Palworld"
+    },
+    {
+      "id": "helldivers-2",
+      "name": "Helldivers 2"
+    },
+    {
+      "id": "spacecraft",
+      "name": "SpaceCraft"
+    },
+    {
+      "id": "sniper-elite-series",
+      "name": "Sniper Elite Series"
+    },
+    {
+      "id": "deadzone-rogue",
+      "name": "Deadzone: Rogue"
+    },
+    {
+      "id": "remnant-i-ii",
+      "name": "Remnant I & II"
+    }
+  ],
+  "members": [
+    {
+      "id": "bigbuffalobill",
+      "name": "BigBuffaloBill"
+    },
+    {
+      "id": "sensei",
+      "name": "Sensei"
+    },
+    {
+      "id": "vampire",
+      "name": "Vampire"
+    },
+    {
+      "id": "jdog",
+      "name": "JDog"
+    },
+    {
+      "id": "sabre",
+      "name": "Sabre"
+    },
+    {
+      "id": "titan",
+      "name": "Titan"
+    },
+    {
+      "id": "griff",
+      "name": "Griff"
+    },
+    {
+      "id": "tameriel",
+      "name": "Tameriel"
+    },
+    {
+      "id": "gunnar",
+      "name": "Gunnar"
+    },
+    {
+      "id": "dad-billy",
+      "name": "Dad/Billy"
+    },
+    {
+      "id": "justin",
+      "name": "Justin"
+    }
+  ],
+  "participation": [
+    {
+      "member": "bigbuffalobill",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "dune-awakening",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "windrose",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "once-human",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "runescape-dragonwilds",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "enshrouded",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "valheim",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "the-elder-scrolls-online",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "destiny-2",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "the-first-descendant",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "palworld",
+      "mark": "X"
+    },
+    {
+      "member": "sensei",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "sensei",
+      "game": "dune-awakening",
+      "mark": "X"
+    },
+    {
+      "member": "sensei",
+      "game": "windrose",
+      "mark": "X"
+    },
+    {
+      "member": "sensei",
+      "game": "enshrouded",
+      "mark": "X"
+    },
+    {
+      "member": "sensei",
+      "game": "minecraft",
+      "mark": "X"
+    },
+    {
+      "member": "sensei",
+      "game": "destiny-2",
+      "mark": "X"
+    },
+    {
+      "member": "vampire",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "vampire",
+      "game": "dune-awakening",
+      "mark": "X"
+    },
+    {
+      "member": "vampire",
+      "game": "windrose",
+      "mark": "X"
+    },
+    {
+      "member": "vampire",
+      "game": "once-human",
+      "mark": "X"
+    },
+    {
+      "member": "vampire",
+      "game": "enshrouded",
+      "mark": "X"
+    },
+    {
+      "member": "vampire",
+      "game": "valheim",
+      "mark": "X"
+    },
+    {
+      "member": "jdog",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "jdog",
+      "game": "dune-awakening",
+      "mark": "X*",
+      "note": "no crossplay yet (as reported)"
+    },
+    {
+      "member": "jdog",
+      "game": "windrose",
+      "mark": "X"
+    },
+    {
+      "member": "jdog",
+      "game": "once-human",
+      "mark": "X"
+    },
+    {
+      "member": "jdog",
+      "game": "runescape-dragonwilds",
+      "mark": "X"
+    },
+    {
+      "member": "jdog",
+      "game": "enshrouded",
+      "mark": "X"
+    },
+    {
+      "member": "sabre",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "sabre",
+      "game": "dune-awakening",
+      "mark": "X"
+    },
+    {
+      "member": "sabre",
+      "game": "the-elder-scrolls-online",
+      "mark": "X"
+    },
+    {
+      "member": "sabre",
+      "game": "minecraft",
+      "mark": "X"
+    },
+    {
+      "member": "sabre",
+      "game": "palworld",
+      "mark": "X"
+    },
+    {
+      "member": "titan",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "titan",
+      "game": "windrose",
+      "mark": "X"
+    },
+    {
+      "member": "titan",
+      "game": "once-human",
+      "mark": "X"
+    },
+    {
+      "member": "titan",
+      "game": "valheim",
+      "mark": "X"
+    },
+    {
+      "member": "titan",
+      "game": "the-first-descendant",
+      "mark": "X"
+    },
+    {
+      "member": "griff",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "griff",
+      "game": "windrose",
+      "mark": "X"
+    },
+    {
+      "member": "griff",
+      "game": "once-human",
+      "mark": "X"
+    },
+    {
+      "member": "griff",
+      "game": "the-first-descendant",
+      "mark": "X"
+    },
+    {
+      "member": "tameriel",
+      "game": "once-human",
+      "mark": "Tried"
+    },
+    {
+      "member": "gunnar",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "gunnar",
+      "game": "dune-awakening",
+      "mark": "Has"
+    },
+    {
+      "member": "gunnar",
+      "game": "enshrouded",
+      "mark": "Has"
+    },
+    {
+      "member": "gunnar",
+      "game": "palworld",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "no-mans-sky",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "dune-awakening",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "once-human",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "valheim",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "minecraft",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "destiny-2",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "palworld",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "helldivers-2",
+      "mark": "X"
+    },
+    {
+      "member": "sensei",
+      "game": "helldivers-2",
+      "mark": "X"
+    },
+    {
+      "member": "gunnar",
+      "game": "helldivers-2",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "helldivers-2",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "spacecraft",
+      "mark": "X"
+    },
+    {
+      "member": "justin",
+      "game": "spacecraft",
+      "mark": "X"
+    },
+    {
+      "member": "gunnar",
+      "game": "spacecraft",
+      "mark": "X"
+    },
+    {
+      "member": "justin",
+      "game": "sniper-elite-series",
+      "mark": "X"
+    },
+    {
+      "member": "jdog",
+      "game": "sniper-elite-series",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "sniper-elite-series",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "deadzone-rogue",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "deadzone-rogue",
+      "mark": "X"
+    },
+    {
+      "member": "jdog",
+      "game": "remnant-i-ii",
+      "mark": "X"
+    },
+    {
+      "member": "bigbuffalobill",
+      "game": "remnant-i-ii",
+      "mark": "X"
+    },
+    {
+      "member": "dad-billy",
+      "game": "remnant-i-ii",
+      "mark": "X"
+    }
+  ]
+}</script>
+<script>
+'use strict';
+// game-participation.html | C:\Users\Public\Claude\review\game-participation.html
+// Local draft. One file builds the game list and each game page from the chart data.
+const DEBUG_PREFIX = '[GameParticipation/game-participation]';
+const CHART = JSON.parse(document.getElementById('chart').textContent);
+
+// byId: return the member or game object for an id.
+function byId(list, id) {
+  return list.find(function (item) { return item.id === id; });
+}
+
+// marksFor: return every recorded mark for one game.
+function marksFor(gameId) {
+  return CHART.participation.filter(function (item) { return item.game === gameId; });
+}
+
+// isPlays: X and X* both mean participates.
+function isPlays(mark) {
+  return mark === 'X' || mark === 'X*';
+}
+
+// markClass: map a chart mark to its color class.
+function markClass(mark) {
+  if (mark === 'Has') return 'owns';
+  if (mark === 'Tried') return 'tried';
+  return 'plays';
+}
+
+// escapeHtml: keep member and game names from being treated as markup.
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// dash: show an em dash when a count is zero.
+function dash(value) {
+  if (!value) return '<span class="zero">—</span>';
+  return String(value);
+}
+
+// summaries: one opening-page row per game, busiest first.
+function summaries() {
+  return CHART.games.map(function (game) {
+    var marks = marksFor(game.id);
+    return {
+      game: game,
+      total: marks.length,
+      plays: marks.filter(function (item) { return isPlays(item.mark); }).length,
+      owns: marks.filter(function (item) { return item.mark === 'Has'; }).length,
+      tried: marks.filter(function (item) { return item.mark === 'Tried'; }).length
+    };
+  }).sort(function (a, b) {
+    return b.total - a.total || a.game.name.localeCompare(b.game.name);
+  });
+}
+
+// hashGameId: read the game id from the address bar.
+function hashGameId() {
+  var raw = location.hash.replace(/^#/, '');
+  if (!raw) return '';
+  return decodeURIComponent(raw);
+}
+
+// fillLegend: paint the chart key once.
+function fillLegend() {
+  var html = CHART.legend.map(function (item) {
+    return '<span class="chip ' + item.id + '">' + escapeHtml(item.label) + '</span>'
+      + '<span class="legend-text">' + escapeHtml(item.meaning) + '</span>';
+  }).join('');
+  document.getElementById('legend').innerHTML = html;
+}
+
+// fillFootnotes: paint the two chart footnotes on the opening page.
+function fillFootnotes() {
+  var html = CHART.footnotes.map(function (line) {
+    return '<p class="foot">' + escapeHtml(line) + '</p>';
+  }).join('');
+  document.getElementById('footnotes').innerHTML = html;
+}
+
+// fillGames: rebuild the opening table from the current search text.
+function fillGames() {
+  var query = document.getElementById('find').value.trim().toLowerCase();
+  var rows = summaries().filter(function (row) {
+    return row.game.name.toLowerCase().indexOf(query) !== -1;
+  });
+  var html = rows.map(function (row) {
+    var href = '#g/' + encodeURIComponent(row.game.id);
+    return '<tr>'
+      + '<td class="name"><a href="' + href + '">' + escapeHtml(row.game.name) + '</a></td>'
+      + '<td class="num total">' + row.total + '</td>'
+      + '<td class="num">' + dash(row.plays) + '</td>'
+      + '<td class="num">' + dash(row.owns) + '</td>'
+      + '<td class="num">' + dash(row.tried) + '</td>'
+      + '<td><a class="btn" href="' + href + '">Players</a></td>'
+      + '</tr>';
+  }).join('');
+  if (!html) html = '<tr><td colspan="6">No games match.</td></tr>';
+  document.getElementById('games-body').innerHTML = html;
+}
+
+// orderedMarks: game-page rows in the original chart member order.
+function orderedMarks(gameId) {
+  var marks = marksFor(gameId);
+  return CHART.members.map(function (member) {
+    return marks.find(function (item) { return item.member === member.id; });
+  }).filter(Boolean);
+}
+
+// fillGame: paint one game page, or return to the list if the id is unknown.
+function fillGame(gameId) {
+  var game = byId(CHART.games, gameId);
+  if (!game) {
+    location.hash = '';
+    return;
+  }
+  var marks = orderedMarks(gameId);
+  var plays = marks.filter(function (item) { return isPlays(item.mark); }).length;
+  var owns = marks.filter(function (item) { return item.mark === 'Has'; }).length;
+  var tried = marks.filter(function (item) { return item.mark === 'Tried'; }).length;
+  document.getElementById('game-title').textContent = game.name;
+  document.getElementById('game-stats').innerHTML =
+    '<div class="stat"><b>' + marks.length + '</b><span>Recorded</span></div>'
+    + '<div class="stat"><b>' + plays + '</b><span>Plays</span></div>'
+    + '<div class="stat"><b>' + owns + '</b><span>Owns</span></div>'
+    + '<div class="stat"><b>' + tried + '</b><span>Tried</span></div>';
+  document.getElementById('game-note').innerHTML = game.note
+    ? '<div class="note">' + escapeHtml(game.note) + '</div>'
+    : '';
+  document.getElementById('game-body').innerHTML = marks.map(function (item) {
+    var member = byId(CHART.members, item.member);
+    var note = item.note ? escapeHtml(item.note) : '<span class="zero">—</span>';
+    return '<tr><td class="name">' + escapeHtml(member.name) + '</td>'
+      + '<td><span class="chip ' + markClass(item.mark) + '">' + escapeHtml(item.mark) + '</span></td>'
+      + '<td>' + note + '</td></tr>';
+  }).join('');
+  document.title = game.name + ' · Known Game Participation';
+}
+
+// marksForMember: return every recorded mark for one player.
+function marksForMember(memberId) {
+  return CHART.participation.filter(function (item) { return item.member === memberId; });
+}
+
+// memberSummaries: one opening-page row per player, busiest first.
+function memberSummaries() {
+  return CHART.members.map(function (member) {
+    return { member: member, total: marksForMember(member.id).length };
+  }).sort(function (a, b) {
+    return b.total - a.total || a.member.name.localeCompare(b.member.name);
+  });
+}
+
+// fillPlayers: rebuild the player table from the current search text.
+function fillPlayers() {
+  var query = document.getElementById('find-player').value.trim().toLowerCase();
+  var rows = memberSummaries().filter(function (row) {
+    return row.member.name.toLowerCase().indexOf(query) !== -1;
+  });
+  var html = rows.map(function (row) {
+    var href = '#p/' + encodeURIComponent(row.member.id);
+    return '<tr>'
+      + '<td class="name"><a href="' + href + '">' + escapeHtml(row.member.name) + '</a></td>'
+      + '<td class="num total">' + row.total + '</td>'
+      + '<td><a class="btn" href="' + href + '">Games</a></td>'
+      + '</tr>';
+  }).join('');
+  if (!html) html = '<tr><td colspan="3">No players match.</td></tr>';
+  document.getElementById('players-body').innerHTML = html;
+}
+
+// orderedMemberMarks: player-page rows in game-list order.
+function orderedMemberMarks(memberId) {
+  var marks = marksForMember(memberId);
+  return CHART.games.map(function (game) {
+    return marks.find(function (item) { return item.game === game.id; });
+  }).filter(Boolean);
+}
+
+// fillPlayer: paint one player page, or return to the list if the id is unknown.
+function fillPlayer(memberId) {
+  var member = byId(CHART.members, memberId);
+  if (!member) {
+    location.hash = '';
+    return;
+  }
+  var marks = orderedMemberMarks(memberId);
+  var plays = marks.filter(function (item) { return isPlays(item.mark); }).length;
+  var owns = marks.filter(function (item) { return item.mark === 'Has'; }).length;
+  var tried = marks.filter(function (item) { return item.mark === 'Tried'; }).length;
+  document.getElementById('player-title').textContent = member.name;
+  document.getElementById('player-stats').innerHTML =
+    '<div class="stat"><b>' + marks.length + '</b><span>Recorded</span></div>'
+    + '<div class="stat"><b>' + plays + '</b><span>Plays</span></div>'
+    + '<div class="stat"><b>' + owns + '</b><span>Owns</span></div>'
+    + '<div class="stat"><b>' + tried + '</b><span>Tried</span></div>';
+  document.getElementById('player-body').innerHTML = marks.map(function (item) {
+    var game = byId(CHART.games, item.game);
+    var note = item.note ? escapeHtml(item.note) : '<span class="zero">—</span>';
+    return '<tr><td class="name">' + escapeHtml(game.name) + '</td>'
+      + '<td><span class="chip ' + markClass(item.mark) + '">' + escapeHtml(item.mark) + '</span></td>'
+      + '<td>' + note + '</td></tr>';
+  }).join('');
+  document.title = member.name + ' · Known Game Participation';
+}
+
+// route: tell the page whether the address bar names a game, a player, or the list.
+function route() {
+  var raw = location.hash.replace(/^#/, '');
+  if (!raw) return { kind: 'list' };
+  raw = decodeURIComponent(raw);
+  if (raw.indexOf('g/') === 0) return { kind: 'game', id: raw.slice(2) };
+  if (raw.indexOf('p/') === 0) return { kind: 'player', id: raw.slice(2) };
+  if (byId(CHART.games, raw)) return { kind: 'game', id: raw };
+  return { kind: 'list' };
+}
+
+// show: switch among the opening lists, a game page, and a player page.
+function show() {
+  var routeInfo = route();
+  document.getElementById('games-view').hidden = routeInfo.kind !== 'list';
+  document.getElementById('game-view').hidden = routeInfo.kind !== 'game';
+  document.getElementById('player-view').hidden = routeInfo.kind !== 'player';
+  if (routeInfo.kind === 'game') {
+    fillGame(routeInfo.id);
+    return;
+  }
+  if (routeInfo.kind === 'player') {
+    fillPlayer(routeInfo.id);
+    return;
+  }
+  document.title = 'Known Game Participation';
+  fillGames();
+  fillPlayers();
+}
+
+// boot: paint the static chrome, then follow the address bar.
+function boot() {
+  document.getElementById('games-meta').textContent =
+    CHART.games.length + ' games · ' + CHART.members.length + ' members · Players counts every recorded mark';
+  fillLegend();
+  fillFootnotes();
+  document.getElementById('find').addEventListener('input', fillGames);
+  document.getElementById('find-player').addEventListener('input', fillPlayers);
+  addEventListener('hashchange', show);
+  show();
+}
+
+boot();
+</script>
+</body>
+</html>
