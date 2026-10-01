@@ -1,0 +1,249 @@
+<!doctype html>
+<!-- ImpossibleMachine.html | C:\Repos\GitHubWebsite\ImpossibleMachine.html
+     THE IMPOSSIBLE MACHINE: a self-contained, gesture-started kinetic musical sculpture. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090f18">
+<meta name="description" content="A kinetic instrument made of brass, light, and time. Build a sculpture. Hear it come alive.">
+<title>The Impossible Machine · A kinetic instrument</title>
+<style>
+/* The studio palette keeps controls legible without competing with the sculpture. */
+:root{color-scheme:dark;--ink:#090f18;--panel:#111b26;--cream:#f0e7d4;--muted:#a5acae;--brass:#dcb77d;--line:#b99b6833;--cyan:#8bd8dd}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--cream);font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,select,input{font:inherit}button,select{min-height:44px;border:1px solid var(--line);background:#15212d;color:var(--cream);border-radius:9px;padding:9px 15px}button{cursor:pointer;transition:background .2s,transform .2s,border-color .2s}button:hover{background:#263240;border-color:var(--brass)}button:active{transform:translateY(1px)}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}button.primary{background:var(--cream);color:#14202c;border-color:var(--cream);font-weight:700}button.primary:hover{background:#fff6df}button[aria-pressed=true]{border-color:var(--cyan);color:var(--cyan)}button.primary[aria-pressed=true]{color:#14202c}small,.muted{color:var(--muted)}#stage{position:absolute;inset:0}canvas{display:block;touch-action:none;width:100%;height:100%}.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 28%,#090f1844 72%,#090f18b0)}header{position:absolute;top:clamp(18px,4vh,42px);left:clamp(20px,4vw,64px);pointer-events:none}.eyebrow{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--brass);font-weight:600}.mark{display:inline-block;border:1px solid var(--brass);border-radius:50%;width:20px;height:20px;line-height:18px;text-align:center;margin-right:9px;letter-spacing:0}h1{font:400 clamp(30px,3.5vw,54px)/1.04 Georgia,"Times New Roman",serif;letter-spacing:-.035em;margin:15px 0 13px}h1 em{font-weight:400;color:var(--brass)}.subhead{margin:0;color:var(--muted);font-size:12px;letter-spacing:.025em}.corner{position:absolute;right:clamp(20px,4vw,64px);top:34px;text-align:right;font-size:10px;color:var(--muted);letter-spacing:.16em}.corner strong{display:block;color:var(--cream);font-size:12px;font-weight:400;margin-bottom:4px}.corner .dot{display:inline-block;width:6px;height:6px;background:var(--cyan);border-radius:50%;margin-right:8px;box-shadow:0 0 12px #8bd8dd66}#welcome{position:absolute;right:4vw;top:115px;width:260px;padding:23px;background:linear-gradient(140deg,#15212dec,#101924ed);border:1px solid var(--line);border-radius:3px;box-shadow:0 14px 50px #0003}#welcome h2{font:24px Georgia,serif;font-weight:400;margin:0 0 12px}#welcome p{font-size:12px;color:#b7bcbc;line-height:1.75;margin:10px 0 17px}#welcome button{width:100%;font-size:12px}.hint{position:absolute;bottom:173px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.12em;color:#929a9e;white-space:nowrap;pointer-events:none}#mechanisms{position:absolute;left:4vw;top:240px;display:flex;flex-direction:column;gap:7px;max-height:calc(100% - 430px);overflow:auto;padding:2px 4px 3px 0}.mechanism{background:#101923b8;display:flex;align-items:center;gap:12px;text-align:left;font-size:11px;padding:7px 13px;min-width:156px}.mechanism .swatch{width:7px;height:7px;border-radius:50%;background:var(--tone)}.mechanism .number{font-size:9px;color:#828d96;margin-left:auto}.mechanism.active{border-color:var(--brass);background:#24303b}.deck{position:absolute;bottom:max(22px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(800px,calc(100% - 40px));border:1px solid var(--line);background:linear-gradient(110deg,#15212df5,#101925f5);box-shadow:0 20px 70px #0007;border-radius:15px;padding:14px 18px 12px;backdrop-filter:blur(18px)}.transport{display:flex;align-items:center;gap:9px}#play{min-width:128px;font-size:14px}#sound{min-width:102px}.divider{width:1px;height:30px;background:var(--line);margin:0 5px}.readout{flex:1;padding-left:4px}.readout b{font-weight:400;font-size:12px;letter-spacing:.05em;display:block}.readout span{color:var(--muted);font-size:10px}#status{margin:9px 0 0;font-size:11px;color:#b2b8b8;min-height:17px}.score{display:flex;align-items:center;gap:5px;float:right;margin-top:5px}.score i{width:5px;height:5px;background:#51606a;border-radius:50%}.score i.lit{background:var(--brass);box-shadow:0 0 8px var(--brass)}.catalog{position:absolute;left:4vw;bottom:30px;color:#6f7a85;font-size:9px;letter-spacing:.15em;writing-mode:vertical-rl}.right-label{position:absolute;right:4vw;bottom:31px;color:#6f7a85;font-size:9px;letter-spacing:.15em;writing-mode:vertical-rl}dialog{color:var(--cream);background:linear-gradient(140deg,#182430,#0e1721);border:1px solid #c8a97655;border-radius:16px;width:min(540px,calc(100vw - 28px));max-height:calc(100dvh - 36px);padding:25px;box-shadow:0 25px 100px #0009;overflow:auto}dialog::backdrop{background:#03091299;backdrop-filter:blur(5px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.dialog-head h2{font:28px Georgia,serif;margin:0;font-weight:400}.close{padding:8px 13px;font-size:12px}.section-title{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--brass);margin:22px 0 12px}.controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:7px;font-size:12px;color:#c9cecd}.field input[type=range]{width:100%;height:30px;accent-color:var(--brass);cursor:pointer}.field select{width:100%;padding:9px}.field output{float:right;color:var(--brass);font-variant-numeric:tabular-nums}.wide{grid-column:1/-1}.add-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.add-row button{padding:10px 3px;font-size:11px}.add-row b{display:block;font:22px Georgia,serif;color:var(--brass);margin-bottom:5px}.inspector{padding:16px;background:#070e1755;border:1px solid var(--line);border-radius:10px}.inspector .section-title{margin-top:0}.inline{display:flex;gap:8px;margin-top:15px}.inline button{flex:1;font-size:12px}.help-copy{font-size:13px;color:#bdc4c6;line-height:1.85}.help-copy strong{color:var(--cream);font-weight:500}.help-copy h3{font-size:14px;color:var(--brass);font-weight:500;margin:18px 0 5px}.fine{font-size:11px;color:var(--muted);margin-bottom:0}.error-card{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);padding:25px;max-width:440px;width:calc(100% - 40px);border:1px solid var(--line);background:#131f2deb;border-radius:12px;text-align:center}.error-card h2{font:25px Georgia,serif}.error-card p{font-size:13px;color:#c6cecf}.loading-ring{width:40px;height:40px;border:1px solid #dcb77d33;border-top-color:var(--brass);border-radius:50%;margin:0 auto 15px;animation:rotate 1.5s linear infinite}@keyframes rotate{to{transform:rotate(360deg)}}[hidden]{display:none!important}@media(max-width:950px){.readout{display:none}.deck{width:fit-content;min-width:470px}.catalog,.right-label{display:none}#welcome{width:230px;right:22px}#mechanisms{left:20px}.hint{bottom:153px}}@media(max-width:650px){header{top:24px;left:22px}h1{font-size:34px;margin:12px 0 10px}.eyebrow{font-size:8px}.subhead{font-size:10px}.corner{top:157px;right:22px;font-size:8px}.corner strong{display:none}#welcome{top:auto;right:20px;left:20px;width:auto;bottom:170px;padding:16px 18px}#welcome h2{font-size:21px;margin-bottom:5px}#welcome p{font-size:11px;margin:5px 0 12px}#welcome button{min-height:44px}#mechanisms{top:185px;left:20px;right:20px;flex-direction:row;max-height:52px;gap:5px;overflow-x:auto;scrollbar-width:none}.mechanism{min-width:auto;white-space:nowrap;font-size:10px;padding:7px 11px;gap:7px}.mechanism .number{display:none}.deck{min-width:0;width:calc(100% - 26px);padding:12px;bottom:max(14px,env(safe-area-inset-bottom))}.transport{gap:6px;justify-content:space-between}.transport button{padding:9px 10px;font-size:12px}#play{min-width:95px;flex:1}#sound{min-width:82px}.divider{display:none}#compose{flex:1}#help{min-width:48px}.hint{bottom:133px;font-size:8px;letter-spacing:.08em}#status{font-size:10px}.score{gap:4px}.score i{width:4px;height:4px}dialog{padding:20px}.add-row{gap:5px}.add-row button{font-size:10px}}@media(max-height:560px){header{top:14px;left:20px}h1{font-size:28px;margin:7px 0}.subhead,.corner,.hint{display:none}#mechanisms{top:125px;max-height:calc(100% - 250px);left:20px;right:auto;flex-direction:column}#welcome{top:20px;bottom:auto;left:auto;right:20px;width:230px;padding:15px}#welcome h2{font-size:19px}#welcome p{font-size:10px}.deck{bottom:10px;padding:9px 12px}#status{margin-top:5px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}.loading-ring{animation:none}}
+</style>
+</head>
+<body>
+<main id="stage" aria-label="Interactive three-dimensional kinetic musical sculpture"></main><div class="vignette"></div>
+<header><div class="eyebrow"><span class="mark">∞</span> An instrument in perpetual becoming</div><h1>The Impossible<br><em>Machine.</em></h1><p class="subhead">Set time in motion. Listen to the geometry.</p></header>
+<div class="corner"><strong>STUDY No. 004</strong><span class="dot"></span><span id="modeLabel">SILENT PREVIEW</span></div>
+<nav id="mechanisms" aria-label="Select a mechanism"></nav>
+<aside id="welcome" hidden><div class="eyebrow" style="margin-bottom:12px">A small introduction</div><h2>Everything you hear,<br>you can see.</h2><p>Brass pendulums, glass orbits, taut strings. Each collision plays a note. Press <strong>Play</strong> below to bring this little universe to life.</p><button id="dismissWelcome">Explore the machine</button></aside>
+<p class="hint">DRAG TO ORBIT · PINCH / SCROLL TO ZOOM · SELECT A MECHANISM TO TUNE</p>
+<div class="catalog">KINETIC HARMONICS / VIRTUAL GALLERY</div><div class="right-label">BRASS · LIGHT · TIME</div>
+<section class="deck" aria-label="Playback controls"><div class="transport"><button class="primary" id="play" disabled aria-pressed="false">▶ Play</button><button id="sound" aria-pressed="false">◖ Sound on</button><span class="divider"></span><div class="readout"><b id="harmonyLabel">D / PENTATONIC</b><span id="tempoLabel">84 beats per minute</span></div><button id="compose">⚙ Compose</button><button id="help">Help</button></div><div class="score" id="score" aria-hidden="true"></div><p id="status" role="status">Preparing your instrument…</p></section>
+<div id="loading" class="error-card"><div class="loading-ring"></div><div class="eyebrow">Assembling the impossible</div><p>Just brass, light, and a little mathematics.</p></div>
+<dialog id="composeDialog" aria-labelledby="composeTitle"><div class="dialog-head"><h2 id="composeTitle">Conduct the machine</h2><button class="close" id="closeCompose">Done</button></div><div class="controls-grid"><label class="field"><span>Tempo <output id="bpmValue">84 BPM</output></span><input id="bpm" type="range" min="48" max="144" value="84"></label><label class="field"><span>Volume <output id="volumeValue">35%</output></span><input id="volume" type="range" min="0" max="75" value="35"></label><label class="field">Harmony<select id="scale"><option value="pentatonic">D · pentatonic / weightless</option><option value="minor">D · minor / nocturne</option><option value="major">D · major / morning</option></select></label><label class="field">Rendering<select id="quality"><option value="auto">Gallery</option><option value="lite">Lite / less battery</option></select></label></div><div class="section-title">Add a voice <span id="countLabel">5 / 8</span></div><div class="add-row"><button id="addPendulum" data-add="pendulum"><b>⌁</b>Pendulum</button><button id="addOrbit" data-add="orbit"><b>◎</b>Orbit</button><button id="addString" data-add="string"><b>⋈</b>String</button><button id="addDrum" data-add="drum"><b>◉</b>Drum</button></div><div class="section-title">Individual mechanism</div><div class="inspector"><label class="field">Selected voice<select id="selected"></select></label><div class="controls-grid" style="margin-top:13px"><label class="field">Strike every<select id="division"><option value="0.5">½ beat / flowing</option><option value="1">1 beat / steady</option><option value="2">2 beats / spacious</option><option value="4">4 beats / patient</option><option value="8">8 beats / glacial</option></select></label><label class="field">Note in harmony<select id="pitch"></select></label></div><div class="inline"><button id="voiceMute" aria-pressed="false">Mute voice</button><button id="voiceSolo" aria-pressed="false">Solo voice</button><button id="remove">Remove</button></div></div><div class="inline"><button id="homeView">Recenter view</button><button id="reset">Reset composition</button></div><p class="fine">A shared musical clock keeps every voice in time. Maximum eight voices.</p></dialog>
+<dialog id="helpDialog" aria-labelledby="helpTitle"><div class="dialog-head"><h2 id="helpTitle">Music you can touch.</h2><button class="close" id="closeHelp">Close</button></div><div class="help-copy"><p>This is a tiny mechanical ensemble. The brass engine at its center marks time; the instruments around it turn that time into harmony.</p><h3>01 / Wake the room</h3><p><strong>Play</strong> starts sound and synchronized motion. <strong>Pause</strong> holds the composition. <strong>Sound / Mute</strong> silences the speakers without stopping the sculpture. Start with a comfortable device volume.</p><h3>02 / Change your perspective</h3><p><strong>Drag</strong> the sculpture to orbit. <strong>Pinch or scroll</strong> to zoom. Click a mechanism or its labeled chip to tune it. Recenter view is in Compose. No secret gestures.</p><h3>03 / Make it yours</h3><p>Open <strong>Compose</strong> to set tempo, scale, and volume. Add up to eight voices. Change an individual voice’s note and strike interval, mute it, or solo it. All pitches belong to the selected harmony; repetition, not randomness, makes the music.</p><h3>04 / A considerate instrument</h3><p>Before Play, movement is a <strong>silent preview</strong>. Switching tabs pauses the instrument; press Play when you return. Reduced-motion preferences disable the automatic camera drift. Lite mode reduces graphics cost. Nothing is recorded or sent anywhere.</p></div></dialog>
+<dialog id="resetDialog" aria-labelledby="resetTitle"><div class="dialog-head"><h2 id="resetTitle">Begin again?</h2></div><p class="help-copy">Restore the original five voices, tempo, harmony, and volume. Your current composition will be replaced.</p><div class="inline"><button id="cancelReset">Keep my composition</button><button class="primary" id="confirmReset">Reset machine</button></div></dialog>
+<script>
+'use strict';
+// The boot shell survives blocked CDNs and exposes an immutable test snapshot.
+const $ = id => document.getElementById(id);
+const DEBUG_PREFIX = '[ImpossibleMachine/ImpossibleMachine]';
+const state = {ready:false,playing:false,muted:false,bpm:84,scale:'pentatonic',volume:.35,notesTriggered:0,visibleStrikes:0,selected:0,solo:null,started:false,error:null};
+let mechanisms=[],audio=null;
+Object.defineProperty(window,'machineTest',{get:()=>Object.freeze({...state,mechanismCount:mechanisms.length,types:mechanisms.map(m=>m.type),audioState:audio?.state||'not-created',voices:mechanisms.map(m=>Object.freeze({id:m.id,type:m.type,division:m.division,pitch:m.pitch,muted:m.muted})),pendingEvents:typeof events==='undefined'?0:events.length})});
+// showFailure: replace the loader with an actionable, nontechnical fallback.
+function showFailure(message){state.error=message;state.ready=false;$('play').disabled=true;$('loading').hidden=false;$('loading').innerHTML='<h2>The studio could not open.</h2><p></p><button id="retry">Try again</button>';$('loading').querySelector('p').textContent=message;$('retry').onclick=()=>location.reload();$('status').textContent='The instrument is unavailable. Help is still available.';console.error(DEBUG_PREFIX,message);}
+// Dialog controls work even if graphics cannot initialize.
+$('help').onclick=()=>$('helpDialog').showModal();$('closeHelp').onclick=()=>$('helpDialog').close();$('compose').onclick=()=>$('composeDialog').showModal();$('closeCompose').onclick=()=>$('composeDialog').close();$('dismissWelcome').onclick=()=>{$('welcome').hidden=true;try{localStorage.setItem('impossible-machine-intro','seen');}catch{}};
+const bootDeadline=setTimeout(()=>showFailure('The graphics library took too long to load. Check your connection, allow cdn.jsdelivr.net, then try again.'),15000);
+const library=document.createElement('script');library.src='https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js';library.onload=()=>{clearTimeout(bootDeadline);try{boot();}catch(error){showFailure('Your browser could not start 3D graphics. Enable hardware acceleration or try an up-to-date Chrome browser.');}};library.onerror=()=>{clearTimeout(bootDeadline);showFailure('The graphics library could not be reached. Check your connection or content blocker, then try again.');};document.head.appendChild(library);
+let scene,camera,renderer,engine,clockHand,selectionRing,raycaster;
+let epochTime=0,epochBeat=0,heldBeat=0,previewStart=performance.now(),scheduler=null,serial=0,master,compressor;
+let events=[],voices=[],effects=[],lastFrame=0,lastUserOrbit=0;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cameraPose={azimuth:.55,elevation:.47,radius:19.5};
+const palettes={pendulum:0xdcb77d,orbit:0x8bd8dd,string:0xefb19a,drum:0xb5b3e1};
+const names={pendulum:'Pendulum',orbit:'Orbit',string:'String',drum:'Drum'};
+const scales={pentatonic:[0,2,4,7,9],minor:[0,2,3,5,7,8,10],major:[0,2,4,5,7,9,11]};
+let brass,copper,dark,ivory;
+// boot: assemble one WebGL scene, the composed ensemble, and the interaction layer.
+function boot(){
+ scene=new THREE.Scene();scene.background=new THREE.Color(0x090f18);scene.fog=new THREE.FogExp2(0x090f18,.024);
+ camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,100);renderer=new THREE.WebGLRenderer({antialias:devicePixelRatio<2,alpha:false,powerPreference:'high-performance'});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1.5:2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;
+ $('stage').appendChild(renderer.domElement);renderer.domElement.setAttribute('aria-label','Drag to orbit the kinetic sculpture; use labeled voice buttons to select instruments.');
+ brass=new THREE.MeshStandardMaterial({color:0xc49f65,metalness:.72,roughness:.3});copper=new THREE.MeshStandardMaterial({color:0xaa6550,metalness:.64,roughness:.34});dark=new THREE.MeshStandardMaterial({color:0x162533,metalness:.5,roughness:.4});ivory=new THREE.MeshStandardMaterial({color:0xe6d7b6,metalness:.18,roughness:.35});
+ scene.add(new THREE.HemisphereLight(0xbde2ef,0x3b2520,2.1));light(0xffd7a0,65,-4,9,4);light(0x69cbdc,45,5,7,-5);light(0xffffff,25,0,10,1);
+ // Broad key and rim lights reveal the machined edges even without an environment map.
+ const key=new THREE.DirectionalLight(0xffe2b3,2.8);key.position.set(-4,8,6);scene.add(key);const rim=new THREE.DirectionalLight(0x8ad9ef,1.5);rim.position.set(5,5,-5);scene.add(rim);
+ buildStage();buildEngine();resetComposition();raycaster=new THREE.Raycaster();bindControls();bindCamera();
+ for(let i=0;i<16;i++)$('score').appendChild(document.createElement('i'));
+ renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();pauseMachine('Graphics paused. Reload the page to restore the studio.');showFailure('The graphics context was lost. Close other graphics-heavy tabs and try again.');});
+ state.ready=true;$('play').disabled=false;$('loading').hidden=true;$('status').textContent='Silent preview · press Play to hear the machine.';
+ try{$('welcome').hidden=localStorage.getItem('impossible-machine-intro')==='seen';}catch{$('welcome').hidden=false;}
+ addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.playing)pauseMachine('Paused while away · press Play to continue.');});requestAnimationFrame(frame);
+}
+// light: place a soft, physically attenuated studio light.
+function light(color,intensity,x,y,z){const lamp=new THREE.PointLight(color,intensity,35,2);lamp.position.set(x,y,z);scene.add(lamp);}
+// mesh: attach generated geometry to a parent with an explicit transform.
+function mesh(parent,geometry,material,x=0,y=0,z=0){const item=new THREE.Mesh(geometry,material);item.position.set(x,y,z);parent.add(item);return item;}
+// rod: connect two points with a slender brass or copper structural member.
+function rod(parent,a,b,r=.035,material=brass){const start=new THREE.Vector3(...a),end=new THREE.Vector3(...b),delta=end.clone().sub(start);const item=mesh(parent,new THREE.CylinderGeometry(r,r,delta.length(),8),material);item.position.copy(start.add(end).multiplyScalar(.5));item.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());return item;}
+// ring: make a machined torus in its local XY plane.
+function ring(parent,radius,tube,material,x=0,y=0,z=0){return mesh(parent,new THREE.TorusGeometry(radius,tube,8,80),material,x,y,z);}
+// luminous: create restrained emissive enamel without postprocessing dependencies.
+function luminous(color){return new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.7,metalness:.25,roughness:.3});}
+// buildStage: sculpt the round, stepped plinth, radial inlay, and gallery floor.
+function buildStage(){
+ const floor=mesh(scene,new THREE.PlaneGeometry(150,150),new THREE.MeshStandardMaterial({color:0x09111c,roughness:.82}),0,-.62,0);floor.rotation.x=-Math.PI/2;
+ mesh(scene,new THREE.CylinderGeometry(6.9,7.05,.34,128),dark,0,-.34,0);mesh(scene,new THREE.CylinderGeometry(6.7,6.9,.16,128),brass,0,-.1,0);mesh(scene,new THREE.CylinderGeometry(6.67,6.67,.12,128),dark,0,.03,0);
+ [2.4,3.05,5.6,6.45].forEach((r,i)=>{const trim=ring(scene,r,i===3?.023:.009,i===3?brass:copper,0,.105,0);trim.rotation.x=Math.PI/2;});
+ for(let i=0;i<72;i++){const a=i*Math.PI/36,r=i%6===0?6.12:6.27;rod(scene,[Math.cos(a)*r,.115,Math.sin(a)*r],[Math.cos(a)*6.42,.115,Math.sin(a)*6.42],i%6===0?.012:.006,brass);}
+ selectionRing=ring(scene,.84,.018,luminous(0xdcb77d));selectionRing.rotation.x=-Math.PI/2;selectionRing.position.y=.13;
+ // A generated radial texture provides a quiet contact shadow beneath the plinth.
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=128;const ctx=canvas.getContext('2d'),gradient=ctx.createRadialGradient(64,64,20,64,64,64);gradient.addColorStop(0,'rgba(0,0,0,.75)');gradient.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gradient;ctx.fillRect(0,0,128,128);
+ const shadow=mesh(scene,new THREE.PlaneGeometry(21,21),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(canvas),transparent:true,depthWrite:false}),0,-.61,0);shadow.rotation.x=-Math.PI/2;
+}
+// buildEngine: create the central armillary timekeeper with suspended core and clock marks.
+function buildEngine(){
+ engine=new THREE.Group();engine.position.y=2.35;scene.add(engine);mesh(scene,new THREE.CylinderGeometry(.65,.9,.28,48),brass,0,.25,0);rod(scene,[0,.3,0],[0,2.35,0],.09,copper);
+ const outer=ring(engine,1.8,.052,brass);outer.rotation.y=.35;const cross=ring(engine,1.5,.032,copper);cross.rotation.y=Math.PI/2;const belt=ring(engine,1.8,.025,brass);belt.rotation.x=Math.PI/2;
+ const core=mesh(engine,new THREE.IcosahedronGeometry(.44,1),luminous(0x9fd4cf));core.name='core';ring(engine,.69,.015,brass).rotation.y=-.5;
+ // A procedural additive halo gives the suspended core a soft glow without a bloom pass.
+ const haloCanvas=document.createElement('canvas');haloCanvas.width=haloCanvas.height=64;const haloContext=haloCanvas.getContext('2d'),haloGradient=haloContext.createRadialGradient(32,32,2,32,32,32);haloGradient.addColorStop(0,'rgba(139,216,221,.48)');haloGradient.addColorStop(.3,'rgba(139,216,221,.12)');haloGradient.addColorStop(1,'rgba(139,216,221,0)');haloContext.fillStyle=haloGradient;haloContext.fillRect(0,0,64,64);const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(haloCanvas),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.75}));halo.scale.set(2.7,2.7,1);engine.add(halo);
+ for(let i=0;i<24;i++){const a=i*Math.PI/12;mesh(outer,new THREE.SphereGeometry(i%3===0?.055:.025,8,6),i%3===0?ivory:brass,1.8*Math.cos(a),1.8*Math.sin(a),0);}
+ clockHand=new THREE.Group();engine.add(clockHand);rod(clockHand,[0,0,0],[0,1.69,0],.019,brass);mesh(clockHand,new THREE.SphereGeometry(.09,12,8),luminous(0xffcc8d),0,1.69,0);
+ const cap=mesh(scene,new THREE.ConeGeometry(.28,.65,24),brass,0,4.55,0);cap.rotation.z=Math.PI;rod(scene,[0,4.2,0],[0,2.8,0],.008,ivory);
+}
+// buildPendulum: an A-frame, suspended weight, and fixed impact bell share one local coordinate system.
+function buildPendulum(m){
+ const g=m.group;[-.63,.63].forEach(x=>{rod(g,[x,0,-.24],[x,2.55,0],.033);rod(g,[x,0,.3],[x,2.55,0],.025,copper);});rod(g,[-.74,2.55,0],[.74,2.55,0],.045);
+ m.moving=new THREE.Group();m.moving.position.y=2.5;g.add(m.moving);rod(m.moving,[0,0,0],[0,-1.72,0],.014,ivory);mesh(m.moving,new THREE.SphereGeometry(.19,20,14),brass,0,-1.72,0);mesh(g,new THREE.SphereGeometry(.07,12,8),copper,0,2.5,0);
+ const x=1.72*Math.sin(.64),y=2.5-1.72*Math.cos(.64);m.hit=new THREE.Vector3(x+.19,y,0);m.target=mesh(g,new THREE.SphereGeometry(.15,18,12),m.glow,...m.hit.toArray());rod(g,[x+.19,0,0],[x+.19,y-.1,0],.025,copper);
+}
+// buildOrbit: a captive bead meets an enamel gate once on every revolution.
+function buildOrbit(m){
+ const g=m.group;rod(g,[0,0,0],[0,1.7,0],.045);mesh(g,new THREE.CylinderGeometry(.4,.55,.12,32),brass,0,.08,0);ring(g,1.05,.025,brass,0,1.65,0);ring(g,1.16,.01,copper,0,1.65,0);
+ m.moving=new THREE.Group();m.moving.position.y=1.65;g.add(m.moving);m.bead=mesh(m.moving,new THREE.SphereGeometry(.13,16,12),m.glow,1.05,0,0);rod(m.moving,[0,0,0],[.92,0,0],.01,copper);mesh(g,new THREE.SphereGeometry(.085,12,8),brass,0,1.65,0);
+ m.hit=new THREE.Vector3(1.05,1.65,0);m.target=ring(g,.2,.035,brass,...m.hit.toArray());m.target.rotation.x=Math.PI/2;rod(g,[1.05,0,0],[1.05,1.42,0],.022,copper);
+ // Short trailing satellites read as a mechanical chain rather than free particles.
+ for(let i=1;i<=6;i++)mesh(m.moving,new THREE.SphereGeometry(.033*(1-i/9),8,6),m.glow,1.05*Math.cos(-i*.12),1.05*Math.sin(-i*.12),0);
+}
+// buildString: a framed harp with taut strings and a traveling plectrum.
+function buildString(m){
+ const g=m.group;rod(g,[-.65,0,0],[-.65,2.5,0],.045);rod(g,[.65,0,0],[.65,2.5,0],.045);rod(g,[-.65,2.5,0],[.65,2.5,0],.05,copper);rod(g,[-.65,.22,0],[.65,.22,0],.05,copper);
+ m.strings=[];for(let i=0;i<5;i++){const x=(i-2)*.21,geometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,.25,0),new THREE.Vector3(x,1.35,0),new THREE.Vector3(x,2.48,0)]);const line=new THREE.Line(geometry,new THREE.LineBasicMaterial({color:0xefc4a2}));g.add(line);m.strings.push(line);mesh(g,new THREE.SphereGeometry(.04,8,6),brass,x,2.51,0);}
+ m.moving=new THREE.Group();g.add(m.moving);mesh(m.moving,new THREE.OctahedronGeometry(.13),m.glow,0,1.35,0);m.hit=new THREE.Vector3(0,1.35,0);m.target=mesh(g,new THREE.SphereGeometry(.055,10,8),m.glow,0,1.35,0);rod(g,[0,0,-.55],[0,1.35,-.55],.025,copper);
+}
+// buildDrum: a stretched membrane and piston hammer make the percussive voice readable.
+function buildDrum(m){
+ const g=m.group;mesh(g,new THREE.CylinderGeometry(.67,.57,.5,48),copper,0,.58,0);m.target=mesh(g,new THREE.CylinderGeometry(.64,.64,.03,48),m.glow,0,.85,0);ring(g,.68,.035,brass,0,.85,0).rotation.x=Math.PI/2;
+ for(let i=0;i<8;i++){const a=i*Math.PI/4;rod(g,[.62*Math.cos(a),.34,.62*Math.sin(a)],[.67*Math.cos(a),.84,.67*Math.sin(a)],.02);}
+ rod(g,[-.85,0,0],[-.85,2.5,0],.04);rod(g,[-.85,2.5,0],[0,2.5,0],.04);m.moving=new THREE.Group();g.add(m.moving);rod(m.moving,[0,1.12,0],[0,2.35,0],.026);mesh(m.moving,new THREE.SphereGeometry(.19,16,12),brass,0,1.05,0);m.hit=new THREE.Vector3(0,.87,0);
+}
+// addMechanism: build a complete voice and put its next strike on the shared grid.
+function addMechanism(type,division=2,pitch=0){
+ if(mechanisms.length>=8)return;const id=++serial,g=new THREE.Group();scene.add(g);const m={id,type,group:g,division,pitch,muted:false,glow:luminous(palettes[type]),next:0,flash:0};g.userData.id=id;
+ mesh(g,new THREE.CylinderGeometry(.72,.82,.13,40),dark,0,.16,0);ring(g,.74,.014,brass,0,.235,0).rotation.x=Math.PI/2;
+ ({pendulum:buildPendulum,orbit:buildOrbit,string:buildString,drum:buildDrum})[type](m);mechanisms.push(m);m.next=Math.ceil((getBeat()+.001)/division)*division;state.selected=id;layoutMechanisms();refreshUI();
+}
+// layoutMechanisms: leave the central armillary clear and face each miniature instrument outward.
+function layoutMechanisms(){mechanisms.forEach((m,i)=>{const angle=i/mechanisms.length*Math.PI*2+.18;m.group.position.set(Math.sin(angle)*4.3,.16,Math.cos(angle)*4.3);m.group.rotation.y=angle;});}
+// disposeGroup: release GPU allocations when a mechanism is removed or reset.
+function disposeGroup(group){group.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&!([brass,copper,dark,ivory].includes(o.material)))o.material.dispose();});scene.remove(group);}
+// resetComposition: restore a deliberately sparse five-voice arrangement, never autoplay.
+function resetComposition(){
+ if(state.playing)pauseMachine();mechanisms.forEach(m=>disposeGroup(m.group));mechanisms=[];events=[];heldBeat=0;epochBeat=0;state.bpm=84;state.scale='pentatonic';state.volume=.35;state.solo=null;state.started=false;previewStart=performance.now();
+ [['pendulum',2,0],['orbit',4,4],['string',1,7],['pendulum',4,2],['drum',2,0]].forEach(v=>addMechanism(...v));state.selected=mechanisms[0].id;
+ $('bpm').value=84;$('volume').value=35;$('scale').value='pentatonic';$('bpmValue').textContent='84 BPM';$('volumeValue').textContent='35%';refreshUI();setVolume();$('modeLabel').textContent='SILENT PREVIEW';$('status').textContent='Silent preview · press Play to hear the machine.';
+}
+// getBeat: derive transport phase from AudioContext time, never accumulated frame deltas.
+function getBeat(){return state.playing&&audio?epochBeat+(audio.currentTime-epochTime)*state.bpm/60:heldBeat;}
+// initAudio: create a bounded synth graph only inside the explicit Play gesture.
+function initAudio(){
+ const Context=window.AudioContext||window.webkitAudioContext;if(!Context)throw new Error('Web Audio is not supported in this browser.');audio=new Context({latencyHint:'interactive'});master=audio.createGain();compressor=audio.createDynamicsCompressor();compressor.threshold.value=-18;compressor.knee.value=18;compressor.ratio.value=5;compressor.attack.value=.004;compressor.release.value=.2;master.gain.value=state.muted?0:state.volume*.55;master.connect(compressor);compressor.connect(audio.destination);
+ audio.addEventListener('statechange',()=>{if(state.playing&&audio.state!=='running')pauseMachine('Audio was interrupted · press Play to resume.');});
+}
+// setVolume: gently ramp the shared output gain to avoid clicks.
+function setVolume(){if(!audio||!master)return;master.gain.cancelScheduledValues(audio.currentTime);master.gain.setTargetAtTime(state.muted?0:state.volume*.55,audio.currentTime,.025);}
+// noteMidi: map every melodic voice to D in the chosen scale across two octaves.
+function noteMidi(index){const scale=scales[state.scale];return 50+scale[index%scale.length]+12*Math.floor(index/scale.length);}
+// voice: schedule a short mallet, pluck, or membrane envelope with an explicit oscillator stop.
+function voice(m,time){
+ const midi=noteMidi(m.pitch),freq=440*Math.pow(2,(midi-69)/12),duration=m.type==='string'?1.35:m.type==='drum'?.28:1.7;
+ const gain=audio.createGain(),filter=audio.createBiquadFilter(),osc=audio.createOscillator();filter.type='lowpass';filter.frequency.setValueAtTime(m.type==='string'?2600:1800,time);filter.frequency.exponentialRampToValueAtTime(450,time+duration);gain.gain.setValueAtTime(0,time);gain.gain.linearRampToValueAtTime(m.type==='drum'?.22:.13,time+.007);gain.gain.exponentialRampToValueAtTime(.0001,time+duration);
+ osc.type=m.type==='string'?'triangle':'sine';osc.frequency.setValueAtTime(m.type==='drum'?120:freq,time);if(m.type==='drum')osc.frequency.exponentialRampToValueAtTime(45,time+.18);osc.connect(filter);filter.connect(gain);gain.connect(master);osc.start(time);osc.stop(time+duration+.04);
+ const record={osc,gain,filter,time};voices.push(record);osc.onended=()=>{osc.disconnect();filter.disconnect();gain.disconnect();voices=voices.filter(v=>v!==record);};
+ // A quiet, detuned upper partial gives glass and brass a mallet-like attack.
+ if(m.type==='orbit'||m.type==='pendulum'){const overtone=audio.createOscillator(),level=audio.createGain();overtone.type='sine';overtone.frequency.value=freq*2.002;level.gain.setValueAtTime(0,time);level.gain.linearRampToValueAtTime(.035,time+.003);level.gain.exponentialRampToValueAtTime(.0001,time+.35);overtone.connect(level);level.connect(master);overtone.start(time);overtone.stop(time+.4);const extra={osc:overtone,gain:level,time};voices.push(extra);overtone.onended=()=>{overtone.disconnect();level.disconnect();voices=voices.filter(v=>v!==extra);};}
+ state.notesTriggered++;
+}
+// schedule: fill only a short future window, skipping stale beats instead of bursting on resume.
+function schedule(){
+ if(!state.playing||audio.state!=='running')return;const now=audio.currentTime,beat=getBeat(),horizon=beat+.085*state.bpm/60;
+ mechanisms.forEach(m=>{if(m.next<beat-.04)m.next=Math.ceil(beat/m.division)*m.division;while(m.next<=horizon){const time=epochTime+(m.next-epochBeat)*60/state.bpm;if(time>=now-.018){const audible=!m.muted&&(state.solo===null||state.solo===m.id);if(audible)voice(m,Math.max(now,time));events.push({id:m.id,time:Math.max(now,time),audible});}m.next+=m.division;}});
+ // Sort before the renderer consumes events, including after tempo or division edits.
+ events.sort((a,b)=>a.time-b.time);
+}
+// startMachine: resume from a user gesture, then align movement and sound to one epoch.
+async function startMachine(){
+ if(!state.ready)return;$('play').disabled=true;
+ try{if(!audio)initAudio();await audio.resume();if(audio.state!=='running')throw new Error('Audio is blocked. Check this site’s sound permission.');epochBeat=heldBeat;epochTime=audio.currentTime+.065;state.playing=true;state.started=true;events=[];mechanisms.forEach(m=>m.next=Math.ceil((heldBeat+.0001)/m.division)*m.division);if(heldBeat===0)mechanisms.forEach(m=>m.next=0);setVolume();schedule();scheduler=setInterval(schedule,25);$('welcome').hidden=true;$('status').textContent='Playing · each impact is a note. Make it yours in Compose.';updateTransport();}
+ catch(error){$('status').textContent='Sound could not start. Check browser audio permission, then press Play again.';console.error(DEBUG_PREFIX,error);}
+ finally{$('play').disabled=false;}
+}
+// cancelFuture: cancel only not-yet-heard voices when timing or harmony changes.
+function cancelFuture(){if(!audio)return;voices.filter(v=>v.time>audio.currentTime).forEach(v=>{try{v.osc.stop();}catch{}});events=events.filter(e=>e.time<=audio.currentTime);}
+// pauseMachine: freeze phase, remove scheduled sound, and require a new gesture to continue.
+function pauseMachine(message='Paused · press Play to continue.'){
+ if(!state.playing)return;heldBeat=Math.max(0,getBeat());state.playing=false;clearInterval(scheduler);scheduler=null;voices.forEach(v=>{try{v.osc.stop();}catch{}});events=[];if(audio?.state==='running')audio.suspend().catch(()=>{});$('status').textContent=message;updateTransport();
+}
+// updateTransport: keep labels and accessible state consistent with the actual transport.
+function updateTransport(){$('play').textContent=state.playing?'Ⅱ Pause':'▶ Play';$('play').setAttribute('aria-pressed',String(state.playing));$('sound').textContent=state.muted?'◖ Muted':'◖ Sound on';$('sound').setAttribute('aria-pressed',String(state.muted));$('modeLabel').textContent=state.playing?(state.muted?'PLAYING · MUTED':'LIVE HARMONICS'):state.started?'PAUSED':'SILENT PREVIEW';}
+// regrid: keep the present beat phase while applying timing, pitch, or audibility edits.
+function regrid(){cancelFuture();const beat=getBeat();mechanisms.forEach(m=>m.next=Math.ceil((beat+.001)/m.division)*m.division);if(state.playing)schedule();}
+// refreshUI: reflect generated voices in both the scene legend and the accessible selector.
+function refreshUI(){
+ $('mechanisms').replaceChildren();$('selected').replaceChildren();mechanisms.forEach((m,i)=>{const button=document.createElement('button');button.className='mechanism'+(m.id===state.selected?' active':'');button.style.setProperty('--tone','#'+palettes[m.type].toString(16));button.innerHTML='<span class="swatch"></span><span>'+names[m.type]+'</span><span class="number">'+String(i+1).padStart(2,'0')+'</span>';button.setAttribute('aria-label','Tune '+names[m.type]+' '+(i+1));button.setAttribute('aria-pressed',String(m.id===state.selected));button.onclick=()=>{selectVoice(m.id);$('composeDialog').showModal();};$('mechanisms').appendChild(button);$('selected').add(new Option(String(i+1).padStart(2,'0')+' / '+names[m.type],m.id));});
+ $('selected').value=state.selected;$('countLabel').textContent=mechanisms.length+' / 8';document.querySelectorAll('[data-add]').forEach(b=>b.disabled=mechanisms.length>=8);$('harmonyLabel').textContent='D / '+state.scale.toUpperCase();$('tempoLabel').textContent=state.bpm+' beats per minute';refreshInspector();
+}
+// refreshInspector: present only controls belonging to the currently selected voice.
+function refreshInspector(){const m=mechanisms.find(v=>v.id===state.selected);if(!m)return;$('division').value=m.division;$('pitch').replaceChildren();for(let i=0;i<10;i++){$('pitch').add(new Option(noteName(noteMidi(i)),i));}$('pitch').value=m.pitch;$('voiceMute').textContent=m.muted?'Unmute voice':'Mute voice';$('voiceMute').setAttribute('aria-pressed',String(m.muted));$('voiceSolo').textContent=state.solo===m.id?'Unsolo voice':'Solo voice';$('voiceSolo').setAttribute('aria-pressed',String(state.solo===m.id));$('remove').disabled=mechanisms.length<=1;}
+// noteName: translate MIDI pitch into a human-readable note and octave.
+function noteName(midi){return ['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B'][midi%12]+(Math.floor(midi/12)-1);}
+// selectVoice: update the selection ring and editor without disturbing playback.
+function selectVoice(id){state.selected=Number(id);refreshUI();}
+// editSelected: apply one local voice change and invalidate its short scheduled future.
+function editSelected(action){const m=mechanisms.find(v=>v.id===state.selected);if(m){action(m);regrid();refreshInspector();}}
+// bindControls: attach explicit, touch-sized controls for every supported interaction.
+function bindControls(){
+ $('play').onclick=()=>state.playing?pauseMachine():startMachine();$('sound').onclick=()=>{state.muted=!state.muted;setVolume();updateTransport();};
+ $('bpm').oninput=e=>{const beat=getBeat();cancelFuture();epochBeat=beat;epochTime=audio?.currentTime||0;heldBeat=beat;state.bpm=Number(e.target.value);$('bpmValue').textContent=state.bpm+' BPM';regrid();refreshUI();};
+ $('volume').oninput=e=>{state.volume=Number(e.target.value)/100;$('volumeValue').textContent=e.target.value+'%';setVolume();};$('scale').onchange=e=>{state.scale=e.target.value;regrid();refreshUI();};
+ $('quality').onchange=()=>{renderer.setPixelRatio($('quality').value==='lite'?1:Math.min(devicePixelRatio,innerWidth<700?1.5:2));resize();};
+ document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addMechanism(b.dataset.add,[2,4,1,4][mechanisms.length%4],(mechanisms.length*2)%10));
+ $('selected').onchange=e=>selectVoice(e.target.value);$('division').onchange=e=>editSelected(m=>m.division=Number(e.target.value));$('pitch').onchange=e=>editSelected(m=>m.pitch=Number(e.target.value));
+ $('voiceMute').onclick=()=>editSelected(m=>m.muted=!m.muted);$('voiceSolo').onclick=()=>editSelected(m=>state.solo=state.solo===m.id?null:m.id);
+ $('remove').onclick=()=>{if(mechanisms.length<=1)return;cancelFuture();const m=mechanisms.find(v=>v.id===state.selected);disposeGroup(m.group);mechanisms=mechanisms.filter(v=>v!==m);if(state.solo===m.id)state.solo=null;state.selected=mechanisms[0].id;events=events.filter(e=>e.id!==m.id);layoutMechanisms();regrid();refreshUI();};
+ $('homeView').onclick=()=>{cameraPose.azimuth=.55;cameraPose.elevation=.47;cameraPose.radius=19.5;lastUserOrbit=performance.now();};$('reset').onclick=()=>$('resetDialog').showModal();$('cancelReset').onclick=()=>$('resetDialog').close();$('confirmReset').onclick=()=>{resetComposition();$('resetDialog').close();};
+}
+// bindCamera: pointer capture provides drag, two-finger zoom, and click selection without hidden gestures.
+function bindCamera(){
+ const canvas=renderer.domElement,pointers=new Map();let moved=0,startX=0,startY=0,pinch=0;
+ canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});startX=e.clientX;startY=e.clientY;moved=0;pinch=0;lastUserOrbit=performance.now();});
+ canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;const old=pointers.get(e.pointerId),dx=e.clientX-old.x,dy=e.clientY-old.y;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});moved+=Math.abs(dx)+Math.abs(dy);if(pointers.size===2){const p=[...pointers.values()],distance=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);if(pinch)cameraPose.radius=Math.max(13,Math.min(29,cameraPose.radius*pinch/distance));pinch=distance;}else{cameraPose.azimuth-=dx*.006;cameraPose.elevation=Math.max(.18,Math.min(1.12,cameraPose.elevation+dy*.004));}lastUserOrbit=performance.now();});
+ canvas.addEventListener('pointerup',e=>{if(moved<8&&pointers.size===1)pickVoice(e.clientX,e.clientY);pointers.delete(e.pointerId);pinch=0;});canvas.addEventListener('pointercancel',e=>{pointers.delete(e.pointerId);pinch=0;});
+ canvas.addEventListener('wheel',e=>{e.preventDefault();cameraPose.radius=Math.max(13,Math.min(29,cameraPose.radius+e.deltaY*.008));lastUserOrbit=performance.now();},{passive:false});
+}
+// pickVoice: raycast only mechanisms, leaving the decorative engine noninteractive.
+function pickVoice(x,y){raycaster.setFromCamera(new THREE.Vector2(x/innerWidth*2-1,-y/innerHeight*2+1),camera);const hits=raycaster.intersectObjects(mechanisms.map(m=>m.group),true);if(!hits.length)return;let item=hits[0].object;while(item&&!item.userData.id)item=item.parent;if(item){selectVoice(item.userData.id);$('composeDialog').showModal();}}
+// resize: keep the entire plinth comfortably framed on portrait phones and landscape desktops.
+function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
+// strike: generate a spatial ring exactly when the corresponding scheduled note is heard.
+function strike(m,audible){m.flash=1;state.visibleStrikes++;const material=new THREE.MeshBasicMaterial({color:palettes[m.type],transparent:true,opacity:audible?.7:.25,depthWrite:false});const ripple=ring(scene,.17,.012,material);m.group.updateMatrixWorld();ripple.position.copy(m.group.localToWorld(m.hit.clone()));ripple.quaternion.copy(camera.quaternion);effects.push({mesh:ripple,birth:performance.now()});if(effects.length>40){const old=effects.shift();old.mesh.geometry.dispose();old.mesh.material.dispose();scene.remove(old.mesh);}}
+// animateMechanism: each periodic motion reaches its physical contact point at integer strike phases.
+function animateMechanism(m,beat,elapsed){
+ const phase=((beat/m.division)%1+1)%1,angle=phase*Math.PI*2;m.flash=Math.max(0,m.flash-elapsed*2.8);m.glow.emissiveIntensity=.45+m.flash*2.2;
+ if(m.type==='pendulum')m.moving.rotation.z=.64*Math.cos(angle);
+ if(m.type==='orbit')m.moving.rotation.z=angle;
+ if(m.type==='drum'){m.moving.position.y=.43*(1-Math.cos(angle));m.target.scale.y=1-m.flash*.13;}
+ if(m.type==='string'){m.moving.position.z=-.45*(1-Math.cos(angle));m.strings.forEach((s,i)=>{s.geometry.attributes.position.setZ(1,Math.sin((1-m.flash)*38+i*.7)*m.flash*.09);s.geometry.attributes.position.needsUpdate=true;});}
+ m.group.traverse(o=>{if(o.isMesh)o.visible=true;});
+}
+// frame: render from absolute transport time and independently decay impact effects.
+function frame(now){
+ requestAnimationFrame(frame);if(!state.ready||document.hidden)return;const elapsed=Math.min(.05,(now-lastFrame)/1000||.016);lastFrame=now;
+ const beat=state.playing?Math.max(0,getBeat()):state.started?heldBeat:(now-previewStart)/1000*.42;
+ if(state.playing){const time=audio.currentTime;while(events.length&&events[0].time<=time){const event=events.shift(),m=mechanisms.find(v=>v.id===event.id);if(m)strike(m,event.audible);}events.sort((a,b)=>a.time-b.time);}
+ mechanisms.forEach(m=>animateMechanism(m,beat,elapsed));clockHand.rotation.z=-beat*Math.PI/8;engine.rotation.y=.12*Math.sin(beat*.07);engine.getObjectByName('core').rotation.y=beat*.12;
+ const selected=mechanisms.find(m=>m.id===state.selected);if(selected){selectionRing.position.x=selected.group.position.x;selectionRing.position.z=selected.group.position.z;}
+ effects=effects.filter(effect=>{const age=(now-effect.birth)/1000;effect.mesh.scale.setScalar(1+age*4);effect.mesh.material.opacity=Math.max(0,.6*(1-age/1.1));if(age<1.1)return true;effect.mesh.geometry.dispose();effect.mesh.material.dispose();scene.remove(effect.mesh);return false;});
+ const drift=!reduced&&now-lastUserOrbit>14000?.035*Math.sin(now*.00006):0,portrait=camera.aspect<.8,zoom=Math.max(1,1.15/camera.aspect);const radius=cameraPose.radius*zoom,az=cameraPose.azimuth+drift;camera.position.set(Math.sin(az)*Math.cos(cameraPose.elevation)*radius,1.2+Math.sin(cameraPose.elevation)*radius,Math.cos(az)*Math.cos(cameraPose.elevation)*radius);camera.lookAt(0,portrait?1.8:1.1,0);scene.fog.density=.024/zoom;
+ const dots=$('score').children,index=Math.floor(beat)%16;for(let i=0;i<dots.length;i++)dots[i].classList.toggle('lit',state.playing&&i===index);renderer.render(scene,camera);
+}
+</script>
+</body>
+</html>
