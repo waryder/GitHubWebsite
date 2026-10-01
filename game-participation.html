@@ -688,7 +688,7 @@ function summaries() {
       tried: marks.filter(function (item) { return item.mark === 'Tried'; }).length
     };
   }).sort(function (a, b) {
-    return b.total - a.total || a.game.name.localeCompare(b.game.name);
+    return a.game.name.localeCompare(b.game.name, undefined, { sensitivity: 'base' });
   });
 }
 
@@ -737,12 +737,13 @@ function fillGames() {
   document.getElementById('games-body').innerHTML = html;
 }
 
-// orderedMarks: game-page rows in the original chart member order.
+// orderedMarks: game-page rows in alphabetical member order.
 function orderedMarks(gameId) {
   var marks = marksFor(gameId);
-  return CHART.members.map(function (member) {
-    return marks.find(function (item) { return item.member === member.id; });
-  }).filter(Boolean);
+  return marks.sort(function (a, b) {
+    return byId(CHART.members, a.member).name.localeCompare(
+      byId(CHART.members, b.member).name, undefined, { sensitivity: 'base' });
+  });
 }
 
 // fillGame: paint one game page, or return to the list if the id is unknown.
@@ -780,12 +781,12 @@ function marksForMember(memberId) {
   return CHART.participation.filter(function (item) { return item.member === memberId; });
 }
 
-// memberSummaries: one opening-page row per player, busiest first.
+// memberSummaries: one opening-page row per player, alphabetical.
 function memberSummaries() {
   return CHART.members.map(function (member) {
     return { member: member, total: marksForMember(member.id).length };
   }).sort(function (a, b) {
-    return b.total - a.total || a.member.name.localeCompare(b.member.name);
+    return a.member.name.localeCompare(b.member.name, undefined, { sensitivity: 'base' });
   });
 }
 
@@ -807,12 +808,13 @@ function fillPlayers() {
   document.getElementById('players-body').innerHTML = html;
 }
 
-// orderedMemberMarks: player-page rows in game-list order.
+// orderedMemberMarks: player-page rows in alphabetical game order.
 function orderedMemberMarks(memberId) {
   var marks = marksForMember(memberId);
-  return CHART.games.map(function (game) {
-    return marks.find(function (item) { return item.game === game.id; });
-  }).filter(Boolean);
+  return marks.sort(function (a, b) {
+    return byId(CHART.games, a.game).name.localeCompare(
+      byId(CHART.games, b.game).name, undefined, { sensitivity: 'base' });
+  });
 }
 
 // fillPlayer: paint one player page, or return to the list if the id is unknown.
