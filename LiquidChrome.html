@@ -1,0 +1,236 @@
+<!doctype html>
+<!-- LiquidChrome.html | C:\Repos\GitHubWebsite\LiquidChrome.html
+     A single-file interactive metal sculpture: procedural WebGL surfaces, no external dependencies. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101215">
+<meta name="description" content="Pull something impossible into shape. A living metal sculpture you can touch, stretch, split, and melt back together.">
+<title>LIQUID CHROME — Matter in motion</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23101215'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23c6d7dc'/%3E%3Cpath d='M9 18Q12 5 23 12' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<style>
+/* A restrained editorial interface gives the sculpture room to breathe. */
+:root{color-scheme:dark;--paper:#f0eee7;--muted:#a5acb2;--line:#c6d2d527;--lime:#dcf6a4;--panel:#151a20ec}*{box-sizing:border-box}html,body{height:100%;width:100%;margin:0;overflow:hidden;background:#101215;color:var(--paper);font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,select,input{font:inherit}button,select{min-height:44px;padding:10px 15px;border-radius:9px;border:1px solid var(--line);background:#ffffff06;color:var(--paper)}button{cursor:pointer;transition:background .18s,border-color .18s}button:hover{background:#ffffff10;border-color:#d5e0dc66}button:disabled{opacity:.35;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--lime);outline-offset:4px}button[aria-pressed=true]{background:#dcf6a414;border-color:#dcf6a477;color:var(--lime)}button.primary{background:var(--lime);border-color:var(--lime);color:#202a1b;font-weight:650}button.primary:hover{background:#ebffd0}button.small{padding:8px 12px;font-size:12px}select{background:#1c2329}input[type=range]{accent-color:var(--lime);width:100%;min-height:44px}#surface{position:absolute;inset:0;width:100%;height:100%;touch-action:none;outline:none;cursor:grab}#surface:focus-visible{outline:2px solid var(--lime);outline-offset:-4px}.topline{position:absolute;top:calc(24px + env(safe-area-inset-top));left:32px;right:32px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}.topline>*{pointer-events:auto}.brand{font-size:10px;letter-spacing:.27em;font-weight:600;display:flex;align-items:center;gap:12px}.brand svg{width:24px;height:24px}.toplinks{display:flex;gap:8px}.hero{position:absolute;left:5%;top:18%;pointer-events:none}.eyebrow{font-size:10px;letter-spacing:.24em;color:var(--lime);text-transform:uppercase}.hero h1{font-size:clamp(48px,6vw,92px);line-height:.94;font-weight:400;letter-spacing:-.075em;margin:23px 0}.hero h1 span{display:block;color:#b0b9c1;font-weight:250}.hero p{font-size:13px;line-height:1.8;color:var(--muted);max-width:225px}.edition{font-size:10px;letter-spacing:.22em;color:#bac6c675;margin-top:32px}.glass{background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(20px);box-shadow:0 18px 80px #0003}.deck{position:absolute;left:50%;bottom:calc(25px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(940px,calc(100% - 48px));padding:17px 20px;border-radius:17px}.deck-top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:12px}.instruction{font-size:12px;color:var(--muted)}.instruction strong{color:var(--paper);font-weight:500}.count{font-size:10px;letter-spacing:.15em;color:var(--lime);white-space:nowrap}.toolbar{display:flex;align-items:center;gap:12px}.modes{display:flex;gap:5px;padding-right:12px;border-right:1px solid var(--line)}.finishes{display:flex;gap:5px;flex:1}.finish{display:flex;gap:8px;align-items:center;font-size:12px;flex:1;justify-content:center;padding:9px}.swatch{width:16px;height:16px;flex-shrink:0;border-radius:50%;border:1px solid #ffffff55;background:linear-gradient(130deg,#0b0f17,#e5f3ff 36%,#718695 52%,#0c1219 65%,#f7fbfc)}.gold{background:linear-gradient(130deg,#362105,#ffeabc 37%,#ad7424 55%,#563400 70%,#f4c76d)}.oil{background:conic-gradient(#a079f4,#53e0cd,#efd785,#f062b5,#a079f4)}.black{background:linear-gradient(130deg,#02030b,#76778e 35%,#161329 52%,#000 75%)}.transport{display:flex;gap:6px}#pauseButton,#splitButton{font-size:12px;white-space:nowrap}#paletteName{font-size:11px;letter-spacing:.15em;color:#b5c2ca}.specimen{position:absolute;right:35px;top:48%;pointer-events:none;text-align:right;font-size:10px;line-height:2.2;letter-spacing:.18em;color:#b6c0ca77}.specimen b{color:#dde2e1bb;font-weight:400}#cursor{position:absolute;width:44px;height:44px;border:1px solid #dcf6a499;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);display:none;box-shadow:0 0 22px #dcf6a414}#cursor.active{display:block}#cursor:after{content:'';position:absolute;inset:18px;border-radius:50%;background:var(--lime)}#toast{position:absolute;left:50%;bottom:190px;transform:translateX(-50%);padding:10px 18px;border-radius:24px;max-width:90%;text-align:center;font-size:12px;opacity:0;pointer-events:none;transition:opacity .18s}#toast.show{opacity:1}.welcome{position:absolute;left:5%;bottom:205px;max-width:280px;border-left:2px solid var(--lime);padding:4px 0 4px 17px}.welcome p{font-size:12px;color:var(--muted);margin:0 0 12px;line-height:1.7}.welcome strong{color:var(--paper);font-weight:500}.welcome button{font-size:12px}.modal{width:min(450px,calc(100% - 28px));max-height:calc(100dvh - 40px);overflow:auto;background:#151b22;color:var(--paper);border:1px solid var(--line);border-radius:20px;padding:27px;box-shadow:0 30px 100px #0007}.modal::backdrop{background:#060a0fc0;backdrop-filter:blur(6px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.dialog-head h2{font-size:25px;font-weight:400;letter-spacing:-.04em;margin:0}.modal p,.modal li{color:var(--muted);font-size:13px;line-height:1.8}.modal strong{color:var(--paper);font-weight:500}.modal ul{padding-left:18px}.field{display:block;margin:17px 0;color:var(--muted);font-size:12px}.field span{display:flex;align-items:center;justify-content:space-between}.field select{width:100%;margin-top:7px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions button{font-size:12px}.note{border-top:1px solid var(--line);padding-top:17px}#error{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse,#28343c,#101215);z-index:10}#error section{max-width:440px;padding:28px;text-align:center}#error h2{font-size:32px;font-weight:400}#error p{color:var(--muted);line-height:1.8}[hidden]{display:none!important}
+/* On phones, the headline, canvas and deck each keep their own visual space. */
+@media(max-width:760px){.topline{left:18px;right:18px;top:calc(16px + env(safe-area-inset-top))}.brand{font-size:8px;letter-spacing:.14em;gap:7px}.brand svg{width:20px}.toplinks{gap:5px}.toplinks button{padding:8px 10px;font-size:11px}.hero{left:22px;top:95px}.hero h1{font-size:44px;margin:12px 0}.hero h1 span{display:inline;margin-left:8px}.hero .eyebrow{font-size:8px}.hero p{font-size:11px;max-width:none;margin-top:8px}.hero p br{display:none}.edition,.specimen{display:none}.deck{bottom:calc(12px + env(safe-area-inset-bottom));width:calc(100% - 24px);padding:12px}.deck-top{margin-bottom:10px;gap:10px}.instruction{font-size:11px;line-height:1.6}.toolbar{flex-wrap:wrap;gap:9px}.modes{padding:0;border:0;flex:1}.modes button{font-size:12px;flex:1}.transport{flex:1;justify-content:flex-end}.finishes{order:3;width:100%;flex:auto}.finish{font-size:11px}.welcome{left:22px;bottom:205px;max-width:calc(100% - 44px);padding-left:12px;background:#101215aa}.welcome p{font-size:11px;margin-bottom:8px}.welcome p br{display:none}#toast{bottom:210px}.modal{padding:22px}#paletteName{display:none}}
+@media(max-height:550px){.hero{top:74px;left:24px}.hero h1{font-size:36px;margin:12px 0}.hero p,.hero .edition,.specimen,.welcome{display:none}.topline{top:12px;left:22px;right:22px}.deck{bottom:10px;padding:10px 14px}.deck-top{margin-bottom:7px}.instruction{font-size:10px}.toolbar{gap:7px}.modes{padding-right:7px}.finish{padding:8px}.count{font-size:9px}.modal{max-height:calc(100dvh - 18px)}#toast{bottom:130px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="surface" tabindex="0" role="application" aria-label="Interactive liquid metal. In Sculpt mode, drag the metal to pull it. In Orbit mode, drag to turn the view. Use the labeled buttons for keyboard controls."></canvas>
+<div class="topline"><div class="brand"><svg viewBox="0 0 30 30" fill="none" aria-hidden="true"><path d="M7 7C17-2 32 15 22 24C12 33-2 16 7 7Z" stroke="currentColor"/><path d="M11 8C23 2 23 26 13 23C3 20 7 10 11 8Z" stroke="currentColor" opacity=".5"/></svg>INTERACTIVE MATTER / 003</div><div class="toplinks"><button id="helpButton" class="small">How to play</button><button id="studioButton" class="small">Studio ↗</button></div></div>
+<header class="hero"><div class="eyebrow">A study in impossible surfaces</div><h1>LIQUID<span>CHROME.</span></h1><p>Pull something impossible into shape. <br>Let go. Watch it find itself again.</p><div class="edition">NO MESH. NO RULES.<br>JUST A LITTLE ALCHEMY.</div></header>
+<div class="specimen"><b id="paletteName">POLISHED CHROME</b><br>CONTINUOUS SURFACE<br>PROCEDURAL / REALTIME</div>
+<aside class="welcome" id="welcome"><p><strong>Touch the shiny form and drag.</strong> <br>It stretches toward you, then melts back. <br>Try <strong>Split</strong> to separate it into droplets.</p><button id="beginButton" class="primary">Let me try ↗</button></aside>
+<section class="deck glass" aria-label="Sculpture controls"><div class="deck-top"><div class="instruction" id="instruction"><strong>Sculpt mode</strong> · Drag the metal to pull it · Pinch / scroll to zoom</div><div class="count" id="count">6 / 10 DROPLETS</div></div><div class="toolbar"><div class="modes" role="group" aria-label="Drag behavior"><button id="sculptButton" aria-pressed="true">✧ Sculpt</button><button id="orbitButton" aria-pressed="false">↻ Orbit</button></div><div class="finishes" role="group" aria-label="Metal finish"><button class="finish" data-finish="0" aria-pressed="true"><span class="swatch" aria-hidden="true"></span>Chrome</button><button class="finish" data-finish="1" aria-pressed="false"><span class="swatch gold" aria-hidden="true"></span>Gold</button><button class="finish" data-finish="2" aria-pressed="false"><span class="swatch oil" aria-hidden="true"></span>Oil slick</button><button class="finish" data-finish="3" aria-pressed="false"><span class="swatch black" aria-hidden="true"></span>Obsidian</button></div><div class="transport"><button id="splitButton" aria-pressed="false">Split</button><button id="pauseButton" aria-pressed="false">Freeze</button></div></div></section>
+<div id="cursor" aria-hidden="true"></div><div id="toast" class="glass" role="status" aria-live="polite"></div>
+<dialog id="helpDialog" class="modal"><div class="dialog-head"><h2>Get your hands into it.</h2><button data-close>Close</button></div><ul><li><strong>Sculpt:</strong> grab the metal with a finger or mouse and pull. Release it to let the surface settle back.</li><li><strong>Orbit:</strong> switch modes, then drag to turn the view. Pinch or scroll to zoom in either mode.</li><li><strong>Split / Fuse:</strong> separate the sculpture into droplets, then let them flow together.</li><li><strong>Finishes:</strong> switch between chrome, gold, oil slick, and obsidian.</li><li><strong>Studio:</strong> add droplets, change lighting and flow speed, save a picture, or reset.</li><li><strong>Keyboard:</strong> focus the sculpture and use arrows to turn it, + / − to zoom, and Space to freeze. The Studio’s Stir button reshapes it without dragging.</li></ul><p class="note">A procedural sculpture, not a scientific fluid simulation. Everything is generated on your device; there are no uploads or external libraries. Reloading starts a fresh sculpture.</p></dialog>
+<dialog id="studioDialog" class="modal"><div class="dialog-head"><h2>Your material laboratory.</h2><button data-close>Done</button></div><div class="actions"><button id="addButton" class="primary">Add droplet +</button><button id="stirButton">Stir the metal</button><button id="saveButton">Save picture ↓</button><button id="viewButton">Recenter view</button></div><label class="field">Lighting environment<select id="lighting"><option value="0">Softbox / white studio</option><option value="1">After hours / neon</option><option value="2">Golden hour / sunset</option></select></label><label class="field"><span>Flow speed <output id="speedValue">Gentle</output></span><input id="speed" type="range" min="0" max="100" value="35"></label><label class="field">Graphics<select id="quality"><option value="auto">Adaptive / balanced</option><option value="lite">Lite / slower phones</option><option value="high">High / sharper details</option></select></label><p id="qualityNote">Adaptive rendering keeps the sculpture responsive.</p><button id="resetButton">Reset sculpture…</button></dialog>
+<dialog id="resetDialog" class="modal"><div class="dialog-head"><h2>A fresh drop of possibility?</h2></div><p>Restore the original six droplets, chrome finish, lighting, motion, and camera.</p><div class="actions"><button data-close>Keep sculpting</button><button id="confirmReset" class="primary">Reset</button></div></dialog>
+<div id="error" hidden><section><div class="eyebrow">The metal needs a little help</div><h2>This studio could not open.</h2><p id="errorText">Enable hardware acceleration or try an up-to-date Chrome browser with WebGL support.</p><button id="retryButton" class="primary">Try again</button></section></div>
+<script>
+'use strict';
+// Core state is bounded: ten smooth droplets, one draw call, and no external assets.
+const $=id=>document.getElementById(id);
+const canvas=$('surface'),mobile=matchMedia('(pointer:coarse)').matches||innerWidth<760,reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const state={ready:false,finish:0,lighting:0,mode:'sculpt',split:false,paused:reduced,speed:.35,time:0,quality:'auto',scale:mobile?.75:1,frames:0,drags:0};
+const pose={yaw:.25,pitch:.12,distance:7.8};
+let gl,program,locations={},balls=[],drag=null,last=0,spread=1,stir=0,toastTimer,slowFrames=0,frameTotal=0,qualityWindow=0;
+let camera={position:[0,0,7.8],right:[1,0,0],up:[0,1,0],forward:[0,0,-1],lens:1.15,center:[0,0]};
+const points=new Map(); // Active pointers support reliable drag and two-finger zoom without page scrolling.
+const finishNames=['Polished chrome','Liquid gold','Oil slick','Obsidian'];
+// Vertex shader: draw one full-screen triangle pair; the fragment shader constructs the entire world.
+const vertexSource=`attribute vec2 aPosition;void main(){gl_Position=vec4(aPosition,0.0,1.0);}`;
+// Fragment shader: signed-distance surfaces blend seamlessly without visible individual sphere meshes.
+const fragmentSource=`
+precision highp float;
+uniform vec2 uResolution,uCenter;
+uniform vec3 uCamera,uRight,uUp,uForward;
+uniform vec4 uBalls[10];
+uniform int uCount,uFinish,uLighting,uSteps;
+uniform float uLens,uTime;
+// smoothUnion: merge droplets with a continuous fillet instead of a hard intersection.
+float smoothUnion(float a,float b){float k=.55;float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
+// field: evaluate the same bounded organic surface at every ray sample.
+float field(vec3 p){float d=20.;for(int i=0;i<10;i++){if(i>=uCount)break;float sphere=length(p-uBalls[i].xyz)-uBalls[i].w;d=smoothUnion(d,sphere);}return d;}
+// normalAt: a tetrahedral gradient needs only four field evaluations.
+vec3 normalAt(vec3 p){vec2 k=vec2(1.,-1.);float e=.002;return normalize(k.xyy*field(p+k.xyy*e)+k.yyx*field(p+k.yyx*e)+k.yxy*field(p+k.yxy*e)+k.xxx*field(p+k.xxx*e));}
+// band: soften a rectangular studio light's angular edges.
+float band(float x,float center,float size,float feather){return 1.-smoothstep(size,size+feather,abs(x-center));}
+// environment: hand-built luminous cards reflect like a photographic light studio.
+vec3 environment(vec3 d){
+ float az=atan(d.x,d.z),height=d.y;
+ vec3 cool=vec3(.74,.86,1.),warm=vec3(1.,.92,.79);
+ if(uLighting==1){cool=vec3(.03,.85,1.);warm=vec3(1.,.06,.38);}
+ if(uLighting==2){cool=vec3(.42,.29,.82);warm=vec3(1.,.47,.10);}
+ vec3 light=mix(vec3(.017,.023,.032),vec3(.24,.28,.34),smoothstep(-.35,.9,height));
+ float a=band(az,-.85,.40,.09)*band(height,.52,.36,.05);
+ float b=band(az,1.4,.16,.045)*band(height,.21,.61,.06);
+ float c=band(az,-2.4,.61,.13)*band(height,.48,.12,.035);
+ float ceiling=pow(max(height,0.),8.);
+ light+=warm*a*2.9+cool*b*2.4+vec3(1.)*c*1.3+cool*ceiling*.65;
+ light+=warm*.14*exp(-abs(height+.13)*20.);
+ return light;
+}
+// tone: retain bright softbox detail without clipping the metal to flat white.
+vec3 tone(vec3 x){return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}
+// background: a restrained dark studio and soft floor anchor the floating sculpture.
+vec3 background(vec3 ro,vec3 rd,vec2 uv){
+ vec3 color=mix(vec3(.038,.047,.062),vec3(.075,.092,.115),exp(-length(uv-vec2(.2,.1))*1.5));
+ if(rd.y<-.001){float t=(-2.30-ro.y)/rd.y;if(t>0.){vec3 p=ro+rd*t;float shadow=0.;for(int i=0;i<10;i++){if(i>=uCount)break;vec2 q=p.xz-uBalls[i].xz;shadow+=exp(-dot(q,q)/(uBalls[i].w*uBalls[i].w*2.8))*.12;}
+ float mist=exp(-length(p.xz)*.11);color=mix(color,vec3(.115,.135,.15),mist*.65);color*=1.-min(.65,shadow);
+ float ring=exp(-abs(length(p.xz)-3.5)*50.)*.035; color+=vec3(.54,.65,.69)*ring*mist;
+ }}return color;
+}
+void main(){
+ vec2 uv=(gl_FragCoord.xy-.5*uResolution)/uResolution.y-uCenter;
+ vec3 ro=uCamera,rd=normalize(uForward*uLens+uRight*uv.x+uUp*uv.y);
+ float travel=0.,distanceToSurface=0.;bool hit=false;
+ // Start at a conservative enclosing sphere to avoid marching through empty studio space.
+ float projected=dot(ro,rd),disc=projected*projected-dot(ro,ro)+25.;
+ if(disc>0.){travel=max(0.,-projected-sqrt(disc));for(int i=0;i<88;i++){if(i>=uSteps)break;vec3 p=ro+rd*travel;distanceToSurface=field(p);if(distanceToSurface<.0025){hit=true;break;}travel+=max(.002,distanceToSurface*.85);if(travel>18.)break;}}
+ vec3 color=background(ro,rd,uv);
+ if(hit){
+  vec3 p=ro+rd*travel,n=normalAt(p),reflected=reflect(rd,n);float facing=clamp(dot(n,-rd),0.,1.);
+  float fresnel=pow(1.-facing,5.),ao=clamp(field(p+n*.2)/.2,.35,1.);
+  vec3 tint=vec3(.89,.93,.98);float metal=.96;
+  if(uFinish==1)tint=vec3(1.,.64,.19);
+  if(uFinish==2)tint=.52+.48*cos(6.28318*(vec3(.02,.35,.66)+(1.-facing)*.75+n.y*.18+uTime*.013));
+  if(uFinish==3){tint=vec3(.085,.07,.14);metal=.3;}
+  color=environment(reflected)*mix(tint,vec3(1.),fresnel*.5)*mix(.78,1.,fresnel)*ao;
+  color+=tint*.035*max(n.y,0.); // A quiet diffuse component reveals dark creases.
+  if(uFinish==3)color+=environment(reflected)*pow(fresnel,.4)*.38;
+  color*=1.-.10*max(0.,-n.y); // Slight underside occlusion preserves sculpture volume.
+ }
+ color=tone(color);color=pow(color,vec3(1./2.2));
+ float vignette=1.-.16*smoothstep(.3,1.4,length(uv));color*=vignette;
+ gl_FragColor=vec4(color,1.);
+}`;
+// vec helpers: small explicit vector operations keep the direct-manipulation geometry readable.
+const add=(a,b)=>a.map((v,i)=>v+b[i]);
+const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+const mul=(a,s)=>a.map(v=>v*s);
+const dot=(a,b)=>a.reduce((v,x,i)=>v+x*b[i],0);
+const length=a=>Math.hypot(...a);
+const norm=a=>mul(a,1/(length(a)||1));
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+// notify: announce mode changes and bounded actions without interrupting manipulation.
+function notify(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2800);}
+// fail: expose a recoverable graphics error rather than a blank canvas.
+function fail(message){state.ready=false;$('error').hidden=false;$('errorText').textContent=message;console.error('[LiquidChrome/LiquidChrome]',message);}
+// compile: surface shader failures and never claim a renderer is ready before linking.
+function compile(type,source){const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){const info=gl.getShaderInfoLog(shader);gl.deleteShader(shader);throw new Error(info);}return shader;}
+// initGraphics: one static fullscreen buffer and one reusable shader program.
+function initGraphics(){
+ gl=canvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'high-performance',preserveDrawingBuffer:true});
+ if(!gl)throw new Error('WebGL is unavailable. Enable hardware acceleration or try an up-to-date Chrome browser.');
+ program=gl.createProgram();const vs=compile(gl.VERTEX_SHADER,vertexSource),fs=compile(gl.FRAGMENT_SHADER,fragmentSource);
+ gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);
+ if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));gl.useProgram(program);
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+ const attribute=gl.getAttribLocation(program,'aPosition');gl.enableVertexAttribArray(attribute);gl.vertexAttribPointer(attribute,2,gl.FLOAT,false,0,0);
+ for(const name of ['uResolution','uCenter','uCamera','uRight','uUp','uForward','uBalls[0]','uCount','uFinish','uLighting','uSteps','uLens','uTime'])locations[name]=gl.getUniformLocation(program,name);
+ canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fail('Your graphics connection was interrupted. Close graphics-heavy tabs, then reload the studio.');});
+}
+// makeBall: keep simulated and home positions separate so released metal settles smoothly.
+function makeBall(home,radius,index){return {home:[...home],position:[...home],radius,phase:index*1.91};}
+// resetSculpture: restore a carefully composed fused form without allocating more GPU resources.
+function resetSculpture(){
+ balls=[makeBall([0,0,0],.91,0),makeBall([.99,.32,.1],.72,1),makeBall([-.83,.67,-.18],.69,2),makeBall([-.59,-.84,.21],.66,3),makeBall([.64,-.72,-.17],.61,4),makeBall([.12,1.24,.14],.44,5)];
+ state.finish=0;state.lighting=0;state.split=false;state.paused=reduced;state.time=0;state.speed=.35;spread=1;stir=0;drag=null;
+ pose.yaw=.25;pose.pitch=.12;pose.distance=7.8;setMode('sculpt');$('lighting').value='0';$('speed').value='35';$('speedValue').textContent='Gentle';syncUI();
+}
+// syncUI: expose selected finishes and all stateful button behavior to assistive technology.
+function syncUI(){
+ document.querySelectorAll('[data-finish]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.finish)===state.finish)));
+ $('pauseButton').textContent=state.paused?'Flow':'Freeze';$('pauseButton').setAttribute('aria-pressed',String(state.paused));
+ $('splitButton').textContent=state.split?'Fuse':'Split';$('splitButton').setAttribute('aria-pressed',String(state.split));
+ $('count').textContent=`${balls.length} / 10 DROPLETS`;$('addButton').disabled=balls.length>=10;$('paletteName').textContent=finishNames[state.finish].toUpperCase();
+}
+// setMode: the same gesture never ambiguously means both camera movement and sculpting.
+function setMode(mode){state.mode=mode;drag=null;$('sculptButton').setAttribute('aria-pressed',String(mode==='sculpt'));$('orbitButton').setAttribute('aria-pressed',String(mode==='orbit'));$('instruction').innerHTML=mode==='sculpt'?'<strong>Sculpt mode</strong> · Drag the metal to pull it · Pinch / scroll to zoom':'<strong>Orbit mode</strong> · Drag to turn the view · Pinch / scroll to zoom';}
+// updateCamera: use the same camera basis in the shader and mouse/touch projection.
+function updateCamera(){
+ camera.position=[Math.sin(pose.yaw)*Math.cos(pose.pitch)*pose.distance,Math.sin(pose.pitch)*pose.distance,Math.cos(pose.yaw)*Math.cos(pose.pitch)*pose.distance];
+ camera.forward=norm(mul(camera.position,-1));camera.right=norm(cross(camera.forward,[0,1,0]));camera.up=cross(camera.right,camera.forward);
+ const aspect=innerWidth/innerHeight;camera.lens=aspect<.8?aspect*1.48:1.15;camera.center=innerWidth>900?[aspect*.10,.015]:[0,-.035];
+}
+// screenRay: reconstruct the exact per-pixel shader ray in CSS coordinates.
+function screenRay(x,y){const uv=[(x-innerWidth*.5)/innerHeight-camera.center[0],(innerHeight*.5-y)/innerHeight-camera.center[1]];return norm(add(mul(camera.forward,camera.lens),add(mul(camera.right,uv[0]),mul(camera.up,uv[1]))));}
+// pickBall: select the frontmost reachable droplet rather than an unrelated shape behind it.
+function pickBall(x,y){
+ const ray=screenRay(x,y);let selected=-1,nearest=Infinity;
+ balls.forEach((b,i)=>{const offset=sub(b.position,camera.position),along=dot(offset,ray),distance2=dot(offset,offset)-along*along,r=b.radius+.23;if(along>0&&distance2<r*r){const depth=along-Math.sqrt(r*r-distance2);if(depth<nearest){nearest=depth;selected=i;}}});return selected;
+}
+// dragPoint: intersect the pointer ray with a camera-facing plane through the grabbed material.
+function dragPoint(x,y){const ray=screenRay(x,y),denom=dot(ray,camera.forward),depth=dot(sub(drag.origin,camera.position),camera.forward)/denom;const target=add(camera.position,mul(ray,depth));return length(target)>3.5?mul(target,3.5/length(target)):target;}
+// bindPointers: capture drags, clean up cancellation, and reserve two fingers for zoom.
+function bindPointers(){
+ canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;canvas.focus();canvas.setPointerCapture(e.pointerId);points.set(e.pointerId,{x:e.clientX,y:e.clientY});$('welcome').hidden=true;if(points.size>1){drag=null;return;}if(state.mode==='sculpt'){const i=pickBall(e.clientX,e.clientY);if(i>=0){drag={index:i,origin:[...balls[i].position],target:[...balls[i].position]};state.drags++;canvas.style.cursor='grabbing';}else notify('Grab the shiny form itself, or switch to Orbit.');}});
+ canvas.addEventListener('pointermove',movePointer);
+ for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,e=>{points.delete(e.pointerId);drag=null;canvas.style.cursor='grab';$('cursor').classList.remove('active');});
+ canvas.addEventListener('wheel',e=>{e.preventDefault();pose.distance=clamp(pose.distance+e.deltaY*.004,5.2,12);},{passive:false});
+ canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-',' '].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft')pose.yaw-=.12;if(e.key==='ArrowRight')pose.yaw+=.12;if(e.key==='ArrowUp')pose.pitch=clamp(pose.pitch+.1,-.6,1.1);if(e.key==='ArrowDown')pose.pitch=clamp(pose.pitch-.1,-.6,1.1);if(e.key==='+'||e.key==='=')pose.distance=clamp(pose.distance-.4,5.2,12);if(e.key==='-')pose.distance=clamp(pose.distance+.4,5.2,12);if(e.key===' '){state.paused=!state.paused;syncUI();}});
+}
+// movePointer: manipulate actual surface positions, not merely a decorative cursor effect.
+function movePointer(e){
+ if(!points.has(e.pointerId))return;const previous=points.get(e.pointerId),all=[...points.values()];let before=0;
+ if(all.length===2)before=Math.hypot(all[0].x-all[1].x,all[0].y-all[1].y);points.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(points.size===2){const next=[...points.values()],after=Math.hypot(next[0].x-next[1].x,next[0].y-next[1].y);if(after>5)pose.distance=clamp(pose.distance*before/after,5.2,12);drag=null;return;}
+ if(state.mode==='orbit'){pose.yaw-=(e.clientX-previous.x)*.008;pose.pitch=clamp(pose.pitch+(e.clientY-previous.y)*.006,-.6,1.1);}
+ else if(drag){drag.target=dragPoint(e.clientX,e.clientY);$('cursor').style.left=e.clientX+'px';$('cursor').style.top=e.clientY+'px';$('cursor').classList.add('active');}
+}
+// addDroplet: introduce one bounded new element into the existing continuous surface.
+function addDroplet(){if(balls.length>=10)return;const a=balls.length*2.4;balls.push(makeBall([Math.cos(a)*1.5,Math.sin(a)*1.35,Math.sin(a*.7)*.6],.42,balls.length));syncUI();notify('A new droplet joined the sculpture.');}
+// savePicture: draw immediately before export, including when automatic flow is frozen.
+function savePicture(){try{render();const a=document.createElement('a');a.download='liquid-chrome.png';a.href=canvas.toDataURL('image/png');a.click();notify('Your metal study is ready to save.');}catch{notify('Picture export was unavailable. Try a screenshot instead.');}}
+// bindControls: every visible button performs a bounded, explicit action.
+function bindControls(){
+ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());$('helpButton').onclick=()=>$('helpDialog').showModal();$('studioButton').onclick=()=>$('studioDialog').showModal();$('beginButton').onclick=()=>$('welcome').hidden=true;$('retryButton').onclick=()=>location.reload();
+ $('sculptButton').onclick=()=>setMode('sculpt');$('orbitButton').onclick=()=>setMode('orbit');
+ document.querySelectorAll('[data-finish]').forEach(b=>b.onclick=()=>{state.finish=Number(b.dataset.finish);syncUI();});
+ $('splitButton').onclick=()=>{state.split=!state.split;syncUI();notify(state.split?'Droplets separating. Press Fuse to bring them together.':'Melting back into one continuous surface.');};
+ $('pauseButton').onclick=()=>{state.paused=!state.paused;syncUI();};$('lighting').onchange=e=>state.lighting=Number(e.target.value);
+ $('speed').oninput=e=>{state.speed=Number(e.target.value)/100;$('speedValue').textContent=state.speed<.2?'Still water':state.speed<.6?'Gentle':'Restless';};
+ $('quality').onchange=e=>{state.quality=e.target.value;state.scale=state.quality==='lite'?.55:state.quality==='high'?1.3:mobile?.75:1;slowFrames=0;resize();};
+ $('addButton').onclick=()=>{addDroplet();$('studioDialog').close();};$('stirButton').onclick=()=>{stir+=Math.PI*.73;$('studioDialog').close();notify('A new shape is finding its balance.');};
+ $('viewButton').onclick=()=>{pose.yaw=.25;pose.pitch=.12;pose.distance=7.8;$('studioDialog').close();};$('saveButton').onclick=savePicture;
+ $('resetButton').onclick=()=>{$('studioDialog').close();$('resetDialog').showModal();};$('confirmReset').onclick=()=>{resetSculpture();$('resetDialog').close();notify('A fresh drop of possibility.');};
+}
+// resize: cap the render target rather than blindly multiplying phone pixel density.
+function resize(){if(!gl)return;const cap=state.quality==='high'?1600:state.quality==='lite'?720:1200,factor=Math.min(state.scale,cap/Math.max(innerWidth,innerHeight));canvas.width=Math.max(1,Math.round(innerWidth*factor));canvas.height=Math.max(1,Math.round(innerHeight*factor));gl.viewport(0,0,canvas.width,canvas.height);$('qualityNote').textContent=`${state.quality==='lite'?'Lite':state.quality==='high'?'High detail':'Adaptive'} · ${canvas.width} × ${canvas.height} render · ten droplets maximum`;}
+// animateMatter: smooth springs return released material home while flow is independently pausable.
+function animateMatter(dt){
+ if(!state.paused)state.time+=dt*(.18+state.speed*.9);spread+=( (state.split?2.25:1)-spread)*Math.min(1,dt*2.8);
+ balls.forEach((b,i)=>{const t=state.time,angle=stir*(i%2?1:-1),home=[b.home[0]*Math.cos(angle)-b.home[1]*Math.sin(angle),b.home[0]*Math.sin(angle)+b.home[1]*Math.cos(angle),b.home[2]];
+ let target=home.map((v,k)=>v*spread+Math.sin(t*(.63+k*.17)+b.phase+k)*.18);
+ if(drag&&drag.index===i)target=drag.target;
+ b.position=b.position.map((v,k)=>v+(target[k]-v)*Math.min(1,dt*(drag&&drag.index===i?15:3.2)));
+ });
+}
+// render: transmit small uniform arrays and shade the world in one bounded draw call.
+function render(){
+ if(!gl||!state.ready)return;updateCamera();const data=new Float32Array(40);balls.forEach((b,i)=>{data.set([...b.position,b.radius],i*4);});
+ gl.uniform2f(locations.uResolution,canvas.width,canvas.height);gl.uniform2fv(locations.uCenter,camera.center);
+ for(const [name,value] of [['uCamera',camera.position],['uRight',camera.right],['uUp',camera.up],['uForward',camera.forward]])gl.uniform3fv(locations[name],value);
+ gl.uniform4fv(locations['uBalls[0]'],data);gl.uniform1i(locations.uCount,balls.length);gl.uniform1i(locations.uFinish,state.finish);gl.uniform1i(locations.uLighting,state.lighting);gl.uniform1i(locations.uSteps,state.quality==='lite'?48:state.quality==='high'?88:72);gl.uniform1f(locations.uLens,camera.lens);gl.uniform1f(locations.uTime,state.time);gl.drawArrays(gl.TRIANGLES,0,6);
+}
+// frame: hidden pages rest; sustained low frame rates trigger a conservative resolution reduction.
+function frame(now){
+ requestAnimationFrame(frame);if(!state.ready||document.hidden){last=now;return;}const raw=last?(now-last)/1000:1/60,dt=Math.min(raw,.06);last=now;animateMatter(dt);render();state.frames++;
+ if(state.quality==='auto'&&raw<.25){frameTotal+=raw;qualityWindow++;if(qualityWindow>=100){if(frameTotal/qualityWindow>.042&&state.scale>.45){state.scale=Math.max(.45,state.scale*.8);resize();}frameTotal=0;qualityWindow=0;}}
+}
+// boot: initialize controls first so useful help remains available even without graphics.
+function boot(){
+ bindControls();resetSculpture();try{initGraphics();resize();bindPointers();state.ready=true;render();requestAnimationFrame(frame);}catch(e){fail('WebGL could not draw this sculpture. Enable hardware acceleration or try another browser. '+e.message);}
+ addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{if(document.hidden){drag=null;points.clear();$('cursor').classList.remove('active');}});
+}
+// Read-only snapshots support verification without giving tests a different interaction path.
+Object.defineProperty(window,'liquidTest',{get:()=>Object.freeze({...state,count:balls.length,positions:balls.map(b=>[...b.position]),camera:{...pose},dragging:!!drag,canvas:[canvas.width,canvas.height]})});
+boot();
+</script>
+</body>
+</html>
