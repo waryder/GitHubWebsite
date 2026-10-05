@@ -1,0 +1,202 @@
+<!doctype html>
+<!-- EventHorizon.html | C:\Repos\GitHubWebsite\EventHorizon.html
+     A cinematic, touch-friendly black-hole observatory. Artistic light-bending approximation, not a scientific simulator. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050609">
+<meta name="description" content="Stand at the edge of everything. Orbit a black hole, bend the starlight, and send matter into a luminous accretion disk.">
+<title>EVENT HORIZON — At the edge of everything</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23050609'/%3E%3Cellipse cx='16' cy='16' rx='14' ry='5' fill='none' stroke='%23ffb878' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23050609' stroke='%23ffb878' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+/* Dark observatory typography deliberately leaves the center of the sky unobstructed. */
+:root{color-scheme:dark;--paper:#f4eade;--muted:#a8a6a8;--fire:#ffbc85;--line:#e5c7ae2a;--glass:#0c1017eb}*{box-sizing:border-box}html,body{height:100%;width:100%;margin:0;overflow:hidden;background:#050609;color:var(--paper);font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,select,input{font:inherit}button,select{min-height:44px;border:1px solid var(--line);border-radius:8px;background:#ffffff05;color:var(--paper);padding:10px 15px}button{cursor:pointer;transition:background .18s,border-color .18s}button:hover{background:#ffbb8810;border-color:#ffbc8580}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--fire);outline-offset:4px}button[aria-pressed=true]{background:#ffbc8515;border-color:#ffbc8588;color:var(--fire)}button.primary{background:var(--fire);border-color:var(--fire);color:#26150a;font-weight:650}button.primary:hover{background:#ffd7b1}select{background:#141a24}input[type=range]{min-height:44px;width:100%;accent-color:var(--fire)}#cosmos{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;outline:none}#cosmos:focus-visible{outline:2px solid var(--fire);outline-offset:-4px}.topline{position:absolute;left:34px;right:34px;top:calc(24px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;pointer-events:none}.topline>*{pointer-events:auto}.brand{display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:.2em}.brand i{width:22px;height:22px;border:1px solid var(--fire);border-radius:50%;box-shadow:0 0 15px #ffbc851a}.links{display:flex;gap:8px}.links button{font-size:12px}.hero{position:absolute;top:18%;left:5%;pointer-events:none}.eyebrow{font-size:9px;letter-spacing:.26em;color:var(--fire);text-transform:uppercase}.hero h1{font:400 clamp(44px,5.8vw,83px)/.94 Georgia,"Times New Roman",serif;letter-spacing:-.055em;margin:25px 0 20px}.hero h1 span{display:block;color:#cfb8a6}.hero p{font-size:12px;color:var(--muted);line-height:1.8;max-width:220px}.hero .index{font-size:9px;letter-spacing:.19em;color:#a49a9177;margin-top:35px}.telemetry{position:absolute;right:34px;top:40%;text-align:right;font-size:9px;letter-spacing:.15em;line-height:2.7;pointer-events:none;color:#b8aca28c}.telemetry b{color:#e4c6a8;font-weight:400}.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px);box-shadow:0 18px 70px #0005}.deck{position:absolute;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(860px,calc(100% - 48px));border-radius:16px;padding:15px 19px}.deck-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.hint{font-size:11px;color:var(--muted)}.hint strong{color:var(--paper);font-weight:500}.tag{color:var(--fire);font-size:9px;letter-spacing:.15em;white-space:nowrap}.toolbar{display:flex;align-items:center;gap:8px}.modes{display:flex;gap:5px;border-right:1px solid var(--line);padding-right:11px}.toolbar button{font-size:12px;white-space:nowrap}.toolbar .primary{flex:1}.welcome{position:absolute;left:5%;bottom:195px;max-width:275px;border-left:1px solid var(--fire);padding-left:16px}.welcome p{font-size:12px;line-height:1.8;color:var(--muted);margin:0 0 12px}.welcome strong{color:var(--paper);font-weight:500}.welcome button{font-size:12px}.footnote{position:absolute;left:34px;bottom:166px;font-size:8px;letter-spacing:.15em;color:#958c8580;pointer-events:none}#toast{position:absolute;left:50%;bottom:178px;transform:translateX(-50%);border-radius:24px;padding:11px 18px;max-width:90%;font-size:12px;text-align:center;opacity:0;pointer-events:none;transition:opacity .18s}#toast.show{opacity:1}.modal{width:min(460px,calc(100% - 28px));max-height:calc(100dvh - 32px);overflow:auto;border:1px solid var(--line);border-radius:18px;background:#101620;color:var(--paper);padding:25px;box-shadow:0 30px 120px #0008}.modal::backdrop{background:#030508c0;backdrop-filter:blur(7px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}.dialog-head h2{font:400 28px Georgia,serif;margin:0}.modal p,.modal li{font-size:13px;color:var(--muted);line-height:1.8}.modal ul{padding-left:18px}.modal strong{color:var(--paper);font-weight:500}.field{display:block;margin:15px 0;font-size:12px;color:var(--muted)}.field span{display:flex;justify-content:space-between;gap:12px}.field select{width:100%;margin-top:7px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button{font-size:12px}.note{border-top:1px solid var(--line);padding-top:15px}.error{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse,#30211c,#050609);z-index:10}.error section{max-width:440px;text-align:center;padding:28px}.error h2{font:32px Georgia,serif}.error p{color:var(--muted);line-height:1.8}[hidden]{display:none!important}
+/* Phone controls wrap into deliberate rows while keeping the black hole visible. */
+@media(max-width:760px){.topline{left:17px;right:17px;top:calc(15px + env(safe-area-inset-top))}.brand{font-size:8px;letter-spacing:.10em;gap:8px}.brand i{width:17px;height:17px}.links{gap:5px}.links button{font-size:11px;padding:8px 10px}.hero{left:22px;top:100px}.hero h1{font-size:43px;margin:14px 0 11px}.hero h1 span{display:inline;margin-left:8px}.hero .eyebrow{font-size:8px}.hero p{font-size:11px;max-width:290px}.hero p br{display:none}.hero .index,.telemetry,.footnote{display:none}.deck{bottom:calc(12px + env(safe-area-inset-bottom));width:calc(100% - 24px);padding:12px}.deck-head{margin-bottom:9px}.hint{font-size:10px;line-height:1.6}.tag{font-size:8px}.toolbar{flex-wrap:wrap;gap:7px}.modes{flex:1;padding:0;border:0}.modes button{flex:1;padding:9px 10px}.toolbar>.primary{flex:1;padding:9px 10px}.toolbar>#viewButton,.toolbar>#colorButton,.toolbar>#pauseButton{flex:1}.welcome{left:22px;bottom:206px;max-width:calc(100% - 44px);padding-left:12px;background:#05060977}.welcome p{font-size:11px;margin-bottom:8px}.welcome p br{display:none}#toast{bottom:214px}.modal{padding:22px}}
+@media(max-height:550px){.topline{top:12px;left:20px;right:20px}.hero{left:24px;top:76px}.hero h1{font-size:34px;margin:12px 0}.hero p,.hero .index,.telemetry,.welcome,.footnote{display:none}.deck{bottom:10px;padding:10px 14px}.deck-head{margin-bottom:6px}.toolbar{gap:6px}.toolbar button{padding:8px 10px}.hint{font-size:10px}.modal{max-height:calc(100dvh - 18px)}#toast{bottom:130px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="cosmos" tabindex="0" role="application" aria-label="Interactive black-hole observatory. Drag to orbit, or choose Move lens to reposition the black hole. Pinch or scroll to zoom."></canvas>
+<div class="topline"><div class="brand"><i aria-hidden="true"></i>DEEP FIELD OBSERVATORY / 002</div><div class="links"><button id="helpButton">Field guide</button><button id="controlsButton">Observatory ↗</button></div></div>
+<header class="hero"><div class="eyebrow">A place where light takes the long way home</div><h1>Event<span>Horizon.</span></h1><p>At the edge of everything, <br>even the stars lose their way.</p><div class="index">NO SIGNAL FROM WITHIN.<br>EVERYTHING TO SEE AROUND IT.</div></header>
+<aside class="telemetry"><b id="themeLabel">EMBER SPECTRUM</b><br>ACCRETION / ACTIVE<br><span id="massLabel">MASS FACTOR / 1.00</span><br><span id="feedLabel">MATTER STREAM / IDLE</span></aside>
+<aside class="welcome" id="welcome"><p><strong>Drag to look around the black hole.</strong> <br>Choose <strong>Move lens</strong> to slide it across the stars. <br>Then try <strong>Feed matter</strong>.</p><button id="beginButton" class="primary">Enter the observatory ↗</button></aside>
+<div class="footnote">A CINEMATIC APPROXIMATION · NOT A SCIENTIFIC SIMULATION</div>
+<section class="deck glass" aria-label="Black-hole controls"><div class="deck-head"><div id="hint" class="hint"><strong>Orbit</strong> · Drag to change your view · Pinch / scroll to zoom</div><span class="tag" id="statusTag">LIGHT BENDS HERE</span></div><div class="toolbar"><div class="modes" role="group" aria-label="Drag behavior"><button id="orbitButton" aria-pressed="true">↻ Orbit</button><button id="moveButton" aria-pressed="false">✧ Move lens</button></div><button id="feedButton" class="primary">Feed matter +</button><button id="viewButton">View: Cinematic</button><button id="colorButton">Ember ↻</button><button id="pauseButton" aria-pressed="false">Freeze</button></div></section>
+<div id="toast" class="glass" role="status" aria-live="polite"></div>
+<dialog id="helpDialog" class="modal"><div class="dialog-head"><h2>Your guide to the edge.</h2><button data-close>Close</button></div><ul><li><strong>Orbit:</strong> drag to see the disk from different angles. Pinch or scroll to move closer.</li><li><strong>Move lens:</strong> drag to reposition the black hole. The background star field bends around its new position.</li><li><strong>Feed matter:</strong> send a bright spiral of gas toward the center. It fades as it moves inward.</li><li><strong>View:</strong> cycle between Cinematic, Face-on, and Edge-on. Color cycles through Ember, Ion Blue, and Violet.</li><li><strong>Observatory:</strong> adjust mass, light bending, disk flow, and graphics. Save a picture or reset.</li><li><strong>Keyboard:</strong> focus the sky, then use arrow keys to orbit or move the lens in the current mode; + / − zoom; Space freezes motion.</li></ul><p class="note">The dark center captures the model’s light rays; the bright band is an accretion disk. Its distorted upper and lower arcs come from bent ray paths. This is a stylized, computationally simplified visual model, <strong>not a precision relativity simulation</strong>.</p><p>All imagery is generated on your device. No external assets, account, uploads, or audio.</p></dialog>
+<dialog id="controlsDialog" class="modal"><div class="dialog-head"><h2>Tune the impossible.</h2><button data-close>Done</button></div><label class="field"><span>Mass factor <output id="massValue">1.00×</output></span><input id="mass" type="range" min="65" max="145" value="100"></label><label class="field"><span>Light bending <output id="gravityValue">1.00×</output></span><input id="gravity" type="range" min="30" max="160" value="100"></label><label class="field"><span>Disk flow <output id="flowValue">Gentle</output></span><input id="flow" type="range" min="0" max="100" value="35"></label><label class="field">Graphics<select id="quality"><option value="auto">Adaptive / balanced</option><option value="lite">Lite / slower phones</option><option value="high">High / sharper details</option></select></label><p id="qualityNote">Adaptive rendering keeps the observatory responsive.</p><div class="actions"><button id="recenterButton">Recenter lens</button><button id="saveButton">Save picture ↓</button><button id="resetButton">Reset observatory</button></div></dialog>
+<div id="error" class="error" hidden><section><div class="eyebrow">The sky is still there</div><h2>The observatory could not open.</h2><p id="errorText">Enable hardware acceleration or use an up-to-date Chrome browser with WebGL support.</p><button id="retryButton" class="primary">Try again</button></section></div>
+<script>
+'use strict';
+// Shared, bounded state: one shader draws the disk, ray bending, background and gas streams.
+const $=id=>document.getElementById(id),canvas=$('cosmos');
+const mobile=matchMedia('(pointer:coarse)').matches||innerWidth<760,reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const state={ready:false,mode:'orbit',theme:0,mass:1,gravity:1,flow:.35,time:0,paused:reduced,quality:'auto',scale:mobile?.70:.95,feeds:0,feedStart:-100,view:0,frames:0};
+const pose={yaw:.05,pitch:.20,distance:11.8,offset:[0,0]};
+let gl,program,locations={},last=0,frameTotal=0,qualityWindow=0,toastTimer;
+let camera={position:[0,2,12],right:[1,0,0],up:[0,1,0],forward:[0,0,-1],center:[0,0],lens:1.0,hole:[0,0,0]};
+const pointers=new Map(),themes=['Ember','Ion Blue','Violet'],views=['Cinematic','Face-on','Edge-on'];
+const vertexSource=`attribute vec2 aPosition;void main(){gl_Position=vec4(aPosition,0.,1.);}`;
+// Bounded ray integration bends both disk imagery and the distant star field around the hole.
+const fragmentSource=`
+precision highp float;
+uniform vec2 uResolution,uCenter;
+uniform vec3 uCamera,uRight,uUp,uForward,uHole;
+uniform float uLens,uTime,uMass,uGravity,uFeedAge;
+uniform int uTheme,uSteps;
+const float PI=3.14159265;
+// hash/noise: procedural stars and layered disk turbulence require no downloaded textures.
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+// palette: spectral colors are aesthetic choices rather than measured blackbody temperature.
+vec3 palette(float heat){vec3 a=vec3(.85,.12,.015),b=vec3(1.,.48,.10),c=vec3(1.,.91,.70);if(uTheme==1){a=vec3(.02,.08,.7);b=vec3(.03,.65,1.);c=vec3(.75,.98,1.);}if(uTheme==2){a=vec3(.28,.015,.6);b=vec3(.85,.10,.6);c=vec3(1.,.75,.96);}return heat<.55?mix(a,b,heat/.55):mix(b,c,(heat-.55)/.45);}
+// sky: multiple stable star scales and a faint dusty galactic band create spatial context.
+vec3 sky(vec3 d){
+ vec2 uv=vec2(atan(d.z,d.x)/(2.*PI)+.5,asin(clamp(d.y,-1.,1.))/PI+.5);
+ float cloud=noise(uv*19.)*.6+noise(uv*53.)*.27+noise(uv*130.)*.13;
+ float band=exp(-abs(d.y+.22*d.x-.10)*8.);vec3 color=vec3(.002,.004,.009)+vec3(.017,.019,.034)*cloud*band;
+ for(int layer=0;layer<3;layer++){float scale=layer==0?140.:layer==1?290.:530.;vec2 p=uv*vec2(scale*2.,scale),cell=floor(p),f=fract(p);float h=hash(cell+float(layer)*37.);vec2 pos=vec2(hash(cell+9.1),hash(cell+41.3));float dist=length(f-pos);float size=layer==0?.075:layer==1?.055:.038;float star=exp(-dist*dist/(size*size));star*=step(layer==0?.982:layer==1?.972:.96,h);vec3 tint=mix(vec3(.53,.70,1.),vec3(1.,.83,.59),hash(cell+87.));color+=tint*star*(layer==0?1.5:layer==1?.9:.6);}
+ return color;
+}
+// diskSample: a hot inner ring, sheared gas bands, and an optional inward-feeding spiral.
+vec4 diskSample(vec3 p){
+ float r=length(p.xz),inner=1.38*uMass,outer=4.85;float a=atan(p.z,p.x);
+ float edge=smoothstep(inner,inner+.14,r)*(1.-smoothstep(outer-.8,outer,r));if(edge<.001)return vec4(0.);
+ float sheared=a-uTime*.62/pow(max(r,.6),1.15),radial=(r-inner)/(outer-inner);
+ float turbulence=noise(vec2(r*11.,sin(sheared)*3.))+noise(vec2(r*29.,cos(sheared*2.)*7.))*.35;
+ float threads=.58+.42*sin(r*49.+turbulence*3.+sin(sheared*8.+r*5.)*.6);
+ float gas=(.45+.55*turbulence)*(.65+.35*threads),heat=clamp(1.-radial*.9,0.,1.);
+ vec3 color=palette(heat)*(1.8+3.3*pow(1.-radial,2.))*gas;
+ float doppler=clamp(1.+sin(a)*.52,.45,1.55);color*=doppler;
+ if(uFeedAge>=0.&&uFeedAge<8.){float head=4.65-uFeedAge*.39,angle=uFeedAge*(1.+uFeedAge*.07);float strand=pow(.5+.5*cos(a*3.-angle*3.+r*2.4),20.);float radialGlow=exp(-pow((r-head)/.40,2.));color+=palette(.95)*strand*radialGlow*9.*min(1.,(8.-uFeedAge)*1.5);}
+ float opacity=edge*(.68+.19*gas);return vec4(color,opacity);
+}
+// tone: compress bright gas while keeping the outer disk color rich.
+vec3 tone(vec3 c){return clamp((c*(2.51*c+.03))/(c*(2.43*c+.59)+.14),0.,1.);}
+void main(){
+ vec2 uv=(gl_FragCoord.xy-.5*uResolution)/uResolution.y-uCenter;
+ vec3 direction=normalize(uForward*uLens+uRight*uv.x+uUp*uv.y),origin=uCamera-uHole;
+ vec3 p=origin,ray=direction,glow=vec3(0.);float transmission=1.,horizon=.68*uMass;bool captured=false;
+ float projection=dot(origin,ray),disc=projection*projection-dot(origin,origin)+64.;
+ if(disc>0.){
+  p+=ray*max(0.,-projection-sqrt(disc));
+  for(int i=0;i<128;i++){
+   if(i>=uSteps)break;float r=length(p);if(r<horizon){captured=true;break;}
+   if(r>13.&&dot(p,ray)>0.)break;
+   float stepLength=clamp((r-horizon)*.19,.045,1.05);
+   vec3 bent=normalize(ray-p*(stepLength*1.32*uMass*uGravity*(1.-smoothstep(6.,8.,r))/max(r*r*r,.08)));
+   vec3 next=p+bent*stepLength;
+   if(p.y*next.y<0.){float t=p.y/(p.y-next.y);vec3 crossing=mix(p,next,t);vec4 disk=diskSample(crossing);glow+=transmission*disk.rgb*disk.a;transmission*=1.-disk.a*.88;}
+   p=next;ray=bent;
+  }
+ }
+ vec3 color=glow;if(!captured)color+=sky(ray)*transmission;
+ // A very subtle dusty halo surrounds the bright disk without filling the black center.
+ float impact=length(cross(origin,direction));if(!captured)color+=palette(.18)*.009*exp(-abs(impact-2.4*uMass)*1.1);
+ color=tone(color);color=pow(color,vec3(1./2.2));color*=1.-.12*smoothstep(.35,1.5,length(uv));
+ gl_FragColor=vec4(color,1.);
+}`;
+// Vector helpers keep shader and input camera transforms consistent.
+const add=(a,b)=>a.map((v,i)=>v+b[i]);
+const mul=(a,s)=>a.map(v=>v*s);
+const norm=a=>mul(a,1/(Math.hypot(...a)||1));
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+// notify: announce one concise action result without covering the center of the scene.
+function notify(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3000);}
+// fail: present a recovery path instead of leaving visitors staring at a black canvas.
+function fail(message){state.ready=false;$('error').hidden=false;$('errorText').textContent=message;console.error('[EventHorizon/EventHorizon]',message);}
+// compile: reject a shader that the current device cannot compile.
+function compile(type,source){const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){const message=gl.getShaderInfoLog(shader);gl.deleteShader(shader);throw new Error(message);}return shader;}
+// initGraphics: use one reusable fullscreen buffer and no textures or network dependencies.
+function initGraphics(){
+ gl=canvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'high-performance',preserveDrawingBuffer:true});
+ if(!gl)throw new Error('WebGL is unavailable. Enable hardware acceleration or try another browser.');
+ program=gl.createProgram();const vs=compile(gl.VERTEX_SHADER,vertexSource),fs=compile(gl.FRAGMENT_SHADER,fragmentSource);gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);
+ if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));gl.useProgram(program);
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+ const attribute=gl.getAttribLocation(program,'aPosition');gl.enableVertexAttribArray(attribute);gl.vertexAttribPointer(attribute,2,gl.FLOAT,false,0,0);
+ for(const name of ['uResolution','uCenter','uCamera','uRight','uUp','uForward','uHole','uLens','uTime','uMass','uGravity','uFeedAge','uTheme','uSteps'])locations[name]=gl.getUniformLocation(program,name);
+ canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fail('The graphics context was interrupted. Close other graphics-heavy tabs, then reload the observatory.');});
+}
+// syncUI: maintain visible labels and accessible pressed states for all toggles.
+function syncUI(){
+ $('orbitButton').setAttribute('aria-pressed',String(state.mode==='orbit'));$('moveButton').setAttribute('aria-pressed',String(state.mode==='move'));
+ $('hint').innerHTML=state.mode==='orbit'?'<strong>Orbit</strong> · Drag to change your view · Pinch / scroll to zoom':'<strong>Move lens</strong> · Drag to slide the black hole across the stars';
+ $('pauseButton').textContent=state.paused?'Resume':'Freeze';$('pauseButton').setAttribute('aria-pressed',String(state.paused));
+ $('colorButton').textContent=themes[state.theme]+' ↻';$('viewButton').textContent='View: '+views[state.view];$('themeLabel').textContent=themes[state.theme].toUpperCase()+' SPECTRUM';
+ $('massLabel').textContent='MASS FACTOR / '+state.mass.toFixed(2);$('massValue').textContent=state.mass.toFixed(2)+'×';$('gravityValue').textContent=state.gravity.toFixed(2)+'×';
+ $('flowValue').textContent=state.flow<.2?'Slow':state.flow<.6?'Gentle':'Rapid';$('statusTag').textContent=state.paused?'TIME IS FROZEN':'LIGHT BENDS HERE';
+}
+// setView: framing presets provide a discoverable alternative to camera gestures.
+function setView(index){state.view=index;pose.yaw=.05;pose.pitch=[.20,1.23,.055][index];pose.distance=11.8;pose.offset=[0,0];syncUI();}
+// feedMatter: one bounded cohort of bright gas winds inward; repeated clicks start a new cohort.
+function feedMatter(){state.feeds++;state.feedStart=state.time;if(state.paused)state.paused=false;$('welcome').hidden=true;syncUI();notify('A bright stream of matter is spiraling inward.');}
+// resetObservatory: reset the visual study without changing the visitor's chosen graphics tier.
+function resetObservatory(){state.mode='orbit';state.theme=0;state.mass=1;state.gravity=1;state.flow=.35;state.time=0;state.feedStart=-100;state.paused=reduced;setView(0);$('mass').value=100;$('gravity').value=100;$('flow').value=35;syncUI();notify('The observatory is back at its starting view.');}
+// savePicture: render immediately so even a paused sky can be exported.
+function savePicture(){try{render();const link=document.createElement('a');link.download='event-horizon.png';link.href=canvas.toDataURL('image/png');link.click();notify('Your view of the event horizon is ready to save.');}catch{notify('Picture export was unavailable. Try a screenshot instead.');}}
+// bindControls: attach every visible control to the same scene state.
+function bindControls(){
+ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());$('helpButton').onclick=()=>$('helpDialog').showModal();$('controlsButton').onclick=()=>$('controlsDialog').showModal();$('beginButton').onclick=()=>$('welcome').hidden=true;$('retryButton').onclick=()=>location.reload();
+ $('orbitButton').onclick=()=>{state.mode='orbit';syncUI();};$('moveButton').onclick=()=>{state.mode='move';syncUI();};$('feedButton').onclick=feedMatter;
+ $('viewButton').onclick=()=>{setView((state.view+1)%views.length);notify(views[state.view]+' view.');};$('colorButton').onclick=()=>{state.theme=(state.theme+1)%themes.length;syncUI();};
+ $('pauseButton').onclick=()=>{state.paused=!state.paused;syncUI();};$('mass').oninput=e=>{state.mass=Number(e.target.value)/100;syncUI();};$('gravity').oninput=e=>{state.gravity=Number(e.target.value)/100;syncUI();};$('flow').oninput=e=>{state.flow=Number(e.target.value)/100;syncUI();};
+ $('quality').onchange=e=>{state.quality=e.target.value;state.scale=state.quality==='lite'?.48:state.quality==='high'?1.15:mobile?.70:.95;qualityWindow=0;frameTotal=0;resize();};
+ $('recenterButton').onclick=()=>{pose.offset=[0,0];$('controlsDialog').close();notify('The lens is centered.');};$('saveButton').onclick=savePicture;$('resetButton').onclick=()=>{resetObservatory();$('controlsDialog').close();};
+}
+// updateCamera: move the hole in the view plane while the distant sky remains anchored in world space.
+function updateCamera(){
+ camera.position=[Math.sin(pose.yaw)*Math.cos(pose.pitch)*pose.distance,Math.sin(pose.pitch)*pose.distance,Math.cos(pose.yaw)*Math.cos(pose.pitch)*pose.distance];
+ camera.forward=norm(mul(camera.position,-1));camera.right=norm(cross(camera.forward,[0,1,0]));camera.up=cross(camera.right,camera.forward);
+ const aspect=innerWidth/innerHeight;camera.lens=aspect<.8?aspect*.92:.98;camera.center=innerWidth>900?[aspect*.095,0.]:[0,-.035];
+ camera.hole=add(mul(camera.right,pose.offset[0]),mul(camera.up,pose.offset[1]));
+}
+// movePointer: one finger performs the selected mode; two fingers always zoom.
+function movePointer(e){
+ if(!pointers.has(e.pointerId))return;const prior=pointers.get(e.pointerId),all=[...pointers.values()];let before=0;
+ if(all.length===2)before=Math.hypot(all[0].x-all[1].x,all[0].y-all[1].y);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(pointers.size===2){const next=[...pointers.values()],after=Math.hypot(next[0].x-next[1].x,next[0].y-next[1].y);if(after>5)pose.distance=clamp(pose.distance*before/after,8.2,17);return;}
+ const dx=e.clientX-prior.x,dy=e.clientY-prior.y;
+ if(state.mode==='orbit'){pose.yaw-=dx*.006;pose.pitch=clamp(pose.pitch+dy*.004,.025,1.45);}
+ else{const factor=pose.distance/(innerHeight*camera.lens);pose.offset[0]=clamp(pose.offset[0]+dx*factor,-3,3);pose.offset[1]=clamp(pose.offset[1]-dy*factor,-2.5,2.5);}
+}
+// keyboard: direct keyboard control mirrors the currently selected drag mode.
+function keyboard(e){
+ if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-',' '].includes(e.key))return;e.preventDefault();const x=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0,y=e.key==='ArrowUp'?1:e.key==='ArrowDown'?-1:0;
+ if(state.mode==='orbit'){pose.yaw+=x*.12;pose.pitch=clamp(pose.pitch+y*.08,.025,1.45);}else{pose.offset[0]=clamp(pose.offset[0]+x*.25,-3,3);pose.offset[1]=clamp(pose.offset[1]+y*.25,-2.5,2.5);}
+ if(e.key==='+'||e.key==='=')pose.distance=clamp(pose.distance-.5,8.2,17);if(e.key==='-')pose.distance=clamp(pose.distance+.5,8.2,17);if(e.key===' '){state.paused=!state.paused;syncUI();}
+}
+// bindPointers: pointer capture protects gestures when fingers move outside the canvas.
+function bindPointers(){
+ canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;canvas.focus();canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});canvas.style.cursor='grabbing';$('welcome').hidden=true;});
+ canvas.addEventListener('pointermove',movePointer);for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,e=>{pointers.delete(e.pointerId);if(!pointers.size)canvas.style.cursor='grab';});
+ canvas.addEventListener('wheel',e=>{e.preventDefault();pose.distance=clamp(pose.distance+e.deltaY*.005,8.2,17);},{passive:false});canvas.addEventListener('keydown',keyboard);
+}
+// resize: resolution limits control ray-tracing cost on phones instead of multiplying native pixel density.
+function resize(){if(!gl)return;const cap=state.quality==='high'?1550:state.quality==='lite'?700:1150,factor=Math.min(state.scale,cap/Math.max(innerWidth,innerHeight));canvas.width=Math.max(1,Math.round(innerWidth*factor));canvas.height=Math.max(1,Math.round(innerHeight*factor));gl.viewport(0,0,canvas.width,canvas.height);$('qualityNote').textContent=`${state.quality==='lite'?'Lite':state.quality==='high'?'High detail':'Adaptive'} · ${canvas.width} × ${canvas.height} render. This is an artistic model, not a calibrated measurement.`;}
+// render: trace a bounded number of steps and send only a small set of uniforms each frame.
+function render(){
+ if(!gl||!state.ready)return;updateCamera();gl.uniform2f(locations.uResolution,canvas.width,canvas.height);gl.uniform2fv(locations.uCenter,camera.center);
+ for(const [name,value] of [['uCamera',camera.position],['uRight',camera.right],['uUp',camera.up],['uForward',camera.forward],['uHole',camera.hole]])gl.uniform3fv(locations[name],value);
+ for(const [name,value] of [['uLens',camera.lens],['uTime',state.time],['uMass',state.mass],['uGravity',state.gravity],['uFeedAge',state.time-state.feedStart]])gl.uniform1f(locations[name],value);
+ gl.uniform1i(locations.uTheme,state.theme);gl.uniform1i(locations.uSteps,state.quality==='lite'?80:state.quality==='high'?128:104);gl.drawArrays(gl.TRIANGLES,0,6);
+}
+// frame: freeze animation independently of controls and lower resolution on persistently slow devices.
+function frame(now){
+ requestAnimationFrame(frame);if(!state.ready||document.hidden){last=now;return;}const raw=last?(now-last)/1000:1/60,dt=Math.min(raw,.06);last=now;if(!state.paused)state.time+=dt*(.35+state.flow*1.25);render();state.frames++;
+ $('feedLabel').textContent=state.time-state.feedStart<8?'MATTER STREAM / INFALL':'MATTER STREAM / IDLE';
+ if(state.quality==='auto'&&raw<.25){frameTotal+=raw;qualityWindow++;if(qualityWindow>=90){if(frameTotal/qualityWindow>.046&&state.scale>.4){state.scale=Math.max(.4,state.scale*.8);resize();}frameTotal=0;qualityWindow=0;}}
+}
+// boot: help is bound before graphics initialization so unsupported devices still get an explanation.
+function boot(){bindControls();syncUI();try{initGraphics();resize();bindPointers();state.ready=true;render();requestAnimationFrame(frame);}catch(e){fail('WebGL could not open this view. Enable hardware acceleration or try another browser. '+e.message);}addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{if(document.hidden)pointers.clear();});}
+// Read-only snapshots let the real interaction path be verified without hidden test-only controls.
+Object.defineProperty(window,'horizonTest',{get:()=>Object.freeze({...state,pose:{...pose,offset:[...pose.offset]},feedActive:state.time-state.feedStart<8,canvas:[canvas.width,canvas.height]})});
+boot();
+</script>
+</body>
+</html>
